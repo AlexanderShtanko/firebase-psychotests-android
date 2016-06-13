@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">psychotests</string>
+    <string name="result">Результат</string>
+    <string name="all_tests">Все тесты</string>
+    <string name="categories">Категории</string>
+    <string name="tests_done">Пройденные тесты</string>
+    <string name="settings">Настройки</string>
+</resources>
