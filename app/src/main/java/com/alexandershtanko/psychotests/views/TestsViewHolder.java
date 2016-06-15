@@ -5,10 +5,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+
+import java.util.List;
 
 import butterknife.BindView;
 import rx.subscriptions.CompositeSubscription;
@@ -28,8 +31,13 @@ public class TestsViewHolder extends AbstractViewHolder {
         list.setAdapter(adapter);
     }
 
-    public static class ViewBinder extends AbstractViewBinder<TestsViewHolder,TestsViewModel> {
+    public void populate(List<TestInfo> testInfoList)
+    {
+        adapter.add(testInfoList);
+    }
 
+
+    public static class ViewBinder extends AbstractViewBinder<TestsViewHolder,TestsViewModel> {
 
         public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
