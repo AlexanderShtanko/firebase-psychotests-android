@@ -1,10 +1,7 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
 import android.support.v4.util.Pair;
-import android.support.v7.util.SortedList;
 
-import com.alexandershtanko.psychotests.models.Test;
-import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -13,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import rx.Observable;
+import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -27,8 +25,11 @@ public class TestsViewModel extends AbstractViewModel {
     DatabaseReference testsRef = database.getReference("tests");
 
 
-    private SortedList<TestInfo> sortedList;
     private ChildEventListener childEventListener;
+    private BehaviorSubject<Pair<ChildAction, DataSnapshot>> dataSubject = BehaviorSubject.create();
+
+    public TestsViewModel() {
+    }
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
@@ -54,7 +55,6 @@ public class TestsViewModel extends AbstractViewModel {
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
                     subscriber.onNext(new Pair<>(ChildAction.ACTION_ADDED, dataSnapshot));
-
                 }
 
                 @Override
@@ -66,25 +66,13 @@ public class TestsViewModel extends AbstractViewModel {
             testsRef.addChildEventListener(childEventListener);
         })
                 .doOnUnsubscribe(() -> testsRef.removeEventListener(childEventListener))
-                .subscribe(pair -> obtainData(pair.first, pair.second)));
+                .subscribe(pair -> dataSubject.onNext(pair)));
     }
 
-    private void obtainData(ChildAction action, DataSnapshot dataSnapshot) {
-        Test test = dataSnapshot.getValue(Test.class);
 
-        switch (action) {
-            case ACTION_ADDED:
-                sortedList.add(test.getInfo());
-                break;
-            case ACTION_CHANGED:
-                sortedList.add(test.getInfo());
-                break;
-            case ACTION_REMOVED:
-                sortedList.remove(test.getInfo());
-                break;
-            case ACTION_MOVED:
-                break;
-        }
+    public Observable<Pair<ChildAction,DataSnapshot>> getChildActionObservable()
+    {
+        return dataSubject.asObservable();
     }
 
 

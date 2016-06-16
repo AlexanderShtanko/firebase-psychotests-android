@@ -14,6 +14,7 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -21,23 +22,22 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class TestsViewHolder extends AbstractViewHolder {
     @BindView(R.id.list)
-    RecyclerView list;
+    RecyclerView recyclerView;
     TestsAdapter adapter;
 
     public TestsViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
         adapter = new TestsAdapter();
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
     }
 
-    public void populate(List<TestInfo> testInfoList)
-    {
+    public void populate(List<TestInfo> testInfoList) {
         adapter.add(testInfoList);
     }
 
 
-    public static class ViewBinder extends AbstractViewBinder<TestsViewHolder,TestsViewModel> {
+    public static class ViewBinder extends AbstractViewBinder<TestsViewHolder, TestsViewModel> {
 
         public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
@@ -45,6 +45,10 @@ public class TestsViewHolder extends AbstractViewHolder {
 
         @Override
         protected void onBind(CompositeSubscription s) {
+            s.add(viewModel.getChildActionObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe());
+            s.add(viewModel.get);
 
         }
     }
