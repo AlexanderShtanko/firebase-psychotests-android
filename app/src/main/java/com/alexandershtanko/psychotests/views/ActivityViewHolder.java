@@ -40,6 +40,7 @@ public class ActivityViewHolder extends AbstractViewHolder {
         drawerList.setAdapter(new ArrayAdapter<>(getContext(),
                 R.layout.item_drawer, new Integer[]{R.string.all_tests, R.string.categories, R.string.tests_done, R.string.settings}));
         drawerList.setOnItemClickListener(((parent, view, position, id) -> selectItem(position)));
+        drawerList.setSelection(0);
     }
 
     private void selectItem(int position) {

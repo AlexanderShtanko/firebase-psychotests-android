@@ -3,15 +3,14 @@ package com.alexandershtanko.psychotests.views;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
-import com.alexandershtanko.psychotests.models.TestInfo;
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
-
-import java.util.List;
 
 import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,24 +31,25 @@ public class TestsViewHolder extends AbstractViewHolder {
         recyclerView.setAdapter(adapter);
     }
 
-    public void populate(List<TestInfo> testInfoList) {
-        adapter.add(testInfoList);
-    }
-
-
     public static class ViewBinder extends AbstractViewBinder<TestsViewHolder, TestsViewModel> {
 
         public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
+            viewModel.getSortedCallback().setAdapter(viewHolder.adapter);
+            viewHolder.adapter.setList(viewModel.getSortedList());
         }
 
         @Override
         protected void onBind(CompositeSubscription s) {
-            s.add(viewModel.getChildActionObservable()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
-            s.add(viewModel.get);
+            s.add(viewModel.getErrorObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError, ErrorUtils.onError()));
 
         }
+
+        public void showError(Throwable throwable)
+        {
+            Toast.makeText(viewHolder.getContext(),throwable.getMessage(),Toast.LENGTH_LONG).show();
+        }
+
+
     }
 }
