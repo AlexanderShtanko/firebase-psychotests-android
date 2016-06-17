@@ -1,6 +1,7 @@
 package com.alexandershtanko.psychotests.views.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.alexandershtanko.psychotests.models.TestInfo;
 
@@ -11,8 +12,7 @@ public class SortedCallback extends android.support.v7.util.SortedList.Callback<
 
     private RecyclerView.Adapter adapter;
 
-    public void setAdapter(RecyclerView.Adapter adapter)
-    {
+    public void setAdapter(RecyclerView.Adapter adapter) {
         this.adapter = adapter;
     }
 
@@ -23,26 +23,30 @@ public class SortedCallback extends android.support.v7.util.SortedList.Callback<
 
     @Override
     public void onInserted(int position, int count) {
-        if(adapter!=null)
-            adapter.notifyItemRangeInserted(position,count);
+        if (adapter != null) {
+            adapter.notifyItemRangeInserted(position, count);
+            Log.e("TAG", "size:" + adapter.getItemCount());
+            adapter.notifyDataSetChanged();
+        }
+
     }
 
     @Override
     public void onRemoved(int position, int count) {
-        if(adapter!=null)
-            adapter.notifyItemRangeRemoved(position,count);
+        if (adapter != null)
+            adapter.notifyItemRangeRemoved(position, count);
     }
 
     @Override
     public void onMoved(int fromPosition, int toPosition) {
-        if(adapter!=null)
-            adapter.notifyItemMoved(fromPosition,toPosition);
+        if (adapter != null)
+            adapter.notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
     public void onChanged(int position, int count) {
-        if(adapter!=null)
-            adapter.notifyItemChanged(position,count);
+        if (adapter != null)
+            adapter.notifyItemChanged(position, count);
     }
 
     @Override

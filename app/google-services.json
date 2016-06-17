@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "797046983292",
+    "firebase_url": "https://project-2631367029004918735.firebaseio.com",
+    "project_id": "project-2631367029004918735",
+    "storage_bucket": "project-2631367029004918735.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797046983292:android:7cafdd86b4689d56",
+        "android_client_info": {
+          "package_name": "com.alexandershtanko.psychotests"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797046983292-4eqhcldc7qjvsnqfg2ncuahgd2ddn62d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_clJrASzCgyM-I5yaAzVeUTAVjz1mbdo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

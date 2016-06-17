@@ -38,9 +38,10 @@ public class ActivityViewHolder extends AbstractViewHolder {
 
     private void initDrawer() {
         drawerList.setAdapter(new ArrayAdapter<>(getContext(),
-                R.layout.item_drawer, new Integer[]{R.string.all_tests, R.string.categories, R.string.tests_done, R.string.settings}));
+                R.layout.item_drawer,getContext().getResources().getStringArray(R.array.drawer_items)));
         drawerList.setOnItemClickListener(((parent, view, position, id) -> selectItem(position)));
         drawerList.setSelection(0);
+        fragments.openTests();
     }
 
     private void selectItem(int position) {
@@ -70,6 +71,7 @@ public class ActivityViewHolder extends AbstractViewHolder {
 
         public ViewBinder(ActivityViewHolder viewHolder, ActivityViewModel viewModel) {
             super(viewHolder, viewModel);
+
         }
 
         @Override

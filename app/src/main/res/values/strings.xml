@@ -5,4 +5,10 @@
     <string name="categories">Категории</string>
     <string name="tests_done">Пройденные тесты</string>
     <string name="settings">Настройки</string>
+    <string-array name="drawer_items">
+        <item>@string/all_tests</item>
+        <item>@string/categories</item>
+        <item>@string/tests_done</item>
+        <item>@string/settings</item>
+    </string-array>
 </resources>

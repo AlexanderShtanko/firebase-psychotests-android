@@ -5,7 +5,7 @@ package com.alexandershtanko.psychotests.models;
  */
 public class AnswerVariant {
     private String text;
-    private Integer value;
+    private String value;
 
     public String getText() {
         return text;
@@ -15,11 +15,11 @@ public class AnswerVariant {
         this.text = text;
     }
 
-    public Integer getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }

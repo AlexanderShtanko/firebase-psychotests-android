@@ -20,24 +20,24 @@ public class TestResult {
         this.image = image;
     }
 
-    public Integer getFrom() {
+    public String getFrom() {
         return from;
     }
 
-    public void setFrom(Integer from) {
+    public void setFrom(String from) {
         this.from = from;
     }
 
-    public Integer getTo() {
+    public String getTo() {
         return to;
     }
 
-    public void setTo(Integer to) {
+    public void setTo(String to) {
         this.to = to;
     }
 
     private String text;
     private String image;
-    private Integer from;
-    private Integer to;
+    private String from;
+    private String to;
 }

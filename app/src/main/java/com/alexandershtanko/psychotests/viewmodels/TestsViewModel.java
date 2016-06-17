@@ -5,6 +5,7 @@ import android.support.v7.util.SortedList;
 
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.views.adapters.SortedCallback;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 import com.google.firebase.database.ChildEventListener;
@@ -37,7 +38,7 @@ public class TestsViewModel extends AbstractViewModel {
 
     public TestsViewModel() {
         callback = new SortedCallback();
-        sortedList = new SortedList<TestInfo>(TestInfo.class, callback);
+        sortedList = new SortedList<>(TestInfo.class, callback);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class TestsViewModel extends AbstractViewModel {
                 .subscribe(pair -> dataSubject.onNext(pair),this::onError));
 
 
-        s.add(getChildActionObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(pair -> observeData(pair.first, pair.second)));
+        s.add(getChildActionObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(pair -> observeData(pair.first, pair.second), ErrorUtils.onError()));
     }
 
 
@@ -89,22 +90,26 @@ public class TestsViewModel extends AbstractViewModel {
     }
 
     public void observeData(ChildAction action, DataSnapshot snapshot) {
-        Test test = snapshot.getValue(Test.class);
-        TestInfo testInfo = test.getInfo();
-        testInfo.setTestId(snapshot.getKey());
+        try {
+            Test test = snapshot.getValue(Test.class);
+            TestInfo testInfo = test.getInfo();
+            testInfo.setTestId(snapshot.getKey());
 
-        switch (action) {
-            case ACTION_ADDED:
-                sortedList.add(testInfo);
-                break;
-            case ACTION_CHANGED:
-                break;
-            case ACTION_MOVED:
-                break;
-            case ACTION_REMOVED:
-                sortedList.remove(testInfo);
-                break;
+            switch (action) {
+                case ACTION_ADDED:
+                    sortedList.add(testInfo);
+                    break;
+                case ACTION_CHANGED:
+                    break;
+                case ACTION_MOVED:
+                    break;
+                case ACTION_REMOVED:
+                    sortedList.remove(testInfo);
+                    break;
+            }
         }
+        catch (Exception ignored)
+        {}
     }
 
 

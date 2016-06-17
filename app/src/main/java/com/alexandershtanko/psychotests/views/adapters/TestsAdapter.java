@@ -19,11 +19,11 @@ import butterknife.ButterKnife;
  * Created by aleksandr on 12.06.16.
  */
 public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> {
-    SortedList<TestInfo> list = new SortedList<TestInfo>(TestInfo.class, null);
+    SortedList<TestInfo> list = new SortedList<>(TestInfo.class, null);
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, null));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests,parent, false));
     }
 
     @Override
@@ -33,7 +33,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public void setList(SortedList<TestInfo> list) {
@@ -57,7 +57,8 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
         public void populate(TestInfo testInfo) {
             name.setText(testInfo.getName());
             category.setText(testInfo.getCategory());
-            Picasso.with(itemView.getContext()).load(testInfo.getImage()).into(image);
+            if(testInfo.getImage()!=null&&testInfo.getImage().length()>0)
+                Picasso.with(itemView.getContext()).load(testInfo.getImage()).into(image);
 
         }
     }
