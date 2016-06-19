@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_tests"
+            android:icon="@android:drawable/ic_menu_today"
+            android:title="Все тесты"/>
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="Категории"/>
+        <item
+            android:id="@+id/nav_done"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            android:title="Пройденные тесты"/>
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="Настройки"/>
+    </group>
+
+    <item android:title="Обратная связь">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@android:drawable/ic_menu_share"
+                android:title="Поделиться ссылкой"/>
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@android:drawable/ic_menu_send"
+                android:title="Оценить приложение"/>
+        </menu>
+    </item>
+
+</menu>

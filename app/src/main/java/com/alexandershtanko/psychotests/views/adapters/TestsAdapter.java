@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.models.TestInfo;
+import com.alexandershtanko.psychotests.views.picasso.CircleTransformation;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -19,16 +20,22 @@ import butterknife.ButterKnife;
  * Created by aleksandr on 12.06.16.
  */
 public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> {
+    static int[] imgBgs = {R.drawable.circle_gray, R.drawable.circle_blue, R.drawable.circle_red, R.drawable.circle_green, R.drawable.circle_orange};
     SortedList<TestInfo> list = new SortedList<>(TestInfo.class, null);
+    private OnItemClickListener onItemCLickListener;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests,parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, parent, false), onItemCLickListener);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.populate(list.get(position));
+        holder.populate(position, list.get(position));
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemCLickListener = onItemClickListener;
     }
 
     @Override
@@ -41,7 +48,12 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(String testId);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final OnItemClickListener onItemClickListener;
         @BindView(R.id.name)
         TextView name;
         @BindView(R.id.category)
@@ -49,17 +61,24 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
         @BindView(R.id.image)
         ImageView image;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, OnItemClickListener onItemClickListener) {
             super(itemView);
+            this.onItemClickListener = onItemClickListener;
             ButterKnife.bind(this, itemView);
         }
 
-        public void populate(TestInfo testInfo) {
+        public void populate(int position, TestInfo testInfo) {
+            itemView.setOnClickListener(v -> {
+                onItemClickListener.onItemClick(testInfo.getTestId());
+            });
             name.setText(testInfo.getName());
             category.setText(testInfo.getCategory());
-            if(testInfo.getImage()!=null&&testInfo.getImage().length()>0)
-                Picasso.with(itemView.getContext()).load(testInfo.getImage()).into(image);
+            if (testInfo.getImage() != null && testInfo.getImage().length() > 0)
+                Picasso.with(itemView.getContext()).load(testInfo.getImage()).transform(new CircleTransformation()).into(image);
+            else
+                Picasso.with(itemView.getContext()).load(R.drawable.ic_dashboard_white_24dp).transform(new CircleTransformation()).into(image);
 
+            image.setBackgroundResource(imgBgs[position % imgBgs.length]);
         }
     }
 }

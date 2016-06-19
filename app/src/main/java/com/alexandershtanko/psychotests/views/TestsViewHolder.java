@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
@@ -13,7 +14,9 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 
 import butterknife.BindView;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -29,6 +32,7 @@ public class TestsViewHolder extends AbstractViewHolder {
         adapter = new TestsAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
+
     }
 
     public static class ViewBinder extends AbstractViewBinder<TestsViewHolder, TestsViewModel> {
@@ -36,18 +40,24 @@ public class TestsViewHolder extends AbstractViewHolder {
         public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
             viewHolder.adapter.setList(viewModel.getSortedList());
+
             viewModel.getSortedCallback().setAdapter(viewHolder.adapter);
         }
 
         @Override
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getErrorObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError, ErrorUtils.onError()));
-
+            s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> {
+                viewHolder.adapter.setOnItemClickListener(subscriber::onNext);
+            })
+                    .observeOn(Schedulers.io())
+                    .doOnNext(viewModel::selectTest)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(testId->ActivityFragments.getInstance().openTestInfo()));
         }
 
-        public void showError(Throwable throwable)
-        {
-            Toast.makeText(viewHolder.getContext(),throwable.getMessage(),Toast.LENGTH_LONG).show();
+        public void showError(Throwable throwable) {
+            Toast.makeText(viewHolder.getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
 
 

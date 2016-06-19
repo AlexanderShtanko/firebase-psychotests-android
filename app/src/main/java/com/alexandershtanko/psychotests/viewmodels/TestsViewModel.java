@@ -3,6 +3,7 @@ package com.alexandershtanko.psychotests.viewmodels;
 import android.support.v4.util.Pair;
 import android.support.v7.util.SortedList;
 
+import com.alexandershtanko.psychotests.models.SessionManager;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
@@ -13,6 +14,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,6 +36,7 @@ public class TestsViewModel extends AbstractViewModel {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference testsRef = database.getReference("tests");
     private SortedList<TestInfo> sortedList;
+    private Map<String,Test> testMap = new HashMap<>();
     private ChildEventListener childEventListener;
     private BehaviorSubject<Pair<ChildAction, DataSnapshot>> dataSubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
@@ -54,17 +59,17 @@ public class TestsViewModel extends AbstractViewModel {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_ADDED, dataSnapshot));
+                    subscriber.onNext(new Pair<>(ChildAction.ACTION_CHANGED, dataSnapshot));
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_ADDED, dataSnapshot));
+                    subscriber.onNext(new Pair<>(ChildAction.ACTION_REMOVED, dataSnapshot));
                 }
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_ADDED, dataSnapshot));
+                    subscriber.onNext(new Pair<>(ChildAction.ACTION_MOVED, dataSnapshot));
                 }
 
                 @Override
@@ -94,17 +99,28 @@ public class TestsViewModel extends AbstractViewModel {
             Test test = snapshot.getValue(Test.class);
             TestInfo testInfo = test.getInfo();
             testInfo.setTestId(snapshot.getKey());
+            testInfo.setSortOrder(0);
 
             switch (action) {
                 case ACTION_ADDED:
                     sortedList.add(testInfo);
+                    testMap.put(snapshot.getKey(),test);
                     break;
                 case ACTION_CHANGED:
+                    sortedList.add(testInfo);
+                    testMap.put(snapshot.getKey(),test);
+
+
                     break;
                 case ACTION_MOVED:
+                    sortedList.add(testInfo);
+                    testMap.put(snapshot.getKey(),test);
+
                     break;
                 case ACTION_REMOVED:
                     sortedList.remove(testInfo);
+                    testMap.remove(snapshot.getKey());
+
                     break;
             }
         }
@@ -138,6 +154,10 @@ public class TestsViewModel extends AbstractViewModel {
 
     public SortedList<TestInfo> getSortedList() {
         return sortedList;
+    }
+
+    public void selectTest(String testId) {
+        SessionManager.getInstance().setTest(testMap.get(testId));
     }
 
     private enum ChildAction {ACTION_ADDED, ACTION_CHANGED, ACTION_REMOVED, ACTION_MOVED}

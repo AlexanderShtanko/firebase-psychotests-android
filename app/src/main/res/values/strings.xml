@@ -1,10 +1,13 @@
 <resources>
-    <string name="app_name">psychotests</string>
+    <string name="app_name">Психологические тесты</string>
     <string name="result">Результат</string>
     <string name="all_tests">Все тесты</string>
     <string name="categories">Категории</string>
     <string name="tests_done">Пройденные тесты</string>
     <string name="settings">Настройки</string>
+    <string name="navigation_drawer_open">Открыто</string>
+    <string name="navigation_drawer_close">Закрыто</string>
+    <string name="number" >$1%d вопрос из $2%d</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>

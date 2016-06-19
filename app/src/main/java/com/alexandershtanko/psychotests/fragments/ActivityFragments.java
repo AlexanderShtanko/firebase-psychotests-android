@@ -36,7 +36,19 @@ public class ActivityFragments {
         replaceFragment(TestsFragment.getInstance());
     }
 
+    public void openTestInfo() {
+        replaceFragment(TestInfoFragment.getInstance());
+    }
     public void openSettings() {
+        replaceFragment(TestsFragment.getInstance());
+    }
+
+    public void openTest() {
+        replaceFragment(TestFragment.getInstance());
+    }
+
+    public void openTestResult() {
+        replaceFragment(TestResultFragment.getInstance());
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -48,6 +60,7 @@ public class ActivityFragments {
     public void destroy() {
         fragmentManager = null;
     }
+
 
 
 }

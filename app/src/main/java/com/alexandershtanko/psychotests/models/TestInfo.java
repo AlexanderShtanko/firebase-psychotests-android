@@ -9,6 +9,7 @@ public class TestInfo {
     private String image;
     private String category;
     private String testId;
+    private long sortOrder = 0;
 
     public String getName() {
         return name;
@@ -48,5 +49,13 @@ public class TestInfo {
 
     public void setTestId(String testId) {
         this.testId = testId;
+    }
+
+    public long getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(long sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

@@ -23,4 +23,8 @@ public abstract class AbstractViewModel {
     public abstract void restoreInstanceState();
 
     protected abstract void onSubscribe(CompositeSubscription s);
+
+    public Boolean notNull(Object object) {
+        return object!=null;
+    }
 }
