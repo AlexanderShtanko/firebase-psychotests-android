@@ -15,7 +15,7 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 public class TestResultFragment extends AbstractFragment<TestResultViewHolder, TestResultViewModel> {
 
     public static Fragment getInstance() {
-        TestsFragment fragment = new TestsFragment();
+        TestResultFragment fragment = new TestResultFragment();
         return fragment;
     }
 
