@@ -54,6 +54,7 @@ public class ActivityFragments {
     private void replaceFragment(Fragment fragment) {
         fragmentManager.beginTransaction()
                 .replace(containerId, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 

@@ -1,12 +1,14 @@
 package com.alexandershtanko.psychotests.models;
 
+import java.util.List;
+
 /**
  * Created by aleksandr on 19.06.16.
  */
 public class SessionManager {
     private static SessionManager instance;
     private Test selectedTest;
-    private Integer result;
+    private List<Integer> result;
 
     private SessionManager() {
     }
@@ -27,12 +29,12 @@ public class SessionManager {
         return selectedTest;
     }
 
-    public void setResult(Integer result) {
+    public void setResult(List<Integer> result) {
         this.result = result;
     }
 
 
-    public Integer getResult() {
+    public List<Integer> getResult() {
         return result;
     }
 }

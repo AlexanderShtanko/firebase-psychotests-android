@@ -16,7 +16,6 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -40,17 +39,13 @@ public class TestsViewHolder extends AbstractViewHolder {
         public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
             viewHolder.adapter.setList(viewModel.getSortedList());
-
             viewModel.getSortedCallback().setAdapter(viewHolder.adapter);
         }
 
         @Override
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getErrorObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError, ErrorUtils.onError()));
-            s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> {
-                viewHolder.adapter.setOnItemClickListener(subscriber::onNext);
-            })
-                    .observeOn(Schedulers.io())
+            s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .doOnNext(viewModel::selectTest)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(testId->ActivityFragments.getInstance().openTestInfo()));

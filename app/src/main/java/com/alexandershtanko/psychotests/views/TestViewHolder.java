@@ -2,6 +2,7 @@ package com.alexandershtanko.psychotests.views;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -9,6 +10,7 @@ import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.AnswerVariant;
 import com.alexandershtanko.psychotests.models.TestQuestion;
+import com.alexandershtanko.psychotests.utils.DisplayUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -34,7 +36,7 @@ public class TestViewHolder extends AbstractViewHolder {
 
     public void populateNumber(Integer index, Integer count)
     {
-        number.setText(getContext().getString(R.string.number,index,count));
+        number.setText(getContext().getString(R.string.number,index+1 ,count));
     }
 
     public static class ViewBinder extends AbstractViewBinder<TestViewHolder, TestViewModel> {
@@ -48,12 +50,6 @@ public class TestViewHolder extends AbstractViewHolder {
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getCurrentQuestionObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateQuestion));
             s.add(viewModel.getCurrentQuestionIndexObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(index->viewHolder.populateNumber(index,viewModel.getQuestionsCount())));
-            s.add(viewModel.getCurrentQuestionIndexObservable()
-                    .filter(index->index.equals(viewModel.getQuestionsCount()))
-                    .switchMap(i->viewModel.getResultObservable())
-                    .doOnNext(viewModel::saveResult)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(r->ActivityFragments.getInstance().openTestResult()));
         }
 
 
@@ -62,10 +58,25 @@ public class TestViewHolder extends AbstractViewHolder {
             viewHolder.variants.removeAllViews();
 
             for (AnswerVariant variant : question.getVariants()) {
-                TextView variantText = (TextView) LayoutInflater.from(viewHolder.getContext()).inflate(R.layout.item_variant, viewHolder.variants);
+                TextView variantText = (TextView) LayoutInflater.from(viewHolder.getContext()).inflate(R.layout.item_variant, null);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0,0,0, DisplayUtils.getSizeInPx(viewHolder.getContext(),10));
+                variantText.setLayoutParams(params);
+
                 variantText.setClickable(true);
                 variantText.setText(variant.getText());
-                variantText.setOnClickListener(v -> viewModel.selectVariant(variant.getValue()));
+                variantText.setOnClickListener(v -> selectVariant(variant));
+                viewHolder.variants.addView(variantText);
+            }
+        }
+
+        private void selectVariant(AnswerVariant variant) {
+            viewModel.selectVariant(variant.getValue());
+            if(viewModel.getCurrentQuestionIndex()==viewModel.getQuestionsCount()-1)
+            {
+
+                viewModel.saveResult();
+                ActivityFragments.getInstance().openTestResult();
             }
         }
     }

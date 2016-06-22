@@ -26,12 +26,12 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, parent, false), onItemCLickListener);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.populate(position, list.get(position));
+        holder.populate(position, list.get(position), onItemCLickListener);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -53,7 +53,6 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final OnItemClickListener onItemClickListener;
         @BindView(R.id.name)
         TextView name;
         @BindView(R.id.category)
@@ -61,15 +60,15 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
         @BindView(R.id.image)
         ImageView image;
 
-        public ViewHolder(View itemView, OnItemClickListener onItemClickListener) {
+        public ViewHolder(View itemView) {
             super(itemView);
-            this.onItemClickListener = onItemClickListener;
             ButterKnife.bind(this, itemView);
         }
 
-        public void populate(int position, TestInfo testInfo) {
+        public void populate(int position, TestInfo testInfo, OnItemClickListener onItemClickListener) {
             itemView.setOnClickListener(v -> {
-                onItemClickListener.onItemClick(testInfo.getTestId());
+                if (onItemClickListener != null)
+                    onItemClickListener.onItemClick(testInfo.getTestId());
             });
             name.setText(testInfo.getName());
             category.setText(testInfo.getCategory());

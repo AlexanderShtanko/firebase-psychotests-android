@@ -5,6 +5,8 @@ import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.models.TestResult;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 
+import java.util.List;
+
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -15,7 +17,7 @@ import rx.subscriptions.CompositeSubscription;
 public class TestResultViewModel extends AbstractViewModel {
 
     private BehaviorSubject<Test> testSubject = BehaviorSubject.create();
-    private BehaviorSubject<Integer> resultValueSubject = BehaviorSubject.create();
+    private BehaviorSubject<List<Integer>> resultValueSubject = BehaviorSubject.create();
     private BehaviorSubject<TestResult> testResultSubject = BehaviorSubject.create();
 
     @Override
@@ -26,7 +28,14 @@ public class TestResultViewModel extends AbstractViewModel {
                 .subscribe(testResultSubject::onNext));
     }
 
-    private TestResult getResult(Test test, Integer value) {
+    private TestResult getResult(Test test, List<Integer> resultList) {
+
+        int value = 0;
+
+        for (int i = 0; i < resultList.size(); i++) {
+            value += resultList.get(i);
+        }
+
         for (TestResult testResult : test.getResults()) {
             if (testResult.getFrom() >= value && testResult.getTo() <= value)
                 return testResult;
@@ -34,8 +43,7 @@ public class TestResultViewModel extends AbstractViewModel {
         throw new IllegalStateException("Unable to find result for selected value");
     }
 
-    public Observable<TestResult> getTestResultObservable()
-    {
+    public Observable<TestResult> getTestResultObservable() {
         return testResultSubject.asObservable();
     }
 
@@ -53,7 +61,7 @@ public class TestResultViewModel extends AbstractViewModel {
         testSubject.onNext(test);
     }
 
-    public void setResultValue(Integer result) {
+    public void setResultValue(List<Integer> result) {
         resultValueSubject.onNext(result);
     }
 

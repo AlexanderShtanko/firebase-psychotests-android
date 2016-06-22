@@ -5,6 +5,9 @@ import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -16,8 +19,7 @@ public class TestViewModel extends AbstractViewModel {
 
     private BehaviorSubject<Test> testSubject = BehaviorSubject.create();
     private BehaviorSubject<Integer> currentQuestionIndexSubject = BehaviorSubject.create(0);
-    private BehaviorSubject<Integer> resultSubject = BehaviorSubject.create(0);
-
+    private List<Integer> resultList = new ArrayList<>();
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
@@ -36,6 +38,7 @@ public class TestViewModel extends AbstractViewModel {
 
     public void setTest(Test test) {
         testSubject.onNext(test);
+        resultList.clear();
     }
 
     public Observable<Test> getTestObservable() {
@@ -43,12 +46,23 @@ public class TestViewModel extends AbstractViewModel {
     }
 
     public void selectVariant(Integer value) {
-        resultSubject.onNext(resultSubject.getValue() + value);
+        int currentQuestionIndex = getCurrentQuestionIndex();
+
+        if(resultList.size()<= currentQuestionIndex)
+        resultList.add(value);
+        else resultList.set(currentQuestionIndex,value);
+
         currentQuestionIndexSubject.onNext(currentQuestionIndexSubject.getValue() + 1);
     }
 
+    public void back() {
+        int currentQuestionIndex = getCurrentQuestionIndex();
+        if (currentQuestionIndex > 0)
+            currentQuestionIndexSubject.onNext(currentQuestionIndex - 1);
+    }
+
     public Observable<TestQuestion> getCurrentQuestionObservable() {
-        return currentQuestionIndexSubject.asObservable().filter(index->index<getQuestionsCount()).switchMap(index -> getTestObservable().map(test -> test.getQuestions().get(index)));
+        return currentQuestionIndexSubject.asObservable().filter(index -> index < getQuestionsCount()).switchMap(index -> getTestObservable().map(test -> test.getQuestions().get(index)));
     }
 
     public Integer getQuestionsCount() {
@@ -62,11 +76,12 @@ public class TestViewModel extends AbstractViewModel {
     }
 
 
-    public void saveResult(Integer result) {
-        SessionManager.getInstance().setResult(result);
+    public void saveResult() {
+        SessionManager.getInstance().setResult(resultList);
     }
 
-    public Observable<Integer> getResultObservable() {
-        return resultSubject.asObservable();
+
+    public int getCurrentQuestionIndex() {
+        return currentQuestionIndexSubject.getValue();
     }
 }
