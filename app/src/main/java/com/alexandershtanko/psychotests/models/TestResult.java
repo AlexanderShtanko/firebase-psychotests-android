@@ -12,11 +12,11 @@ public class TestResult {
         this.text = text;
     }
 
-    public Image getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(String image) {
         this.image = image;
     }
 
@@ -37,7 +37,7 @@ public class TestResult {
     }
 
     private String text;
-    private Image image;
+    private String image;
     private Integer from;
     private Integer to;
 }

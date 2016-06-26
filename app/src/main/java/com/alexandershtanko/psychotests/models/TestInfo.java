@@ -6,7 +6,7 @@ package com.alexandershtanko.psychotests.models;
 public class TestInfo {
     private String name;
     private String desc;
-    private Image image;
+    private String image;
     private String category;
     private String testId;
     private long sortOrder = 0;
@@ -27,11 +27,11 @@ public class TestInfo {
         this.desc = desc;
     }
 
-    public Image getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

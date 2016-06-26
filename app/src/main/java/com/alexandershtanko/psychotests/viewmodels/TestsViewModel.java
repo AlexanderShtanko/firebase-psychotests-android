@@ -2,6 +2,7 @@ package com.alexandershtanko.psychotests.viewmodels;
 
 import android.support.v4.util.Pair;
 import android.support.v7.util.SortedList;
+import android.util.Log;
 
 import com.alexandershtanko.psychotests.models.SessionManager;
 import com.alexandershtanko.psychotests.models.Test;
@@ -132,7 +133,8 @@ public class TestsViewModel extends AbstractViewModel {
 
                     break;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.e("","",e);
         }
     }
 

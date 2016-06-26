@@ -7,6 +7,7 @@ public class Image {
     private Integer filesize;
     private String filetype;
     private String filename;
+    private String base64;
 
     public String getBase64() {
         return base64;
@@ -39,6 +40,4 @@ public class Image {
     public void setFilesize(Integer filesize) {
         this.filesize = filesize;
     }
-
-    private String base64;
 }
