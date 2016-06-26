@@ -6,6 +6,10 @@ import java.util.List;
  * Created by aleksandr on 13.06.16.
  */
 public class TestQuestion {
+    private String text;
+    private Image image;
+    private List<AnswerVariant> variants;
+
     public String getText() {
         return text;
     }
@@ -22,6 +26,11 @@ public class TestQuestion {
         this.variants = variants;
     }
 
-    private String text;
-    private List<AnswerVariant> variants;
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }

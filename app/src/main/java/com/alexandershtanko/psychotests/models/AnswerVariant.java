@@ -6,6 +6,15 @@ package com.alexandershtanko.psychotests.models;
 public class AnswerVariant {
     private String text;
     private Integer value;
+    private Image image;
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 
     public String getText() {
         return text;

@@ -73,8 +73,8 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
             });
             name.setText(testInfo.getName());
             category.setText(testInfo.getCategory());
-            if (testInfo.getImage() != null && testInfo.getImage().length() > 0)
-                Picasso.with(itemView.getContext()).load(testInfo.getImage()).transform(new CircleTransformation()).into(image);
+            if (testInfo.getImage() != null)
+                Picasso.with(itemView.getContext()).load("data:"+testInfo.getImage().getFiletype()+":base64,"+testInfo.getImage().getBase64()).transform(new CircleTransformation()).into(image);
             else
                 Picasso.with(itemView.getContext()).load(R.drawable.ic_dashboard_white_24dp).transform(new CircleTransformation()).into(image);
 
