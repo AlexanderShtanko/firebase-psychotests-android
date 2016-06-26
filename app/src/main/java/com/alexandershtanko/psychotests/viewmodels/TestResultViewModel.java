@@ -34,13 +34,33 @@ public class TestResultViewModel extends AbstractViewModel {
 
         for (int i = 0; i < resultList.size(); i++) {
             value += resultList.get(i);
+
         }
+        int i=0;
+
+        TestResult min = null;
+        TestResult max = null;
 
         for (TestResult testResult : test.getResults()) {
-            if (testResult.getFrom() >= value && testResult.getTo() <= value)
+            if (value>=testResult.getFrom() && value<=testResult.getTo())
                 return testResult;
+
+            if(min==null||min.getFrom()>testResult.getFrom())
+                min = testResult;
+
+            if(max==null||max.getTo()<testResult.getTo())
+                max = testResult;
+
+            i++;
         }
-        throw new IllegalStateException("Unable to find result for selected value");
+
+        if(min!=null && min.getFrom()>value)
+            return min;
+
+        if(max!=null && max.getTo()<value)
+            return max;
+
+        return null;
     }
 
     public Observable<TestResult> getTestResultObservable() {

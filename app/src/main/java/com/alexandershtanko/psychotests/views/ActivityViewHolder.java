@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
@@ -23,6 +24,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by aleksandr on 12.06.16.
  */
 public class ActivityViewHolder extends AbstractViewHolder implements NavigationView.OnNavigationItemSelectedListener {
+    private final AppCompatActivity activity;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.nav_view)
@@ -33,10 +35,12 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     private ActivityFragments fragments = ActivityFragments.getInstance();
     private ActionBarDrawerToggle toggle;
     private DrawerLayout.DrawerListener listener;
+    private boolean flgBackTwice;
 
 
     public ActivityViewHolder(AppCompatActivity activity, int layoutRes) {
         super(activity, layoutRes);
+        this.activity = activity;
         fragments.init(activity.getSupportFragmentManager(), R.id.content_frame);
         initDrawer(activity);
     }
@@ -57,9 +61,9 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     public boolean onNavigationItemSelected(MenuItem item) {
 
         drawerLayout.closeDrawer(GravityCompat.START);
+
         onDrawerClose(() -> {
-            switch (item.getItemId())
-            {
+            switch (item.getItemId()) {
                 case R.id.nav_tests:
                     toolbar.setTitle(R.string.app_name);
                     fragments.openTests();
@@ -72,10 +76,6 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
                     toolbar.setTitle(R.string.tests_done);
                     fragments.openTestsDone();
                     break;
-                case R.id.nav_settings:
-                    toolbar.setTitle(R.string.settings);
-                    fragments.openSettings();
-                    break;
             }
         });
 
@@ -83,8 +83,7 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     }
 
     private void onDrawerClose(Runnable runnable) {
-        if(listener!=null)
-            drawerLayout.removeDrawerListener(listener);
+
 
         listener = new DrawerLayout.DrawerListener() {
             @Override
@@ -100,6 +99,8 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
             @Override
             public void onDrawerClosed(View drawerView) {
                 runnable.run();
+                if (listener != null)
+                    drawerLayout.removeDrawerListener(listener);
             }
 
             @Override
@@ -108,6 +109,29 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
             }
         };
         drawerLayout.addDrawerListener(listener);
+    }
+
+    public boolean onBackPressed() {
+        Boolean res = true;
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            res = false;
+        } else {
+
+
+            if (activity.getSupportFragmentManager().getBackStackEntryCount() > 1) {
+                activity.getSupportFragmentManager().popBackStackImmediate();
+                flgBackTwice = false;
+            } else if (flgBackTwice)
+                res = false;
+            else {
+                flgBackTwice = true;
+                Toast.makeText(activity, R.string.text_exit_on_back_button, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        return res;
+
     }
 
 

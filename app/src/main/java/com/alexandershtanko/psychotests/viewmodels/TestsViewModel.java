@@ -32,14 +32,19 @@ public class TestsViewModel extends AbstractViewModel {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
-    private final SortedCallback callback;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference testsRef = database.getReference("tests");
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference testsRef = database.getReference("tests");
+
+    private SortedCallback callback;
     private SortedList<TestInfo> sortedList;
-    private Map<String,Test> testMap = new HashMap<>();
     private ChildEventListener childEventListener;
+
+    private Map<String, Test> testMap = new HashMap<>();
+
     private BehaviorSubject<Pair<ChildAction, DataSnapshot>> dataSubject = BehaviorSubject.create();
+    private BehaviorSubject<String> categorySubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
+
 
     public TestsViewModel() {
         callback = new SortedCallback();
@@ -49,72 +54,76 @@ public class TestsViewModel extends AbstractViewModel {
     @Override
     protected void onSubscribe(CompositeSubscription s) {
 
-        s.add(Observable.create((Observable.OnSubscribe<Pair<ChildAction, DataSnapshot>>) subscriber ->
-        {
-            childEventListener = new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_ADDED, dataSnapshot));
-                }
+        s.add(categorySubject.asObservable().subscribeOn(Schedulers.io())
+                .flatMap(category -> Observable.create((Observable.OnSubscribe<Pair<ChildAction, DataSnapshot>>) subscriber ->
+                {
+                    childEventListener = new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            subscriber.onNext(new Pair<>(ChildAction.ACTION_ADDED, dataSnapshot));
+                        }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_CHANGED, dataSnapshot));
-                }
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            subscriber.onNext(new Pair<>(ChildAction.ACTION_CHANGED, dataSnapshot));
+                        }
 
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_REMOVED, dataSnapshot));
-                }
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            subscriber.onNext(new Pair<>(ChildAction.ACTION_REMOVED, dataSnapshot));
+                        }
 
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                    subscriber.onNext(new Pair<>(ChildAction.ACTION_MOVED, dataSnapshot));
-                }
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                            subscriber.onNext(new Pair<>(ChildAction.ACTION_MOVED, dataSnapshot));
+                        }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    subscriber.onError(databaseError.toException());
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
 
-                }
-            };
+                        }
+                    };
 
-            testsRef.addChildEventListener(childEventListener);
-        })
+                    testsRef.addChildEventListener(childEventListener);
+                }))
                 .doOnUnsubscribe(() -> testsRef.removeEventListener(childEventListener))
-                .subscribe(pair -> dataSubject.onNext(pair),this::onError));
+                .subscribe(pair -> dataSubject.onNext(pair), this::onError));
 
 
         s.add(getChildActionObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(pair -> observeData(pair.first, pair.second), ErrorUtils.onError()));
     }
 
 
-    public void onError(Throwable throwable)
-    {
+    public void onError(Throwable throwable) {
         errorSubject.onNext(throwable);
     }
 
     public void observeData(ChildAction action, DataSnapshot snapshot) {
         try {
+            String category = categorySubject.getValue();
             Test test = snapshot.getValue(Test.class);
             TestInfo testInfo = test.getInfo();
             testInfo.setTestId(snapshot.getKey());
             testInfo.setSortOrder(0);
 
+            if (category != null && !category.equals(testInfo.getCategory()))
+                return;
+
             switch (action) {
                 case ACTION_ADDED:
                     sortedList.add(testInfo);
-                    testMap.put(snapshot.getKey(),test);
+                    testMap.put(snapshot.getKey(), test);
                     break;
                 case ACTION_CHANGED:
                     sortedList.add(testInfo);
-                    testMap.put(snapshot.getKey(),test);
+                    testMap.put(snapshot.getKey(), test);
 
 
                     break;
                 case ACTION_MOVED:
                     sortedList.add(testInfo);
-                    testMap.put(snapshot.getKey(),test);
+                    testMap.put(snapshot.getKey(), test);
 
                     break;
                 case ACTION_REMOVED:
@@ -123,9 +132,8 @@ public class TestsViewModel extends AbstractViewModel {
 
                     break;
             }
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored)
-        {}
     }
 
 
@@ -133,8 +141,7 @@ public class TestsViewModel extends AbstractViewModel {
         return dataSubject.asObservable();
     }
 
-    public Observable<Throwable> getErrorObservable()
-    {
+    public Observable<Throwable> getErrorObservable() {
         return errorSubject.asObservable();
     }
 
@@ -158,6 +165,11 @@ public class TestsViewModel extends AbstractViewModel {
 
     public void selectTest(String testId) {
         SessionManager.getInstance().setTest(testMap.get(testId));
+    }
+
+    public void setCategory(String category) {
+        sortedList.clear();
+        categorySubject.onNext(category);
     }
 
     private enum ChildAction {ACTION_ADDED, ACTION_CHANGED, ACTION_REMOVED, ACTION_MOVED}

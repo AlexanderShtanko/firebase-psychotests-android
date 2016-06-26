@@ -66,6 +66,7 @@ public class CategoriesViewModel extends AbstractViewModel {
             testsRef.addChildEventListener(childEventListener);
         })
                 .doOnUnsubscribe(() -> testsRef.removeEventListener(childEventListener))
+                .subscribeOn(Schedulers.io())
                 .subscribe(dataSnapshot -> dataSubject.onNext(dataSnapshot),this::onError));
 
 

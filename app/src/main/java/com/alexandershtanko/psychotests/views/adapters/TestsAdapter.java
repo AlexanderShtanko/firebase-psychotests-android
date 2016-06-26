@@ -36,6 +36,7 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemCLickListener = onItemClickListener;
+        notifyDataSetChanged();
     }
 
     @Override

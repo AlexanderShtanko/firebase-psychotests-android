@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
  */
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
     List<String> list = new ArrayList<>();
+    private OnItemClickListener onItemClickListener;
 
     public void add(String category)
     {
@@ -43,12 +44,21 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.populate(position, list.get(position));
+        holder.populate(position, list.get(position), onItemClickListener);
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+        notifyDataSetChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(String category);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -60,7 +70,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             ButterKnife.bind(this,itemView);
         }
 
-        public void populate(int position, String category) {
+        public void populate(int position, String category, OnItemClickListener onItemClickListener) {
+            itemView.setOnClickListener(v->{if(onItemClickListener!=null) onItemClickListener.onItemClick(category);});
             name.setText(category);
         }
     }

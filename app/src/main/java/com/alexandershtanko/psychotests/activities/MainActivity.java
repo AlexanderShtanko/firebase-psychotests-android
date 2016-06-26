@@ -6,11 +6,14 @@ import com.alexandershtanko.psychotests.views.ActivityViewHolder;
 import com.alexandershtanko.psychotests.vvm.AbstractActivity;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 
-public class MainActivity extends AbstractActivity<ActivityViewHolder,ActivityViewModel> {
+public class MainActivity extends AbstractActivity<ActivityViewHolder, ActivityViewModel> {
+
+    private ActivityViewHolder activityViewHolder;
 
     @Override
     public ActivityViewHolder createViewHolder() {
-        return new ActivityViewHolder(this, R.layout.activity_main);
+        activityViewHolder = new ActivityViewHolder(this, R.layout.activity_main);
+        return activityViewHolder;
     }
 
     @Override
@@ -20,6 +23,12 @@ public class MainActivity extends AbstractActivity<ActivityViewHolder,ActivityVi
 
     @Override
     public AbstractViewBinder<ActivityViewHolder, ActivityViewModel> createViewBinder(ActivityViewHolder viewHolder, ActivityViewModel viewModel) {
-        return new ActivityViewHolder.ViewBinder(viewHolder,viewModel);
+        return new ActivityViewHolder.ViewBinder(viewHolder, viewModel);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!activityViewHolder.onBackPressed())
+            finish();
     }
 }

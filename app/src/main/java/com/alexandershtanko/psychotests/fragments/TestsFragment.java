@@ -3,6 +3,7 @@ package com.alexandershtanko.psychotests.fragments;
 import android.support.v4.app.Fragment;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.models.SessionManager;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.views.TestsViewHolder;
@@ -19,8 +20,11 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder,TestsViewMod
     }
 
     @Override
-    public TestsViewModel createViewModel() {
-        return new TestsViewModel();
+    public TestsViewModel createViewModel()
+    {
+        TestsViewModel testsViewModel = new TestsViewModel();
+        testsViewModel.setCategory(SessionManager.getInstance().getSelectedCategory());
+        return testsViewModel;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.viewmodels.CategoriesViewModel;
 import com.alexandershtanko.psychotests.views.adapters.CategoriesAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -14,6 +15,7 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import java.util.Set;
 
 import butterknife.BindView;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -54,6 +56,13 @@ public class CategoriesViewHolder extends AbstractViewHolder {
             s.add(viewModel.getCategoriesObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populate));
             s.add(viewModel.getCategoryObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::add));
             s.add(viewModel.getErrorObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError));
+            s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(this::selectCategory));
+
+        }
+
+        private void selectCategory(String category) {
+            ActivityFragments.getInstance().openTests(category);
         }
 
         public void showError(Throwable throwable)

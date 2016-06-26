@@ -8,6 +8,7 @@ import java.util.List;
 public class SessionManager {
     private static SessionManager instance;
     private Test selectedTest;
+    private String selectedCategory = null;
     private List<Integer> result;
 
     private SessionManager() {
@@ -19,22 +20,27 @@ public class SessionManager {
         return instance;
     }
 
-    public void setTest(Test test)
-    {
+    public Test getTest() {
+        return selectedTest;
+    }
+
+    public void setTest(Test test) {
         this.selectedTest = test;
     }
 
-    public Test getTest()
-    {
-        return selectedTest;
+    public List<Integer> getResult() {
+        return result;
     }
 
     public void setResult(List<Integer> result) {
         this.result = result;
     }
 
+    public String getSelectedCategory() {
+        return selectedCategory;
+    }
 
-    public List<Integer> getResult() {
-        return result;
+    public void setSelectedCategory(String selectedCategory) {
+        this.selectedCategory = selectedCategory;
     }
 }

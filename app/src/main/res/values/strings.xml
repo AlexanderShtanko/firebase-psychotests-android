@@ -8,6 +8,7 @@
     <string name="navigation_drawer_open">Открыто</string>
     <string name="navigation_drawer_close">Закрыто</string>
     <string name="number" >%1$d вопрос из %2$d</string>
+    <string name="text_exit_on_back_button">Нажмите \"Назад\" еще раз для выхода</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>
