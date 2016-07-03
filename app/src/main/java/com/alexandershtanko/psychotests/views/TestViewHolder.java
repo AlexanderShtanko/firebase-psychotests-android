@@ -2,6 +2,7 @@ package com.alexandershtanko.psychotests.views;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -10,7 +11,9 @@ import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.AnswerVariant;
 import com.alexandershtanko.psychotests.models.TestQuestion;
+import com.alexandershtanko.psychotests.utils.Animate;
 import com.alexandershtanko.psychotests.utils.DisplayUtils;
+import com.alexandershtanko.psychotests.utils.Storage;
 import com.alexandershtanko.psychotests.viewmodels.TestViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -40,10 +43,11 @@ public class TestViewHolder extends AbstractViewHolder {
     }
 
     public static class ViewBinder extends AbstractViewBinder<TestViewHolder, TestViewModel> {
-
+        Storage storage;
 
         public ViewBinder(TestViewHolder viewHolder, TestViewModel viewModel) {
             super(viewHolder, viewModel);
+            storage = new Storage(viewHolder.getContext());
         }
 
         @Override
@@ -54,6 +58,10 @@ public class TestViewHolder extends AbstractViewHolder {
 
 
         public void populateQuestion(TestQuestion question) {
+
+            viewHolder.question.setVisibility(View.GONE);
+            viewHolder.variants.setVisibility(View.GONE);
+
             viewHolder.question.setText(question.getText());
             viewHolder.variants.removeAllViews();
 
@@ -68,15 +76,18 @@ public class TestViewHolder extends AbstractViewHolder {
                 variantText.setOnClickListener(v -> selectVariant(variant));
                 viewHolder.variants.addView(variantText);
             }
+
+
+            Animate.show(viewHolder.question,R.anim.expand_from_top);
+            Animate.show(viewHolder.variants,R.anim.expand_from_bottom);
         }
 
         private void selectVariant(AnswerVariant variant) {
             viewModel.selectVariant(variant.getValue());
-            if(viewModel.getCurrentQuestionIndex()==viewModel.getQuestionsCount()-1)
+            if(viewModel.getCurrentQuestionIndex()==viewModel.getQuestionsCount())
             {
-
-                viewModel.saveResult();
-                ActivityFragments.getInstance().openTestResult();
+                storage.saveResult(viewModel.getTestId(),viewModel.getResult());
+                ActivityFragments.getInstance().openTestResult(viewModel.getResult());
             }
         }
     }

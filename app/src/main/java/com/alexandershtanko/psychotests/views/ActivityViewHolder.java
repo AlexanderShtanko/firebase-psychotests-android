@@ -74,7 +74,7 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
                     break;
                 case R.id.nav_done:
                     toolbar.setTitle(R.string.tests_done);
-                    fragments.openTestsDone();
+                    fragments.openPassedTests();
                     break;
             }
         });

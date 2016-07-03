@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
+import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
@@ -46,9 +47,14 @@ public class TestsViewHolder extends AbstractViewHolder {
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getErrorObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError, ErrorUtils.onError()));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
-                    .doOnNext(viewModel::selectTest)
+                    .map(viewModel::getTest)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(testId->ActivityFragments.getInstance().openTestInfo()));
+                    .subscribe(this::selectTest));
+        }
+
+        private void selectTest(Test test) {
+            ActivityFragments.getInstance().openTestInfo(test);
+
         }
 
         public void showError(Throwable throwable) {

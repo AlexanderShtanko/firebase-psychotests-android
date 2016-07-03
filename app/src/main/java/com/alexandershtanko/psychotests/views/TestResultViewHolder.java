@@ -2,12 +2,15 @@ package com.alexandershtanko.psychotests.views;
 
 import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.models.TestResult;
+import com.alexandershtanko.psychotests.utils.Animate;
 import com.alexandershtanko.psychotests.viewmodels.TestResultViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -27,20 +30,30 @@ public class TestResultViewHolder extends AbstractViewHolder {
     TextView name;
     @BindView(R.id.button_done)
     FloatingActionButton doneFab;
+    @BindView(R.id.repeat)
+    Button repeatButton;
 
     public TestResultViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
     }
 
     public void populateResult(TestResult result) {
+        text.setVisibility(View.GONE);
         if (result != null)
             text.setText(result.getText());
         else
             text.setText("Результат не найден");
+
+        Animate.show(text, R.anim.expand_from_bottom);
+
+
     }
 
     public void populateTestInfo(TestInfo testInfo) {
+        name.setVisibility(View.GONE);
         name.setText(testInfo.getName());
+        Animate.show(name, R.anim.expand_from_top);
+
 
     }
 
@@ -56,6 +69,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
             s.add(viewModel.getTestResultObservable().subscribeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateResult));
             s.add(viewModel.getTestInfoObservable().subscribeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateTestInfo));
             s.add(RxView.clicks(viewHolder.doneFab).subscribe(v -> ActivityFragments.getInstance().openTests()));
+            s.add(RxView.clicks(viewHolder.repeatButton).subscribe(v -> ActivityFragments.getInstance().openTest()));
         }
     }
 }

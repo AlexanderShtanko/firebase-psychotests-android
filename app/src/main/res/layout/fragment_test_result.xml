@@ -23,11 +23,16 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp">
 
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_centerVertical="true"
                 android:background="@color/gray" />
+
+            <Button
+                android:layout_width="wrap_content" android:text="Пройти заново"
+                android:layout_height="wrap_content" android:id="@+id/repeat"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/button_done"

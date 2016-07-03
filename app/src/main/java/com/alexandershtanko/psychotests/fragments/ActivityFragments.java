@@ -4,7 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.models.SessionManager;
+import com.alexandershtanko.psychotests.models.Test;
+
+import java.util.List;
 
 /**
  * Created by aleksandr on 13.06.16.
@@ -34,36 +38,32 @@ public class ActivityFragments {
 
 
     public void openTests() {
-        SessionManager.getInstance().setSelectedCategory(null);
         replaceFragment(TestsFragment.getInstance(), TESTS_FRAGMENT_TAG, true);
     }
 
     public void openTests(String category) {
-        SessionManager.getInstance().setSelectedCategory(category);
-        replaceFragment(TestsFragment.getInstance(), TESTS_FRAGMENT_TAG, true);
+        replaceFragment(TestsFragment.getInstance(category), TESTS_FRAGMENT_TAG, true);
     }
 
     public void openCategories() {
         replaceFragment(CategoriesFragment.getInstance(), CATEGORIES_FRAGMENT_TAG, true);
     }
 
-    public void openTestsDone() {
-        replaceFragment(TestsFragment.getInstance(), TESTS_FRAGMENT_TAG, true);
+    public void openPassedTests() {
+        replaceFragment(TestsFragment.getInstanceForPassedTests(), TESTS_FRAGMENT_TAG, true);
     }
 
-    public void openTestInfo() {
+    public void openTestInfo(Test test) {
+        SessionManager.getInstance().setTest(test);
         replaceFragment(TestInfoFragment.getInstance(), TEST_INFO_FRAGMENT_TAG, true);
-    }
-
-    public void openSettings() {
-        replaceFragment(TestsFragment.getInstance(), TESTS_FRAGMENT_TAG, true);
     }
 
     public void openTest() {
         replaceFragment(TestFragment.getInstance(), TEST_FRAGMENT_TAG, true);
     }
 
-    public void openTestResult() {
+    public void openTestResult(List<Integer> result) {
+        SessionManager.getInstance().setResult(result);
         replaceFragment(TestResultFragment.getInstance(), TEST_RESULT_FRAGMENT_TAG, true);
     }
 
@@ -73,7 +73,7 @@ public class ActivityFragments {
         if (old != null)
             fragmentManager.beginTransaction().remove(old).commit();
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction().replace(containerId, fragment, tag);
+        FragmentTransaction transaction = fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(containerId, fragment, tag);
 
         if (toBackStack) {
             fragmentManager.popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -84,10 +84,5 @@ public class ActivityFragments {
 
 
     }
-
-    public void destroy() {
-        fragmentManager = null;
-    }
-
 
 }

@@ -4,10 +4,10 @@ import android.support.v4.util.Pair;
 import android.support.v7.util.SortedList;
 import android.util.Log;
 
-import com.alexandershtanko.psychotests.models.SessionManager;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
+import com.alexandershtanko.psychotests.utils.Storage;
 import com.alexandershtanko.psychotests.views.adapters.SortedCallback;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 import com.google.firebase.database.ChildEventListener;
@@ -33,6 +33,8 @@ public class TestsViewModel extends AbstractViewModel {
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
+    private final Storage storage;
+
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference testsRef = database.getReference("tests");
 
@@ -45,11 +47,16 @@ public class TestsViewModel extends AbstractViewModel {
     private BehaviorSubject<Pair<ChildAction, DataSnapshot>> dataSubject = BehaviorSubject.create();
     private BehaviorSubject<String> categorySubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
+    private boolean flgShowOnlyPassed = false;
 
 
-    public TestsViewModel() {
+    public TestsViewModel(Storage storage) {
+        this.storage = storage;
         callback = new SortedCallback();
         sortedList = new SortedList<>(TestInfo.class, callback);
+
+        setCategory(null);
+
     }
 
     @Override
@@ -108,6 +115,10 @@ public class TestsViewModel extends AbstractViewModel {
             testInfo.setTestId(snapshot.getKey());
             testInfo.setSortOrder(0);
 
+            if (flgShowOnlyPassed && !storage.hasResult(testInfo.getTestId())) {
+                return;
+            }
+
             if (category != null && !category.equals(testInfo.getCategory()))
                 return;
 
@@ -134,7 +145,7 @@ public class TestsViewModel extends AbstractViewModel {
                     break;
             }
         } catch (Exception e) {
-            Log.e("","",e);
+            Log.e("", "", e);
         }
     }
 
@@ -165,13 +176,21 @@ public class TestsViewModel extends AbstractViewModel {
         return sortedList;
     }
 
-    public void selectTest(String testId) {
-        SessionManager.getInstance().setTest(testMap.get(testId));
-    }
-
     public void setCategory(String category) {
         sortedList.clear();
         categorySubject.onNext(category);
+    }
+
+    public void showOnlyPassedTests() {
+        flgShowOnlyPassed = true;
+    }
+
+    public Test getTest(String testId) {
+        return testMap.get(testId);
+    }
+
+    public boolean hasResult(String testId) {
+        return storage.hasResult(testId);
     }
 
     private enum ChildAction {ACTION_ADDED, ACTION_CHANGED, ACTION_REMOVED, ACTION_MOVED}

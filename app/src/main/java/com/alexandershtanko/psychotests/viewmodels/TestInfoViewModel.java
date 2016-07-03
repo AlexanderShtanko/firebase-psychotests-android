@@ -36,4 +36,8 @@ public class TestInfoViewModel extends AbstractViewModel {
     public void restoreInstanceState() {
 
     }
+
+    public String getTestId() {
+        return testInfoSubject.getValue().getTestId();
+    }
 }

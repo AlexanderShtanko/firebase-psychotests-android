@@ -1,6 +1,5 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
-import com.alexandershtanko.psychotests.models.SessionManager;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
@@ -48,9 +47,9 @@ public class TestViewModel extends AbstractViewModel {
     public void selectVariant(Integer value) {
         int currentQuestionIndex = getCurrentQuestionIndex();
 
-        if(resultList.size()<= currentQuestionIndex)
-        resultList.add(value);
-        else resultList.set(currentQuestionIndex,value);
+        if (resultList.size() <= currentQuestionIndex)
+            resultList.add(value);
+        else resultList.set(currentQuestionIndex, value);
 
         currentQuestionIndexSubject.onNext(currentQuestionIndexSubject.getValue() + 1);
     }
@@ -76,12 +75,15 @@ public class TestViewModel extends AbstractViewModel {
     }
 
 
-    public void saveResult() {
-        SessionManager.getInstance().setResult(resultList);
-    }
-
-
     public int getCurrentQuestionIndex() {
         return currentQuestionIndexSubject.getValue();
+    }
+
+    public List<Integer> getResult() {
+        return resultList;
+    }
+
+    public String getTestId() {
+        return testSubject.getValue().getInfo().getTestId();
     }
 }

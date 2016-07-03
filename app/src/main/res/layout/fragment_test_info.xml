@@ -25,6 +25,9 @@
             android:layout_marginTop="10dp"
             android:singleLine="true"
             android:text="Категория" />
+        <ImageView
+            android:layout_width="80dp" android:id="@+id/image" android:layout_marginTop="10dp"
+            android:layout_height="80dp" android:layout_gravity="center_horizontal" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -36,11 +39,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp" android:layout_centerVertical="true"
                 android:background="@color/gray" />
+
             <android.support.design.widget.FloatingActionButton
                 android:src="@drawable/ic_arrow_forward_white_24dp"
                 app:fabSize="normal" android:layout_alignParentRight="true"
                 android:layout_width="wrap_content" android:id="@+id/start"
                 android:layout_height="wrap_content" />
+
+            <Button android:id="@+id/show_result"
+                android:layout_width="wrap_content" android:text="Показать результат"
+                android:layout_height="wrap_content" android:layout_centerVertical="true" />
         </RelativeLayout>
 
         <TextView

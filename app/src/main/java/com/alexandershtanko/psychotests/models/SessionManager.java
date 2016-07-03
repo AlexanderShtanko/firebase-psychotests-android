@@ -8,9 +8,7 @@ import java.util.List;
 public class SessionManager {
     private static SessionManager instance;
     private Test selectedTest;
-    private String selectedCategory = null;
     private List<Integer> result;
-
     private SessionManager() {
     }
 
@@ -36,11 +34,5 @@ public class SessionManager {
         this.result = result;
     }
 
-    public String getSelectedCategory() {
-        return selectedCategory;
-    }
 
-    public void setSelectedCategory(String selectedCategory) {
-        this.selectedCategory = selectedCategory;
-    }
 }
