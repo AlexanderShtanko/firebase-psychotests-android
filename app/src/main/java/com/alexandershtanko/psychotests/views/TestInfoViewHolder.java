@@ -64,9 +64,9 @@ public class TestInfoViewHolder extends AbstractViewHolder {
 
         showResultButton.setVisibility(hasResult ? View.VISIBLE : View.GONE);
 
-        Animate.show(name, R.anim.expand_from_top);
+        Animate.show(name, R.anim.fade_in);
         Animate.show(category, R.anim.fade_in);
-        Animate.show(desc, R.anim.expand_from_bottom);
+        Animate.show(desc, R.anim.fade_in);
 
 
 

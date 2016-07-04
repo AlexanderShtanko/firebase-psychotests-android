@@ -78,7 +78,7 @@ public class TestViewHolder extends AbstractViewHolder {
             }
 
 
-            Animate.show(viewHolder.question,R.anim.expand_from_top);
+            Animate.show(viewHolder.question,R.anim.fade_in);
             Animate.show(viewHolder.variants,R.anim.expand_from_bottom);
         }
 

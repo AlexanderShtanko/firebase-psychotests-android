@@ -44,7 +44,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
         else
             text.setText("Результат не найден");
 
-        Animate.show(text, R.anim.expand_from_bottom);
+        Animate.show(text, R.anim.fade_in);
 
 
     }
@@ -52,7 +52,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
     public void populateTestInfo(TestInfo testInfo) {
         name.setVisibility(View.GONE);
         name.setText(testInfo.getName());
-        Animate.show(name, R.anim.expand_from_top);
+        Animate.show(name, R.anim.fade_in);
 
 
     }
