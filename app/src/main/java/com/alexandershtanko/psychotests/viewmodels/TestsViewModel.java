@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
-import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.utils.Storage;
 import com.alexandershtanko.psychotests.views.adapters.SortedCallback;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
@@ -44,7 +43,6 @@ public class TestsViewModel extends AbstractViewModel {
 
     private Map<String, Test> testMap = new HashMap<>();
 
-    private BehaviorSubject<Pair<ChildAction, DataSnapshot>> dataSubject = BehaviorSubject.create();
     private BehaviorSubject<String> categorySubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
     private boolean flgShowOnlyPassed = false;
@@ -63,6 +61,7 @@ public class TestsViewModel extends AbstractViewModel {
     protected void onSubscribe(CompositeSubscription s) {
 
         s.add(categorySubject.asObservable().subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
                 .flatMap(category -> Observable.create((Observable.OnSubscribe<Pair<ChildAction, DataSnapshot>>) subscriber ->
                 {
                     childEventListener = new ChildEventListener() {
@@ -96,10 +95,9 @@ public class TestsViewModel extends AbstractViewModel {
                     testsRef.addChildEventListener(childEventListener);
                 }))
                 .doOnUnsubscribe(() -> testsRef.removeEventListener(childEventListener))
-                .subscribe(pair -> dataSubject.onNext(pair), this::onError));
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(pair -> observeData(pair.first, pair.second), this::onError));
 
-
-        s.add(getChildActionObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(pair -> observeData(pair.first, pair.second), ErrorUtils.onError()));
     }
 
 
@@ -147,11 +145,6 @@ public class TestsViewModel extends AbstractViewModel {
         } catch (Exception e) {
             Log.e("", "", e);
         }
-    }
-
-
-    public Observable<Pair<ChildAction, DataSnapshot>> getChildActionObservable() {
-        return dataSubject.asObservable();
     }
 
     public Observable<Throwable> getErrorObservable() {

@@ -39,8 +39,9 @@ public class TestsViewHolder extends AbstractViewHolder {
 
         public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
-            viewHolder.adapter.setList(viewModel.getSortedList());
+
             viewModel.getSortedCallback().setAdapter(viewHolder.adapter);
+            viewHolder.adapter.setList(viewModel.getSortedList());
         }
 
         @Override

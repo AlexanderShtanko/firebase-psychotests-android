@@ -10,6 +10,7 @@ import rx.subscriptions.CompositeSubscription;
 public class ActivityViewModel extends AbstractViewModel {
 
 
+
     @Override
     public void saveInstanceState() {
 

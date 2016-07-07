@@ -2,7 +2,6 @@ package com.alexandershtanko.psychotests.viewmodels;
 
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
-import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +24,6 @@ import rx.subscriptions.CompositeSubscription;
 public class CategoriesViewModel extends AbstractViewModel {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference testsRef = database.getReference("tests");
-    private BehaviorSubject<DataSnapshot> dataSubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
     private BehaviorSubject<Set<String>> categoriesSubject = BehaviorSubject.create(new HashSet<>());
     private BehaviorSubject<String> categorySubject = BehaviorSubject.create();
@@ -67,10 +65,10 @@ public class CategoriesViewModel extends AbstractViewModel {
         })
                 .doOnUnsubscribe(() -> testsRef.removeEventListener(childEventListener))
                 .subscribeOn(Schedulers.io())
-                .subscribe(dataSnapshot -> dataSubject.onNext(dataSnapshot),this::onError));
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::observeData,this::onError));
 
 
-        s.add(dataSubject.asObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(data -> observeData(data), ErrorUtils.onError()));
 
     }
 
