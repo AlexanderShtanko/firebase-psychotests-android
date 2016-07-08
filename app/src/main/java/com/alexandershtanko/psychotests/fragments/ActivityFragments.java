@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.alexandershtanko.psychotests.models.SessionManager;
-import com.alexandershtanko.psychotests.models.Test;
 
 import java.util.List;
 
@@ -52,18 +51,16 @@ public class ActivityFragments {
         replaceFragment(TestsFragment.getInstanceForPassedTests(), TESTS_FRAGMENT_TAG, true);
     }
 
-    public void openTestInfo(Test test) {
-        SessionManager.getInstance().setTest(test);
-        replaceFragment(TestInfoFragment.getInstance(), TEST_INFO_FRAGMENT_TAG, true);
+    public void openTestInfo(String testId) {
+        replaceFragment(TestInfoFragment.getInstance(testId), TEST_INFO_FRAGMENT_TAG, true);
     }
 
     public void openTest() {
         replaceFragment(TestFragment.getInstance(), TEST_FRAGMENT_TAG, true);
     }
 
-    public void openTestResult(List<Integer> result) {
-        SessionManager.getInstance().setResult(result);
-        replaceFragment(TestResultFragment.getInstance(), TEST_RESULT_FRAGMENT_TAG, true);
+    public void openTestResult(String testId) {
+        replaceFragment(TestResultFragment.getInstance(testId), TEST_RESULT_FRAGMENT_TAG, true);
     }
 
     private void replaceFragment(Fragment fragment, String tag, boolean toBackStack) {

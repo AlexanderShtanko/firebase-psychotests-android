@@ -51,6 +51,7 @@ dependencies {
     compile 'com.google.firebase:firebase-core:9.0.2'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     compile 'com.google.firebase:firebase-database:9.0.2'
+    compile 'com.github.pilgr:Paper:1.5'
 }
 
 apply plugin: 'com.google.gms.google-services'

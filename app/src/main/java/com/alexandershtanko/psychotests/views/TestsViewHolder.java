@@ -48,13 +48,12 @@ public class TestsViewHolder extends AbstractViewHolder {
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getErrorObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError, ErrorUtils.onError()));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
-                    .map(viewModel::getTest)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::selectTest));
         }
 
-        private void selectTest(Test test) {
-            ActivityFragments.getInstance().openTestInfo(test);
+        private void selectTest(String testId) {
+            ActivityFragments.getInstance().openTestInfo(testId);
 
         }
 

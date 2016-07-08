@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.alexandershtanko.psychotests.R;
-import com.alexandershtanko.psychotests.utils.Storage;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.TestsViewHolder;
 import com.alexandershtanko.psychotests.vvm.AbstractFragment;
@@ -47,15 +46,22 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
 
     @Override
     public TestsViewModel createViewModel() {
-        TestsViewModel testsViewModel = new TestsViewModel(new Storage(getContext()));
+        TestsViewModel testsViewModel = new TestsViewModel(getContext());
+
+        String category = null;
+        Boolean onlyPassed = false;
+
         Bundle args = getArguments();
         if (args != null) {
             if (args.containsKey(ARG_CATEGORY)) {
-                testsViewModel.setCategory(args.getString(ARG_CATEGORY));
-            } else {
-                testsViewModel.showOnlyPassedTests();
+                category = args.getString(ARG_CATEGORY);
+            }
+            if (args.containsKey(ARG_PASSED)) {
+                onlyPassed = args.getBoolean(ARG_PASSED);
             }
         }
+
+        testsViewModel.setFilter(category,onlyPassed);
 
         return testsViewModel;
     }
