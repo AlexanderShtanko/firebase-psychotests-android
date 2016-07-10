@@ -21,7 +21,6 @@ public class TestResultViewModel extends AbstractViewModel {
     private Storage storage = Storage.getInstance();
 
     private BehaviorSubject<TestInfo> testInfoSubject = BehaviorSubject.create();
-    private BehaviorSubject<List<Integer>> resultValueSubject = BehaviorSubject.create();
     private BehaviorSubject<TestResult> testResultSubject = BehaviorSubject.create();
     private BehaviorSubject<String> testIdSubject = BehaviorSubject.create();
 
@@ -36,7 +35,7 @@ public class TestResultViewModel extends AbstractViewModel {
                     if (result != null) {
                         testResultSubject.onNext(getResult(test, result));
                     }
-                }));
+                },this::onError));
     }
 
     private TestResult getResult(Test test, List<Integer> resultList) {

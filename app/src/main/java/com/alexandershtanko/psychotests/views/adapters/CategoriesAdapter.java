@@ -10,7 +10,6 @@ import com.alexandershtanko.psychotests.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,12 +30,6 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         }
     }
 
-    public void populate(Set<String> categories)
-    {
-        list = new ArrayList<>(categories);
-        notifyDataSetChanged();
-    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categories,parent,false));
@@ -54,6 +47,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
+        notifyDataSetChanged();
+    }
+
+    public void populate(List<String> categories) {
+        list = categories;
         notifyDataSetChanged();
     }
 

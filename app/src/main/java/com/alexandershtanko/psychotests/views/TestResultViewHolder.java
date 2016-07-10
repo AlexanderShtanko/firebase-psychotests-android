@@ -66,8 +66,8 @@ public class TestResultViewHolder extends AbstractViewHolder {
 
         @Override
         protected void onBind(CompositeSubscription s) {
-            s.add(viewModel.getTestResultObservable().subscribeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateResult));
-            s.add(viewModel.getTestInfoObservable().subscribeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateTestInfo));
+            s.add(viewModel.getTestResultObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateResult));
+            s.add(viewModel.getTestInfoObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateTestInfo));
             s.add(RxView.clicks(viewHolder.doneFab).subscribe(v -> ActivityFragments.getInstance().openTests()));
             s.add(RxView.clicks(viewHolder.repeatButton).subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId())));
         }

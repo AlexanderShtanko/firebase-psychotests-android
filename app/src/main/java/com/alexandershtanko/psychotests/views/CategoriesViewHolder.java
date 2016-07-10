@@ -12,7 +12,7 @@ import com.alexandershtanko.psychotests.views.adapters.CategoriesAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 
-import java.util.Set;
+import java.util.List;
 
 import butterknife.BindView;
 import rx.Observable;
@@ -36,24 +36,26 @@ public class CategoriesViewHolder extends AbstractViewHolder {
         list.setAdapter(adapter);
     }
 
-    public void populate(Set<String> categories)
-    {
-        adapter.populate(categories);
-    }
-
     public void add(String category)
     {
         adapter.add(category);
     }
 
+    public void populate(List<String> categories)
+    {
+        adapter.populate(categories);
+    }
+
     public static class ViewBinder extends AbstractViewBinder<CategoriesViewHolder, CategoriesViewModel> {
         public ViewBinder(CategoriesViewHolder viewHolder, CategoriesViewModel viewModel) {
             super(viewHolder, viewModel);
+
         }
 
         @Override
         protected void onBind(CompositeSubscription s) {
-            s.add(viewModel.getCategoriesObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populate));
+            s.add(Observable.create((Observable.OnSubscribe<List<String>>) subscriber -> subscriber.onNext(viewModel.getCategories())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(viewHolder::populate));
             s.add(viewModel.getCategoryObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::add));
             s.add(viewModel.getErrorObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
