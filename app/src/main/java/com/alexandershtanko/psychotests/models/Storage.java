@@ -79,9 +79,9 @@ public class Storage {
         rxPaper.write(BOOK_RESULTS, testId, result);
     }
 
-    public List<String> getResult(String testId) {
+    public List<Integer> getResult(String testId) {
         if (hasResult(testId)) {
-            RxPaper.PaperObject<List<String>> paperObject = rxPaper.readOnce(BOOK_RESULTS, testId);
+            RxPaper.PaperObject<List<Integer>> paperObject = rxPaper.readOnce(BOOK_RESULTS, testId);
             return paperObject.getObject();
         }
         return null;

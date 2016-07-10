@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
+import com.alexandershtanko.psychotests.utils.IntentUtils;
 import com.alexandershtanko.psychotests.viewmodels.ActivityViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -75,6 +76,14 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
                 case R.id.nav_done:
                     toolbar.setTitle(R.string.tests_done);
                     fragments.openPassedTests();
+                    break;
+
+                case R.id.nav_share:
+                    IntentUtils.shareTheApp(getContext());
+                    break;
+
+                case R.id.nav_rate:
+                    IntentUtils.rateTheApp(getContext());
                     break;
             }
         });

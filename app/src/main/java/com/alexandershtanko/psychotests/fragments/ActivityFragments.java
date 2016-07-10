@@ -4,10 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.alexandershtanko.psychotests.models.SessionManager;
-
-import java.util.List;
-
 /**
  * Created by aleksandr on 13.06.16.
  */
@@ -55,8 +51,8 @@ public class ActivityFragments {
         replaceFragment(TestInfoFragment.getInstance(testId), TEST_INFO_FRAGMENT_TAG, true);
     }
 
-    public void openTest() {
-        replaceFragment(TestFragment.getInstance(), TEST_FRAGMENT_TAG, true);
+    public void openTest(String testId) {
+        replaceFragment(TestFragment.getInstance(testId), TEST_FRAGMENT_TAG, true);
     }
 
     public void openTestResult(String testId) {

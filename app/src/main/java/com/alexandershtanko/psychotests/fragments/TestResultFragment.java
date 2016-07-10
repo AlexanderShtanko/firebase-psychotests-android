@@ -1,9 +1,9 @@
 package com.alexandershtanko.psychotests.fragments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import com.alexandershtanko.psychotests.R;
-import com.alexandershtanko.psychotests.models.SessionManager;
 import com.alexandershtanko.psychotests.viewmodels.TestResultViewModel;
 import com.alexandershtanko.psychotests.views.TestResultViewHolder;
 import com.alexandershtanko.psychotests.vvm.AbstractFragment;
@@ -14,8 +14,13 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
  */
 public class TestResultFragment extends AbstractFragment<TestResultViewHolder, TestResultViewModel> {
 
-    public static Fragment getInstance() {
+    public static final String ARG_TEST_ID = "test_id";
+
+    public static Fragment getInstance(String testId) {
         TestResultFragment fragment = new TestResultFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_TEST_ID,testId);
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -27,8 +32,18 @@ public class TestResultFragment extends AbstractFragment<TestResultViewHolder, T
     @Override
     public TestResultViewModel createViewModel() {
         TestResultViewModel testResultViewModel = new TestResultViewModel();
-        testResultViewModel.setTest(SessionManager.getInstance().getTest());
-        testResultViewModel.setResultValue(SessionManager.getInstance().getResult());
+
+        Bundle args = getArguments();
+        String testId = null;
+        if (args != null) {
+            if (args.containsKey(ARG_TEST_ID)) {
+                testId = args.getString(ARG_TEST_ID);
+            }
+        }
+
+        if (testId != null)
+            testResultViewModel.setTestId(testId);
+
         return testResultViewModel;
     }
 

@@ -18,7 +18,7 @@ public class MainActivity extends AbstractActivity<ActivityViewHolder, ActivityV
 
     @Override
     public ActivityViewModel createViewModel() {
-        return new ActivityViewModel();
+        return new ActivityViewModel(this);
     }
 
     @Override

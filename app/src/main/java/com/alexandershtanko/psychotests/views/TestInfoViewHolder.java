@@ -12,7 +12,6 @@ import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.utils.Animate;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
-import com.alexandershtanko.psychotests.utils.Storage;
 import com.alexandershtanko.psychotests.viewmodels.TestInfoViewModel;
 import com.alexandershtanko.psychotests.views.picasso.CircleTransformation;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -46,7 +45,7 @@ public class TestInfoViewHolder extends AbstractViewHolder {
 
     }
 
-    public void populate(TestInfo testInfo, boolean hasResult) {
+    public void populateTestInfo(TestInfo testInfo) {
         name.setVisibility(View.GONE);
         category.setVisibility(View.GONE);
         desc.setVisibility(View.GONE);
@@ -62,41 +61,47 @@ public class TestInfoViewHolder extends AbstractViewHolder {
             image.setVisibility(View.GONE);
         }
 
-        showResultButton.setVisibility(hasResult ? View.VISIBLE : View.GONE);
 
         Animate.show(name, R.anim.fade_in);
         Animate.show(category, R.anim.fade_in);
         Animate.show(desc, R.anim.fade_in);
+    }
 
-
+    private void showResultButton(Boolean hasResult) {
+        showResultButton.setVisibility(hasResult ? View.VISIBLE : View.GONE);
 
     }
 
+
+
+
     public static class ViewBinder extends AbstractViewBinder<TestInfoViewHolder, TestInfoViewModel> {
-        Storage storage;
         public ViewBinder(TestInfoViewHolder viewHolder, TestInfoViewModel viewModel) {
             super(viewHolder, viewModel);
-            storage = new Storage(viewHolder.getContext());
         }
 
         @Override
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getTestInfoObservable()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(info->viewHolder.populate(info,hasResult(info)), ErrorUtils.onError()));
+                    .subscribe(viewHolder::populateTestInfo, ErrorUtils.onError()));
+
+            s.add(viewModel.getHasResultObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(viewHolder::showResultButton, ErrorUtils.onError()));
 
             s.add(RxView.clicks(viewHolder.startFab)
-                    .subscribe(v -> ActivityFragments.getInstance().openTest()));
+                    .subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId())));
             s.add(RxView.clicks(viewHolder.showResultButton)
                     .subscribe(v-> showResult()));
         }
 
         private void showResult() {
-            ActivityFragments.getInstance().openTestResult(storage.getResult(viewModel.getTestId()));
+            ActivityFragments.getInstance().openTestResult(viewModel.getTestId());
         }
 
-        private boolean hasResult(TestInfo info) {
-            return storage.hasResult(info.getTestId());
-        }
+
     }
+
+
 }

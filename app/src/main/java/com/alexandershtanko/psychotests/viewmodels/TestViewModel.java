@@ -1,5 +1,6 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
+import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
@@ -18,11 +20,27 @@ public class TestViewModel extends AbstractViewModel {
 
     private BehaviorSubject<Test> testSubject = BehaviorSubject.create();
     private BehaviorSubject<Integer> currentQuestionIndexSubject = BehaviorSubject.create(0);
+    private BehaviorSubject<TestQuestion> currentQuestionSubject = BehaviorSubject.create();
+    private BehaviorSubject<String> testIdSubject = BehaviorSubject.create();
     private List<Integer> resultList = new ArrayList<>();
+    private Storage storage = Storage.getInstance();
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
+        s.add(testIdSubject.asObservable().switchMap(storage::getTestObservable).first()
+                .subscribeOn(Schedulers.io()).subscribe(testSubject::onNext));
 
+        s.add(currentQuestionIndexSubject.asObservable()
+                .switchMap(index -> testSubject.asObservable().first()
+                        .filter(test -> index < test.getQuestions().size())
+                        .map(test -> test.getQuestions().get(index)))
+                .subscribe(currentQuestionSubject::onNext));
+
+        s.add(currentQuestionIndexSubject.asObservable()
+                .switchMap(index -> testSubject.asObservable()
+                        .filter(test -> index == test.getQuestions().size()))
+                .subscribeOn(Schedulers.io())
+                .subscribe(test -> storage.setResult(test.getInfo().getTestId(), resultList)));
     }
 
     @Override
@@ -35,14 +53,6 @@ public class TestViewModel extends AbstractViewModel {
 
     }
 
-    public void setTest(Test test) {
-        testSubject.onNext(test);
-        resultList.clear();
-    }
-
-    public Observable<Test> getTestObservable() {
-        return testSubject.asObservable();
-    }
 
     public void selectVariant(Integer value) {
         int currentQuestionIndex = getCurrentQuestionIndex();
@@ -50,6 +60,7 @@ public class TestViewModel extends AbstractViewModel {
         if (resultList.size() <= currentQuestionIndex)
             resultList.add(value);
         else resultList.set(currentQuestionIndex, value);
+
 
         currentQuestionIndexSubject.onNext(currentQuestionIndexSubject.getValue() + 1);
     }
@@ -61,7 +72,7 @@ public class TestViewModel extends AbstractViewModel {
     }
 
     public Observable<TestQuestion> getCurrentQuestionObservable() {
-        return currentQuestionIndexSubject.asObservable().filter(index -> index < getQuestionsCount()).switchMap(index -> getTestObservable().map(test -> test.getQuestions().get(index)));
+        return currentQuestionSubject.asObservable();
     }
 
     public Integer getQuestionsCount() {
@@ -79,11 +90,11 @@ public class TestViewModel extends AbstractViewModel {
         return currentQuestionIndexSubject.getValue();
     }
 
-    public List<Integer> getResult() {
-        return resultList;
-    }
-
     public String getTestId() {
         return testSubject.getValue().getInfo().getTestId();
+    }
+
+    public void setTestId(String testId) {
+        testIdSubject.onNext(testId);
     }
 }
