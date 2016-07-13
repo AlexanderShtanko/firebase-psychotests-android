@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.models.TestInfo;
+import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -72,8 +73,8 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
                 if (onItemClickListener != null)
                     onItemClickListener.onItemClick(testInfo.getTestId());
             });
-            name.setText(testInfo.getName());
-            category.setText(testInfo.getCategory());
+            name.setText(StringUtils.capitalizeFirstLetter(testInfo.getName()));
+            category.setText(StringUtils.capitalizeFirstLetter(testInfo.getCategory()));
             if (testInfo.getImage() != null && !testInfo.getImage().equals(""))
                 Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .placeholder(R.drawable.ic_help_outline_white_24dp).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);

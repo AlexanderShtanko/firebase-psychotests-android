@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.utils.IntentUtils;
+import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.ActivityViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -145,7 +146,7 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     }
 
     public void updateToolbar(String string) {
-        toolbar.setTitle(string);
+        toolbar.setTitle(StringUtils.capitalizeFirstLetter(string));
     }
 
 

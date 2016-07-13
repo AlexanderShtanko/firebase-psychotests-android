@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         public void populate(int position, String category, OnItemClickListener onItemClickListener) {
             itemView.setOnClickListener(v->{if(onItemClickListener!=null) onItemClickListener.onItemClick(category);});
-            name.setText(category);
+            name.setText(StringUtils.capitalizeFirstLetter(category));
         }
     }
 }

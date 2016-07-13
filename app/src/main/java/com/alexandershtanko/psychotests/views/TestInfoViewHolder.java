@@ -12,6 +12,7 @@ import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.utils.Animate;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
+import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestInfoViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -52,8 +53,8 @@ public class TestInfoViewHolder extends AbstractViewHolder {
         category.setVisibility(View.GONE);
         desc.setVisibility(View.GONE);
 
-        name.setText(testInfo.getName());
-        category.setText(testInfo.getCategory());
+        name.setText(StringUtils.capitalizeFirstLetter(testInfo.getName()));
+        category.setText(StringUtils.capitalizeFirstLetter(testInfo.getCategory()));
         desc.setText(testInfo.getDesc());
 
         if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {

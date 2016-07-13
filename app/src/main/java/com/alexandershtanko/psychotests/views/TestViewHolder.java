@@ -13,6 +13,7 @@ import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.AnswerVariant;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.utils.DisplayUtils;
+import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -86,7 +87,7 @@ public class TestViewHolder extends AbstractViewHolder {
                     variantText.setLayoutParams(params);
 
                     variantText.setClickable(true);
-                    variantText.setText(variant.getText());
+                    variantText.setText(StringUtils.capitalizeFirstLetter(variant.getText()));
                     variantText.setOnClickListener(v -> selectVariant(variant));
                     viewHolder.variants.addView(variantText);
                 }

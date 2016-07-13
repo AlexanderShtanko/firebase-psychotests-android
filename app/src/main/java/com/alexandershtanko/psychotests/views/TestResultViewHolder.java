@@ -11,6 +11,7 @@ import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.models.TestResult;
 import com.alexandershtanko.psychotests.utils.Animate;
+import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestResultViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
@@ -51,7 +52,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
 
     public void populateTestInfo(TestInfo testInfo) {
         name.setVisibility(View.GONE);
-        name.setText(testInfo.getName());
+        name.setText(StringUtils.capitalizeFirstLetter(testInfo.getName()));
         Animate.show(name, R.anim.fade_in);
 
 
