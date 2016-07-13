@@ -2,6 +2,7 @@ package com.alexandershtanko.psychotests.viewmodels;
 
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
+import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 
@@ -19,7 +20,7 @@ import rx.subscriptions.CompositeSubscription;
 public class TestViewModel extends AbstractViewModel {
 
     private BehaviorSubject<Test> testSubject = BehaviorSubject.create();
-    private BehaviorSubject<Integer> currentQuestionIndexSubject = BehaviorSubject.create(0);
+    private BehaviorSubject<Integer> currentQuestionIndexSubject = BehaviorSubject.create();
     private BehaviorSubject<TestQuestion> currentQuestionSubject = BehaviorSubject.create();
     private BehaviorSubject<String> testIdSubject = BehaviorSubject.create();
     private List<Integer> resultList = new ArrayList<>();
@@ -29,6 +30,8 @@ public class TestViewModel extends AbstractViewModel {
     protected void onSubscribe(CompositeSubscription s) {
         s.add(testIdSubject.asObservable().switchMap(storage::getTestObservable).first()
                 .subscribeOn(Schedulers.io()).subscribe(testSubject::onNext));
+
+        s.add(testSubject.asObservable().subscribeOn(Schedulers.io()).subscribe(test -> currentQuestionIndexSubject.onNext(0)));
 
         s.add(currentQuestionIndexSubject.asObservable()
                 .switchMap(index -> testSubject.asObservable().first()
@@ -66,8 +69,8 @@ public class TestViewModel extends AbstractViewModel {
     }
 
     public void back() {
-        int currentQuestionIndex = getCurrentQuestionIndex();
-        if (currentQuestionIndex > 0)
+        Integer currentQuestionIndex = getCurrentQuestionIndex();
+        if (currentQuestionIndex != null && currentQuestionIndex > 0)
             currentQuestionIndexSubject.onNext(currentQuestionIndex - 1);
     }
 
@@ -86,7 +89,7 @@ public class TestViewModel extends AbstractViewModel {
     }
 
 
-    public int getCurrentQuestionIndex() {
+    public Integer getCurrentQuestionIndex() {
         return currentQuestionIndexSubject.getValue();
     }
 
@@ -96,5 +99,9 @@ public class TestViewModel extends AbstractViewModel {
 
     public void setTestId(String testId) {
         testIdSubject.onNext(testId);
+    }
+
+    public Observable<String> getTestNameObservable() {
+        return testSubject.asObservable().filter(this::notNull).map(Test::getInfo).map(TestInfo::getName);
     }
 }

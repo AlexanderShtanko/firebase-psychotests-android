@@ -31,4 +31,15 @@ public class MainActivity extends AbstractActivity<ActivityViewHolder, ActivityV
         if (!activityViewHolder.onBackPressed())
             finish();
     }
+
+
+    public void updateToolbar(int stringRes)
+    {
+        activityViewHolder.updateToolbar(stringRes);
+    }
+
+    public void updateToolbar(String string) {
+        activityViewHolder.updateToolbar(string);
+
+    }
 }

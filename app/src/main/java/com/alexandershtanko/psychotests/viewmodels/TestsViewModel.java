@@ -12,6 +12,7 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -94,7 +95,12 @@ public class TestsViewModel extends AbstractViewModel {
         filterSubject.onNext(new Filter(category, onlyDone));
     }
 
-    private class Filter {
+    public Observable<Filter> getFilterObservable()
+    {
+        return filterSubject.asObservable();
+    }
+
+    public static class Filter {
         public String getCategory() {
             return category;
         }

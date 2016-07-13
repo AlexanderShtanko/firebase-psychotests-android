@@ -68,6 +68,6 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
 
     @Override
     public AbstractViewBinder<TestsViewHolder, TestsViewModel> createViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
-        return new TestsViewHolder.ViewBinder(viewHolder, viewModel);
+        return new TestsViewHolder.ViewBinder(getMainActivity(),viewHolder, viewModel);
     }
 }

@@ -1,5 +1,6 @@
 package com.alexandershtanko.psychotests.vvm;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,12 @@ public abstract class AbstractFragment<H extends AbstractViewHolder, M extends A
     H viewHolder;
     M viewModel;
     AbstractViewBinder<H, M> viewBinder;
+    Activity activity;
+
+    public Activity getMainActivity() {
+        return activity;
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -45,6 +52,7 @@ public abstract class AbstractFragment<H extends AbstractViewHolder, M extends A
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.activity = getActivity();
         viewModel = createViewModel();
         viewModel.subscribe();
     }

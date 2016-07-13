@@ -41,7 +41,7 @@ public class TestFragment extends AbstractFragment<TestViewHolder,TestViewModel>
 
     @Override
     public AbstractViewBinder<TestViewHolder, TestViewModel> createViewBinder(TestViewHolder viewHolder, TestViewModel viewModel) {
-        return new TestViewHolder.ViewBinder(viewHolder,viewModel);
+        return new TestViewHolder.ViewBinder(getMainActivity(), viewHolder,viewModel);
     }
 
     public static Fragment getInstance(String testId) {

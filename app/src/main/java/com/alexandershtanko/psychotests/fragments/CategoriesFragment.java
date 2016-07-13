@@ -3,6 +3,7 @@ package com.alexandershtanko.psychotests.fragments;
 import android.support.v4.app.Fragment;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.activities.MainActivity;
 import com.alexandershtanko.psychotests.viewmodels.CategoriesViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.views.CategoriesViewHolder;
@@ -31,5 +32,12 @@ public class CategoriesFragment extends AbstractFragment<CategoriesViewHolder,Ca
     public static Fragment getInstance() {
         CategoriesFragment fragment = new CategoriesFragment();
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity)getMainActivity()).updateToolbar(R.string.categories);
+
     }
 }

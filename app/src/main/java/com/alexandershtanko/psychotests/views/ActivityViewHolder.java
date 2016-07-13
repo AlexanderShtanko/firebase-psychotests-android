@@ -66,15 +66,12 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         onDrawerClose(() -> {
             switch (item.getItemId()) {
                 case R.id.nav_tests:
-                    toolbar.setTitle(R.string.app_name);
                     fragments.openTests();
                     break;
                 case R.id.nav_categories:
-                    toolbar.setTitle(R.string.categories);
                     fragments.openCategories();
                     break;
                 case R.id.nav_done:
-                    toolbar.setTitle(R.string.tests_done);
                     fragments.openPassedTests();
                     break;
 
@@ -141,6 +138,14 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
         return res;
 
+    }
+
+    public void updateToolbar(int stringRes) {
+        toolbar.setTitle(stringRes);
+    }
+
+    public void updateToolbar(String string) {
+        toolbar.setTitle(string);
     }
 
 

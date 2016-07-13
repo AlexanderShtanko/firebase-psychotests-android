@@ -1,13 +1,14 @@
 package com.alexandershtanko.psychotests.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.activities.MainActivity;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
-import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
@@ -37,8 +38,11 @@ public class TestsViewHolder extends AbstractViewHolder {
 
     public static class ViewBinder extends AbstractViewBinder<TestsViewHolder, TestsViewModel> {
 
-        public ViewBinder(TestsViewHolder viewHolder, TestsViewModel viewModel) {
+        private final MainActivity activity;
+
+        public ViewBinder(Activity activity, TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
+            this.activity = (MainActivity)activity;
 
             viewModel.getSortedCallback().setAdapter(viewHolder.adapter);
             viewHolder.adapter.setList(viewModel.getSortedList());
@@ -50,6 +54,27 @@ public class TestsViewHolder extends AbstractViewHolder {
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::selectTest));
+            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(filter->populateToolbar(filter)));
+        }
+
+        private void populateToolbar(TestsViewModel.Filter filter) {
+            if(filter.getOnlyDone())
+            {
+                activity.updateToolbar(R.string.tests_done);
+            }
+            else
+            {
+                if(filter.getCategory()!=null)
+                {
+                    activity.updateToolbar(viewHolder.getContext().getResources().getString(R.string.category)+": "+filter.getCategory());
+
+                }
+                else
+                {
+                    activity.updateToolbar(R.string.all_tests);
+
+                }
+            }
         }
 
         private void selectTest(String testId) {

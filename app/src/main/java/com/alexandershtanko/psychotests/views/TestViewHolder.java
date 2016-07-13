@@ -1,5 +1,6 @@
 package com.alexandershtanko.psychotests.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
+import com.alexandershtanko.psychotests.activities.MainActivity;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.AnswerVariant;
 import com.alexandershtanko.psychotests.models.TestQuestion;
@@ -40,12 +42,18 @@ public class TestViewHolder extends AbstractViewHolder {
 
     public static class ViewBinder extends AbstractViewBinder<TestViewHolder, TestViewModel> {
 
-        public ViewBinder(TestViewHolder viewHolder, TestViewModel viewModel) {
+        private final MainActivity activity;
+
+        public ViewBinder(Activity activity, TestViewHolder viewHolder, TestViewModel viewModel) {
             super(viewHolder, viewModel);
+            this.activity = (MainActivity) activity;
         }
 
         @Override
         protected void onBind(CompositeSubscription s) {
+            s.add(viewModel.getTestNameObservable()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::populateToolbar));
             s.add(viewModel.getCurrentQuestionObservable()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::populateQuestion));
@@ -56,6 +64,9 @@ public class TestViewHolder extends AbstractViewHolder {
                             .populateNumber(index, viewModel.getQuestionsCount())));
         }
 
+        private void populateToolbar(String name) {
+            activity.updateToolbar(name);
+        }
 
         public void populateQuestion(TestQuestion question) {
 

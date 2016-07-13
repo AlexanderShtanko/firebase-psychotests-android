@@ -5,10 +5,10 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"  android:padding="16dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/name"
@@ -31,8 +31,16 @@
                 android:background="@color/gray" />
 
             <Button
-                android:layout_width="wrap_content" android:text="Пройти заново"
-                android:layout_height="wrap_content" android:id="@+id/repeat"/>
+                android:id="@+id/repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/oval_normal"
+                android:paddingLeft="20dp"
+                android:textAllCaps="false"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:paddingRight="20dp"
+                android:text="Пройти заново" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/button_done"
