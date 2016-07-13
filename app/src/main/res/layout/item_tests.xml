@@ -30,7 +30,7 @@
                 style="@style/TextAppearance.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="12345" />
+                android:text="" />
 
             <TextView
                 android:id="@+id/category"
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
                 android:singleLine="true"
-                android:text="12345"
+                android:text=""
                 android:textColor="@color/gray_black" />
 
         </LinearLayout>

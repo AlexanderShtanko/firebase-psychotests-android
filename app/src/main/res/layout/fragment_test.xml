@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="1 вопрос из 20" />
+            android:text="" />
 
         <TextView android:layout_marginTop="20dp"
             android:id="@+id/question"
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="Текст вопроса" />
+            android:text="" />
 
         <LinearLayout android:layout_marginTop="20dp"
             android:id="@+id/layout_variants"

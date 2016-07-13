@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.models.TestInfo;
-import com.alexandershtanko.psychotests.views.picasso.CircleTransformation;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /**
  * Created by aleksandr on 12.06.16.
@@ -74,9 +75,10 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
             name.setText(testInfo.getName());
             category.setText(testInfo.getCategory());
             if (testInfo.getImage() != null && !testInfo.getImage().equals(""))
-                Picasso.with(itemView.getContext()).load(testInfo.getImage()).transform(new CircleTransformation()).into(image);
+                Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.ic_help_outline_white_24dp).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
             else
-                Picasso.with(itemView.getContext()).load(R.drawable.ic_dashboard_white_24dp).transform(new CircleTransformation()).into(image);
+                Glide.with(itemView.getContext()).load(R.drawable.ic_help_outline_white_24dp).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
 
             image.setBackgroundResource(imgBgs[position % imgBgs.length]);
         }

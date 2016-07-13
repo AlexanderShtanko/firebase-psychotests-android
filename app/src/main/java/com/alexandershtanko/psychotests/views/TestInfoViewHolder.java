@@ -13,13 +13,15 @@ import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.utils.Animate;
 import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestInfoViewModel;
-import com.alexandershtanko.psychotests.views.picasso.CircleTransformation;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.jakewharton.rxbinding.view.RxView;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -56,9 +58,11 @@ public class TestInfoViewHolder extends AbstractViewHolder {
 
         if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {
             image.setVisibility(View.VISIBLE);
-            Picasso.with(getContext()).load(testInfo.getImage()).transform(new CircleTransformation()).into(image);
+            Glide.with(getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.ic_help_outline_white_48dp).bitmapTransform(new SketchFilterTransformation(getContext()),new CropCircleTransformation(getContext())).into(image);
         } else {
-            image.setVisibility(View.GONE);
+            image.setVisibility(View.VISIBLE);
+            Glide.with(getContext()).load(R.drawable.ic_help_outline_white_48dp).bitmapTransform(new SketchFilterTransformation(getContext()),new CropCircleTransformation(getContext())).into(image);
+
         }
 
 
