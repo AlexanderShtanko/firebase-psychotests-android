@@ -146,7 +146,7 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     }
 
     public void updateToolbar(String string) {
-        toolbar.setTitle(StringUtils.capitalizeFirstLetter(string));
+        toolbar.setTitle(StringUtils.capitalizeSentences(string));
     }
 
 

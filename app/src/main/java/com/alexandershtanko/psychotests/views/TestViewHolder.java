@@ -87,7 +87,7 @@ public class TestViewHolder extends AbstractViewHolder {
                     variantText.setLayoutParams(params);
 
                     variantText.setClickable(true);
-                    variantText.setText(StringUtils.capitalizeFirstLetter(variant.getText()));
+                    variantText.setText(StringUtils.capitalizeSentences(variant.getText()));
                     variantText.setOnClickListener(v -> selectVariant(variant));
                     viewHolder.variants.addView(variantText);
                 }

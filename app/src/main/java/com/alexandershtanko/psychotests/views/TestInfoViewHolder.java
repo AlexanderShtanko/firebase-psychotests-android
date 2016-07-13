@@ -53,8 +53,8 @@ public class TestInfoViewHolder extends AbstractViewHolder {
         category.setVisibility(View.GONE);
         desc.setVisibility(View.GONE);
 
-        name.setText(StringUtils.capitalizeFirstLetter(testInfo.getName()));
-        category.setText(StringUtils.capitalizeFirstLetter(testInfo.getCategory()));
+        name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
+        category.setText(StringUtils.capitalizeSentences(testInfo.getCategory()));
         desc.setText(testInfo.getDesc());
 
         if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {

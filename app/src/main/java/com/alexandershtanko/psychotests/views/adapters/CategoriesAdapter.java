@@ -71,7 +71,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         public void populate(int position, String category, OnItemClickListener onItemClickListener) {
             itemView.setOnClickListener(v->{if(onItemClickListener!=null) onItemClickListener.onItemClick(category);});
-            name.setText(StringUtils.capitalizeFirstLetter(category));
+            name.setText(StringUtils.capitalizeSentences(category));
         }
     }
 }

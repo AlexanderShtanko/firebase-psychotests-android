@@ -52,7 +52,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
 
     public void populateTestInfo(TestInfo testInfo) {
         name.setVisibility(View.GONE);
-        name.setText(StringUtils.capitalizeFirstLetter(testInfo.getName()));
+        name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
         Animate.show(name, R.anim.fade_in);
 
 
