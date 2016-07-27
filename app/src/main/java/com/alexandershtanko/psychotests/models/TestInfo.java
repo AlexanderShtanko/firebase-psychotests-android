@@ -9,7 +9,7 @@ public class TestInfo {
     private String image;
     private String category;
     private String testId;
-    private long sortOrder = 0;
+    private long dateAdd = 0;
 
     public String getName() {
         return name;
@@ -52,11 +52,11 @@ public class TestInfo {
         this.testId = testId;
     }
 
-    public long getSortOrder() {
-        return sortOrder;
+    public long getDateAdd() {
+        return dateAdd;
     }
 
-    public void setSortOrder(long sortOrder) {
-        this.sortOrder = sortOrder;
+    public void setDateAdd(long dateAdd) {
+        this.dateAdd = dateAdd;
     }
 }

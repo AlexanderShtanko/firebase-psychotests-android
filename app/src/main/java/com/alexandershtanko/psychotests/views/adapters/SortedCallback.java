@@ -18,7 +18,7 @@ public class SortedCallback extends android.support.v7.util.SortedList.Callback<
 
     @Override
     public int compare(TestInfo o1, TestInfo o2) {
-        return (o1.getSortOrder() == o2.getSortOrder()?0:o1.getSortOrder()>o2.getSortOrder()?1:-1);
+        return (o1.getDateAdd() == o2.getDateAdd()?0:o1.getDateAdd()>o2.getDateAdd()?-1:1);
     }
 
     @Override
