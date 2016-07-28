@@ -62,6 +62,8 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
         TextView category;
         @BindView(R.id.image)
         ImageView image;
+        @BindView(R.id.image_done)
+        ImageView done;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -82,6 +84,11 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
                 Glide.with(itemView.getContext()).load(R.drawable.ic_help_outline_white_24dp).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
 
             image.setBackgroundResource(imgBgs[position % imgBgs.length]);
+
+            if (testInfo.isDone()) {
+                done.setVisibility(View.VISIBLE);
+            } else
+                done.setVisibility(View.GONE);
         }
     }
 }

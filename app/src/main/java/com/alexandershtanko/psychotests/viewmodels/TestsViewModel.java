@@ -63,8 +63,13 @@ public class TestsViewModel extends AbstractViewModel {
 
         for (Test test : tests) {
             if (category == null || test.getInfo().getCategory() != null && test.getInfo().getCategory().equals(category)) {
-                if (!onlyDone || storage.hasResult(test.getInfo().getTestId()))
+                boolean isDone = storage.hasResult(test.getInfo().getTestId());
+                if (!onlyDone || isDone) {
+                    if (test.getInfo() != null)
+                        test.getInfo().setDone(isDone);
                     filteredTests.add(test);
+                }
+
             }
 
         }
@@ -95,26 +100,25 @@ public class TestsViewModel extends AbstractViewModel {
         filterSubject.onNext(new Filter(category, onlyDone));
     }
 
-    public Observable<Filter> getFilterObservable()
-    {
+    public Observable<Filter> getFilterObservable() {
         return filterSubject.asObservable();
     }
 
     public static class Filter {
-        public String getCategory() {
-            return category;
-        }
-
-        public Boolean getOnlyDone() {
-            return onlyDone;
-        }
-
         private String category;
         private Boolean onlyDone;
 
         public Filter(String category, Boolean onlyDone) {
             this.category = category;
             this.onlyDone = onlyDone;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public Boolean getOnlyDone() {
+            return onlyDone;
         }
     }
 }

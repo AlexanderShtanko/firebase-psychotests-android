@@ -17,6 +17,9 @@ import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.ActivityViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import butterknife.BindView;
 import rx.subscriptions.CompositeSubscription;
@@ -33,6 +36,9 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     NavigationView navigationView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.adView)
+    AdView adView;
+
 
     private ActivityFragments fragments = ActivityFragments.getInstance();
     private ActionBarDrawerToggle toggle;
@@ -42,9 +48,17 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
     public ActivityViewHolder(AppCompatActivity activity, int layoutRes) {
         super(activity, layoutRes);
+
         this.activity = activity;
         fragments.init(activity.getSupportFragmentManager(), R.id.content_frame);
         initDrawer(activity);
+
+
+        MobileAds.initialize(activity.getApplicationContext(), "ca-app-pub-5101098532198101~8268739673");
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+
+
     }
 
     private void initDrawer(AppCompatActivity activity) {

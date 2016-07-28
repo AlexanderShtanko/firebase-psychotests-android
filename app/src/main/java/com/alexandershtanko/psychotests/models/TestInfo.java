@@ -10,6 +10,7 @@ public class TestInfo {
     private String category;
     private String testId;
     private long sortOrder = 0;
+    private boolean done;
 
     public String getName() {
         return name;
@@ -58,5 +59,13 @@ public class TestInfo {
 
     public void setSortOrder(long sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public boolean isDone() {
+        return done;
     }
 }

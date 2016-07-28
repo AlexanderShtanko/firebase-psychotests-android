@@ -44,6 +44,9 @@
                 android:textColor="@color/gray_black" />
 
         </LinearLayout>
+
+        <ImageView android:layout_width="25dp" android:layout_height="25dp" android:layout_gravity="center" android:src="@drawable/ok" android:layout_marginLeft="10dp"
+            android:id="@+id/image_done" />
     </LinearLayout>
     <View android:layout_marginLeft="81dp"
         android:layout_width="match_parent"
