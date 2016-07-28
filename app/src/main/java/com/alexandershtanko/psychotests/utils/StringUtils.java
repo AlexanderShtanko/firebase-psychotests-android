@@ -1,5 +1,7 @@
 package com.alexandershtanko.psychotests.utils;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 /**
  * Created by aleksandr on 13.07.16.
  */
