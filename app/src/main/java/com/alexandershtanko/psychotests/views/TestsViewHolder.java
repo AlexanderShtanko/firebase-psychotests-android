@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
@@ -26,6 +27,8 @@ import rx.subscriptions.CompositeSubscription;
 public class TestsViewHolder extends AbstractViewHolder {
     @BindView(R.id.list)
     RecyclerView recyclerView;
+    @BindView(R.id.layout_internet_connection)
+    View internetConnectionLayout;
     TestsAdapter adapter;
 
     public TestsViewHolder(Context context, int layoutRes) {
@@ -55,6 +58,7 @@ public class TestsViewHolder extends AbstractViewHolder {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::selectTest));
             s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(filter->populateToolbar(filter)));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(isEmpty->viewHolder.populateEmpty(isEmpty)));
         }
 
         private void populateToolbar(TestsViewModel.Filter filter) {
@@ -86,6 +90,11 @@ public class TestsViewHolder extends AbstractViewHolder {
             Toast.makeText(viewHolder.getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
 
+
+    }
+
+    private void populateEmpty(Boolean isEmpty) {
+        internetConnectionLayout.setVisibility(isEmpty?View.VISIBLE:View.GONE);
 
     }
 }

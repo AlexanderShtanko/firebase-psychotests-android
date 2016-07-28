@@ -32,6 +32,8 @@ public class TestsViewModel extends AbstractViewModel {
     private BehaviorSubject<Filter> filterSubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
 
+    private BehaviorSubject<Boolean> emptySubject = BehaviorSubject.create(false);
+
 
     public TestsViewModel(Context context) {
 
@@ -51,9 +53,17 @@ public class TestsViewModel extends AbstractViewModel {
 
 
     private void addToSortedList(List<Test> tests) {
-        for (Test test : tests) {
-            sortedList.add(test.getInfo());
+
+        if (tests != null && tests.size() > 0) {
+            emptySubject.onNext(false);
+            for (Test test : tests) {
+                sortedList.add(test.getInfo());
+            }
         }
+        else
+            emptySubject.onNext(true);
+
+
     }
 
     private List<Test> filter(List<Test> tests, Filter filter) {
@@ -75,6 +85,11 @@ public class TestsViewModel extends AbstractViewModel {
         }
 
         return filteredTests;
+    }
+
+    public Observable<Boolean> getEmptyObservable()
+    {
+        return emptySubject.asObservable();
     }
 
 
