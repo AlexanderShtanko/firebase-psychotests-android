@@ -34,13 +34,13 @@
                 android:id="@+id/repeat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/oval_normal"
-                android:paddingLeft="20dp"
-                android:textAllCaps="false"
                 android:layout_centerVertical="true"
+                android:background="@drawable/oval_normal"
                 android:gravity="center"
+                android:paddingLeft="20dp"
                 android:paddingRight="20dp"
-                android:text="Пройти заново" />
+                android:text="Пройти заново"
+                android:textAllCaps="false" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/button_done"
@@ -65,5 +65,61 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Текст результата" />
+
+        <Button
+            android:id="@+id/share_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/oval_normal"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Поделиться результатом"
+            android:textAllCaps="false"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp" />
+        <TextView
+
+            style="@style/TextAppearance.Page.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Если вам понравилось:" />
+        <Button
+            android:id="@+id/rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/oval_normal"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Оценить в Google Play"
+            android:textAllCaps="false"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+
+            style="@style/TextAppearance.Page.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Если вам не понравилось:" />
+        <Button
+            android:id="@+id/feedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/oval_normal"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Написать разработчику"
+            android:textAllCaps="false"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp" />
+
     </LinearLayout>
 </ScrollView>

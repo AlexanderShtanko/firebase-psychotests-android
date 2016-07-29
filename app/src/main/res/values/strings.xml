@@ -13,6 +13,14 @@
     <string name="ok">Ок</string>
     <string name="cancel">Отмена</string>
     <string name="category">Категория</string>
+    <string name="error_connection">Произошла ошибка при получении данных</string>
+    <string name="developer_email">alexjcomp@gmail.com</string>
+    <string name="error_result_not_found">Результат не найден</string>
+    <string name="app_link">\nСсылка на приложение\n\n</string>
+    <string name="app_review">"Отзыв на приложение: "</string>
+    <string name="negative_review">"Что вам не понравилось: "</string>
+    <string name="send_review">Отправить отзыв</string>
+    <string name="select">Выберите</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>

@@ -99,4 +99,12 @@ public class TestResultViewModel extends AbstractViewModel {
     public void setTestId(String testId) {
         testIdSubject.onNext(testId);
     }
+
+    public TestInfo getTestInfo() {
+        return testInfoSubject.getValue();
+    }
+
+    public TestResult getTestResult() {
+        return testResultSubject.getValue();
+    }
 }

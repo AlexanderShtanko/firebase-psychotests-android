@@ -39,13 +39,18 @@ public class TestsViewHolder extends AbstractViewHolder {
 
     }
 
+    private void populateEmpty(Boolean isEmpty) {
+        internetConnectionLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+
+    }
+
     public static class ViewBinder extends AbstractViewBinder<TestsViewHolder, TestsViewModel> {
 
         private final MainActivity activity;
 
         public ViewBinder(Activity activity, TestsViewHolder viewHolder, TestsViewModel viewModel) {
             super(viewHolder, viewModel);
-            this.activity = (MainActivity)activity;
+            this.activity = (MainActivity) activity;
 
             viewModel.getSortedCallback().setAdapter(viewHolder.adapter);
             viewHolder.adapter.setList(viewModel.getSortedList());
@@ -57,24 +62,18 @@ public class TestsViewHolder extends AbstractViewHolder {
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::selectTest));
-            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(filter->populateToolbar(filter)));
-            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(isEmpty->viewHolder.populateEmpty(isEmpty)));
+            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(filter -> populateToolbar(filter)));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(isEmpty -> viewHolder.populateEmpty(isEmpty)));
         }
 
         private void populateToolbar(TestsViewModel.Filter filter) {
-            if(filter.getOnlyDone())
-            {
+            if (filter.getOnlyDone()) {
                 activity.updateToolbar(R.string.tests_done);
-            }
-            else
-            {
-                if(filter.getCategory()!=null)
-                {
-                    activity.updateToolbar(viewHolder.getContext().getResources().getString(R.string.category)+": "+filter.getCategory());
+            } else {
+                if (filter.getCategory() != null) {
+                    activity.updateToolbar(viewHolder.getContext().getResources().getString(R.string.category) + ": " + filter.getCategory());
 
-                }
-                else
-                {
+                } else {
                     activity.updateToolbar(R.string.all_tests);
 
                 }
@@ -90,11 +89,6 @@ public class TestsViewHolder extends AbstractViewHolder {
             Toast.makeText(viewHolder.getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
 
-
-    }
-
-    private void populateEmpty(Boolean isEmpty) {
-        internetConnectionLayout.setVisibility(isEmpty?View.VISIBLE:View.GONE);
 
     }
 }

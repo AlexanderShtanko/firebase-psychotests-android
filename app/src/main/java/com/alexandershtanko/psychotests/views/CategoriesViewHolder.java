@@ -3,6 +3,7 @@ package com.alexandershtanko.psychotests.views;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
@@ -26,6 +27,8 @@ import rx.subscriptions.CompositeSubscription;
 public class CategoriesViewHolder extends AbstractViewHolder {
     @BindView(R.id.list)
     RecyclerView list;
+    @BindView(R.id.layout_internet_connection)
+    View internetConnectionLayout;
 
     CategoriesAdapter adapter;
 
@@ -36,14 +39,17 @@ public class CategoriesViewHolder extends AbstractViewHolder {
         list.setAdapter(adapter);
     }
 
-    public void add(String category)
-    {
+    public void add(String category) {
         adapter.add(category);
     }
 
-    public void populate(List<String> categories)
-    {
+    public void populate(List<String> categories) {
         adapter.populate(categories);
+    }
+
+    private void populateEmpty(Boolean isEmpty) {
+        internetConnectionLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+
     }
 
     public static class ViewBinder extends AbstractViewBinder<CategoriesViewHolder, CategoriesViewModel> {
@@ -60,6 +66,7 @@ public class CategoriesViewHolder extends AbstractViewHolder {
             s.add(viewModel.getErrorObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(this::selectCategory));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(isEmpty -> viewHolder.populateEmpty(isEmpty)));
 
         }
 
@@ -67,9 +74,10 @@ public class CategoriesViewHolder extends AbstractViewHolder {
             ActivityFragments.getInstance().openTests(category);
         }
 
-        public void showError(Throwable throwable)
-        {
-            Toast.makeText(viewHolder.getContext(),throwable.getMessage(),Toast.LENGTH_LONG).show();
+        public void showError(Throwable throwable) {
+            Toast.makeText(viewHolder.getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+
 }

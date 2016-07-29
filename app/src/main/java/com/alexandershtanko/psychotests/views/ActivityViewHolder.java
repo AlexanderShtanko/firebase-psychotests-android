@@ -1,6 +1,7 @@
 package com.alexandershtanko.psychotests.views;
 
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,16 +13,18 @@ import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
-import com.alexandershtanko.psychotests.utils.IntentUtils;
+import com.alexandershtanko.psychotests.utils.RateHelper;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.ActivityViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
 import butterknife.BindView;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 
@@ -53,10 +56,26 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         fragments.init(activity.getSupportFragmentManager(), R.id.content_frame);
         initDrawer(activity);
 
-
+        adView.setVisibility(View.GONE);
         MobileAds.initialize(activity.getApplicationContext(), "ca-app-pub-5101098532198101~8268739673");
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                adView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                super.onAdFailedToLoad(i);
+                adView.setVisibility(View.GONE);
+
+            }
+        });
+
 
 
     }
@@ -91,11 +110,11 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
                     break;
 
                 case R.id.nav_share:
-                    IntentUtils.shareTheApp(getContext());
+                    RateHelper.shareTheApp(getContext());
                     break;
 
                 case R.id.nav_rate:
-                    IntentUtils.rateTheApp(getContext());
+                    RateHelper.rateTheApp(getContext());
                     break;
             }
         });
@@ -173,6 +192,14 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
         @Override
         protected void onBind(CompositeSubscription s) {
+            s.add(viewModel.getErrorObservable()
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(e->viewModel.clearError())
+                    .subscribe(this::showError));
+        }
+
+        private void showError(Throwable error) {
+            Snackbar.make(viewHolder.getView(), R.string.error_connection,Snackbar.LENGTH_INDEFINITE).show();
         }
 
     }

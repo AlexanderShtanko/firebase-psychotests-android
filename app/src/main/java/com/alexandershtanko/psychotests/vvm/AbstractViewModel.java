@@ -37,6 +37,11 @@ public abstract class AbstractViewModel {
     }
 
     public Observable<Throwable> getErrorObservable() {
-        return errorSubject.asObservable();
+        return errorSubject.asObservable().filter(this::notNull);
+    }
+
+    public void clearError()
+    {
+        errorSubject.onNext(null);
     }
 }

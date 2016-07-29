@@ -7,23 +7,40 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <LinearLayout
-        android:layout_width="match_parent" android:padding="20dp"
-        android:layout_height="match_parent" android:orientation="vertical"
+        android:id="@+id/layout_internet_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:gravity="center"
-        android:id="@+id/layout_internet_connection">
-        <ImageView android:src="@mipmap/ic_launcher"
-            android:layout_width="120dp" android:layout_gravity="center"
-            android:layout_height="120dp" />
-        <TextView android:text="Упс!" android:layout_marginTop="10dp"
-            android:layout_width="match_parent" android:layout_gravity="center" android:gravity="center"
-            android:layout_height="wrap_content" android:textSize="18sp"/>
-        <TextView android:text="Проверьте ваше подключение к Интернету" android:layout_marginTop="10dp"
-            android:layout_width="match_parent" android:layout_gravity="center" android:gravity="center"
-            android:layout_height="wrap_content" />
+        android:gravity="center" android:visibility="gone"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_pan_tool_black_24dp"
+             />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Упс!"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Список пуст" />
     </LinearLayout>
 
 </RelativeLayout>

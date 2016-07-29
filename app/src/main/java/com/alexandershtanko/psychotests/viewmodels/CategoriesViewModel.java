@@ -23,6 +23,7 @@ public class CategoriesViewModel extends AbstractViewModel {
     Set<String> categories = new HashSet<>();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
     private BehaviorSubject<String> categorySubject = BehaviorSubject.create();
+    private BehaviorSubject<Boolean> emptySubject = BehaviorSubject.create(true);
 
 
     @Override
@@ -30,7 +31,6 @@ public class CategoriesViewModel extends AbstractViewModel {
         s.add(storage.getTestsObservable()
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::observeData, this::onError));
-
 
     }
 
@@ -45,6 +45,9 @@ public class CategoriesViewModel extends AbstractViewModel {
                 categories.add(category);
             }
         }
+        if(categories.size()==0)
+            emptySubject.onNext(true);
+        else emptySubject.onNext(false);
     }
 
     public List<String> getCategories() {
@@ -72,5 +75,10 @@ public class CategoriesViewModel extends AbstractViewModel {
     @Override
     public void restoreInstanceState() {
 
+    }
+
+    public Observable<Boolean> getEmptyObservable()
+    {
+        return emptySubject.asObservable();
     }
 }

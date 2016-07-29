@@ -11,6 +11,7 @@ import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.models.TestResult;
 import com.alexandershtanko.psychotests.utils.Animate;
+import com.alexandershtanko.psychotests.utils.RateHelper;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestResultViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -33,6 +34,12 @@ public class TestResultViewHolder extends AbstractViewHolder {
     FloatingActionButton doneFab;
     @BindView(R.id.repeat)
     Button repeatButton;
+    @BindView(R.id.share_result)
+    Button shareResultButton;
+    @BindView(R.id.rate)
+    Button rate;
+    @BindView(R.id.feedback)
+    Button feedback;
 
     public TestResultViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
@@ -43,7 +50,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
         if (result != null)
             text.setText(result.getText());
         else
-            text.setText("Результат не найден");
+            text.setText(R.string.error_result_not_found);
 
         Animate.show(text, R.anim.fade_in);
 
@@ -56,6 +63,11 @@ public class TestResultViewHolder extends AbstractViewHolder {
         Animate.show(name, R.anim.fade_in);
 
 
+    }
+
+    private void shareResult(TestInfo testInfo, TestResult testResult) {
+        if (testInfo != null && testResult != null)
+            RateHelper.shareTheResult(getContext(), testInfo.getName(), testResult.getText());
     }
 
     public static class ViewBinder extends AbstractViewBinder<TestResultViewHolder, TestResultViewModel> {
@@ -71,6 +83,11 @@ public class TestResultViewHolder extends AbstractViewHolder {
             s.add(viewModel.getTestInfoObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateTestInfo));
             s.add(RxView.clicks(viewHolder.doneFab).subscribe(v -> ActivityFragments.getInstance().openTests()));
             s.add(RxView.clicks(viewHolder.repeatButton).subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId())));
+            s.add(RxView.clicks(viewHolder.shareResultButton).subscribe(v -> viewHolder.shareResult(viewModel.getTestInfo(), viewModel.getTestResult())));
+            s.add(RxView.clicks(viewHolder.rate).subscribe(v -> RateHelper.rateTheApp(viewHolder.getContext())));
+            s.add(RxView.clicks(viewHolder.feedback).subscribe(v -> RateHelper.feedback(viewHolder.getContext(),viewHolder.getContext().getString(R.string.developer_email))));
+
+
         }
     }
 }
