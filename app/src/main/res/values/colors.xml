@@ -10,4 +10,7 @@
     <color name="orange">#FF9800</color>
     <color name="gray_black">#666666</color>
     <color name="black">#212121</color>
+    <color name="black_overlay">#8b000000</color>
+    <color name="white">#ffffff</color>
+    <color name="white_overlay">#96ffffff</color>
 </resources>

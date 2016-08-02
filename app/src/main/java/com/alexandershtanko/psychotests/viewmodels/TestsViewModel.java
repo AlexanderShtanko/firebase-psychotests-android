@@ -49,18 +49,22 @@ public class TestsViewModel extends AbstractViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::addToSortedList, this::onError));
+
     }
 
 
     private void addToSortedList(List<Test> tests) {
+        String testOfDayId=storage.getTestOfDayId();
 
         if (tests != null && tests.size() > 0) {
-            emptySubject.onNext(false);
+            if (emptySubject.getValue())
+                emptySubject.onNext(false);
             for (Test test : tests) {
+                if(test.getInfo().getTestId().equals(testOfDayId))
+                    test.getInfo().setTestOfDay(true);
                 sortedList.add(test.getInfo());
             }
-        }
-        else
+        } else if (!emptySubject.getValue())
             emptySubject.onNext(true);
 
 
@@ -87,8 +91,7 @@ public class TestsViewModel extends AbstractViewModel {
         return filteredTests;
     }
 
-    public Observable<Boolean> getEmptyObservable()
-    {
+    public Observable<Boolean> getEmptyObservable() {
         return emptySubject.asObservable();
     }
 

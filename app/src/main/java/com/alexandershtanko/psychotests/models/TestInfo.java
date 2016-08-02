@@ -11,6 +11,7 @@ public class TestInfo {
     private String testId;
     private boolean done;
     private long dateAdd = 0;
+    private boolean testOfDay;
 
     public String getName() {
         return name;
@@ -67,5 +68,13 @@ public class TestInfo {
 
     public boolean isDone() {
         return done;
+    }
+
+    public boolean isTestOfDay() {
+        return testOfDay;
+    }
+
+    public void setTestOfDay(boolean testOfDay) {
+        this.testOfDay = testOfDay;
     }
 }

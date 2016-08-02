@@ -86,4 +86,8 @@ public class Storage {
         }
         return null;
     }
+
+    public String getTestOfDayId() {
+        return null ;
+    }
 }

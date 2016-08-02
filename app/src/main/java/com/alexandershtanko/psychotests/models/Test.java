@@ -35,5 +35,4 @@ public class Test {
         this.results = results;
     }
 
-
 }

@@ -21,23 +21,47 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 /**
  * Created by aleksandr on 12.06.16.
  */
-public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> {
+public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int TYPE_TEST = 0;
+    private static final int TYPE_TEST_OF_DAY = 1;
     static int[] imgBgs = {R.drawable.circle_gray, R.drawable.circle_blue, R.drawable.circle_red, R.drawable.circle_green, R.drawable.circle_orange};
     SortedList<TestInfo> list = new SortedList<>(TestInfo.class, null);
-    private OnItemClickListener onItemCLickListener;
+    private OnItemClickListener onItemClickListener;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, parent, false));
+        switch (viewType) {
+            case TYPE_TEST:
+                return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, parent, false));
+            case TYPE_TEST_OF_DAY:
+                return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests_tod, parent, false));
+        }
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.populate(position, list.get(position), onItemCLickListener);
+    public int getItemViewType(int position) {
+        if (list.get(position).isTestOfDay())
+            return TYPE_TEST_OF_DAY;
+        else
+            return TYPE_TEST;
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case TYPE_TEST:
+                ((ViewHolder) holder).populate(position, list.get(position), onItemClickListener);
+                break;
+            case TYPE_TEST_OF_DAY:
+                ((ViewHolderTOD) holder).populate(list.get(position), onItemClickListener);
+                break;
+        }
+
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemCLickListener = onItemClickListener;
+        this.onItemClickListener = onItemClickListener;
         notifyDataSetChanged();
     }
 
@@ -89,6 +113,33 @@ public class TestsAdapter extends RecyclerView.Adapter<TestsAdapter.ViewHolder> 
                 done.setVisibility(View.VISIBLE);
             } else
                 done.setVisibility(View.GONE);
+        }
+    }
+
+    public static class ViewHolderTOD extends RecyclerView.ViewHolder {
+        @BindView(R.id.name)
+        TextView name;
+        @BindView(R.id.image)
+        ImageView image;
+
+
+        public ViewHolderTOD(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void populate(TestInfo testInfo, OnItemClickListener onItemClickListener) {
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null)
+                    onItemClickListener.onItemClick(testInfo.getTestId());
+            });
+            name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
+            if (testInfo.getImage() != null && !testInfo.getImage().equals(""))
+                Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.ic_help_outline_white_24dp).into(image);
+            else
+                Glide.with(itemView.getContext()).load(R.drawable.ic_help_outline_white_24dp).into(image);
+
         }
     }
 }
