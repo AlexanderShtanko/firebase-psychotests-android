@@ -1,10 +1,12 @@
 package com.alexandershtanko.psychotests.models;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 
 import com.alexandershtanko.psychotests.utils.RxPaper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +18,10 @@ import rx.Observable;
  */
 public class Storage {
 
+    public static final String TEST_OF_DAY = "test of day";
     private static final String BOOK_TESTS = "TEST";
     private static final String BOOK_RESULTS = "RESULT";
+    private static final String BOOK_DATA = "DATA";
     private static Storage instance;
 
     private Context context;
@@ -88,6 +92,26 @@ public class Storage {
     }
 
     public String getTestOfDayId() {
-        return null ;
+        RxPaper.PaperObject<String> paperObject = RxPaper.getInstance().readOnce(BOOK_DATA, TEST_OF_DAY);
+        if (paperObject != null && DateUtils.isToday(paperObject.getCreatedAt()))
+            return paperObject.getObject();
+        else {
+            String testOfDay = null;
+
+            Map<String, RxPaper.PaperObject<Object>> tests = RxPaper.getInstance().readOnce(BOOK_TESTS);
+            if (tests != null && tests.size() > 0) {
+                RxPaper.PaperObject<Object> lastTest = Collections.max(tests.values(), (lhs, rhs) -> {
+                    if (lhs.getCreatedAt() > rhs.getCreatedAt())
+                        return 1;
+                    else if (lhs.getCreatedAt() < rhs.getCreatedAt())
+                        return -1;
+                    else return 0;
+                });
+                testOfDay = lastTest.getKey();
+                RxPaper.getInstance().write(BOOK_DATA, TEST_OF_DAY, testOfDay);
+            }
+
+            return testOfDay;
+        }
     }
 }

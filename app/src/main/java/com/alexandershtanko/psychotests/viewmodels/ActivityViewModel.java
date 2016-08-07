@@ -2,6 +2,7 @@ package com.alexandershtanko.psychotests.viewmodels;
 
 import android.content.Context;
 
+import com.alexandershtanko.psychotests.helpers.AlarmHelper;
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.utils.RxFirebase;
@@ -16,13 +17,17 @@ import rx.subscriptions.CompositeSubscription;
  * Created by aleksandr on 12.06.16.
  */
 public class ActivityViewModel extends AbstractViewModel {
+    private static final int ALARM_ID = 111;
     private Storage storage;
     private DatabaseReference testsRef = FirebaseDatabase.getInstance().getReference("tests");
 
     public ActivityViewModel(Context context) {
         storage = Storage.getInstance();
         storage.init(context);
+        AlarmHelper.setTestOfDayAlarm(context);
     }
+
+
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
@@ -30,6 +35,7 @@ public class ActivityViewModel extends AbstractViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(this::observe, this::onError));
+
     }
 
     public void observe(RxFirebase.ChildEvent<Test> event) {

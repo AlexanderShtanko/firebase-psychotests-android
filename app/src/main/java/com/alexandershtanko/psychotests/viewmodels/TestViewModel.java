@@ -104,4 +104,8 @@ public class TestViewModel extends AbstractViewModel {
     public Observable<String> getTestNameObservable() {
         return testSubject.asObservable().filter(this::notNull).map(Test::getInfo).map(TestInfo::getName);
     }
+
+    public Observable<String> getTestImageObservable() {
+        return testSubject.asObservable().filter(this::notNull).map(Test::getInfo).map(TestInfo::getImage).filter(this::notNull);
+    }
 }

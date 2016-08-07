@@ -3,7 +3,9 @@ package com.alexandershtanko.psychotests.views;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -32,6 +35,10 @@ public class TestViewHolder extends AbstractViewHolder {
     TextView number;
     @BindView(R.id.layout_variants)
     LinearLayout variants;
+    @BindView(R.id.background)
+    ImageView backgroundImage;
+    @BindView(R.id.layout_test)
+    View testLayout;
 
     public TestViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
@@ -63,11 +70,18 @@ public class TestViewHolder extends AbstractViewHolder {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(index -> viewHolder
                             .populateNumber(index, viewModel.getQuestionsCount())));
+            s.add(viewModel.getTestImageObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateBackground));
         }
 
         private void populateToolbar(String name) {
             activity.updateToolbar(name);
         }
+
+        private void populateBackground(String background) {
+            Glide.with(viewHolder.getContext()).load(background).into(viewHolder.backgroundImage);
+
+        }
+
 
         public void populateQuestion(TestQuestion question) {
 

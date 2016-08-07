@@ -1,7 +1,9 @@
 package com.alexandershtanko.psychotests.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.graphics.Palette;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,11 +20,12 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.jakewharton.rxbinding.view.RxView;
 
 import butterknife.BindView;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -59,10 +62,18 @@ public class TestInfoViewHolder extends AbstractViewHolder {
 
         if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {
             image.setVisibility(View.VISIBLE);
-            Glide.with(getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.ic_help_outline_white_48dp).bitmapTransform(new SketchFilterTransformation(getContext()),new CropCircleTransformation(getContext())).into(image);
+            Glide.with(getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.tree).bitmapTransform(new CropCircleTransformation(getContext())).into(image);
+            Glide.with(getContext()).load(testInfo.getImage()).asBitmap().into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                    Palette.from(resource).generate(palette -> {
+
+                    });
+                }
+            });
         } else {
             image.setVisibility(View.VISIBLE);
-            Glide.with(getContext()).load(R.drawable.ic_help_outline_white_48dp).bitmapTransform(new SketchFilterTransformation(getContext()),new CropCircleTransformation(getContext())).into(image);
+            Glide.with(getContext()).load(R.drawable.tree).bitmapTransform(new CropCircleTransformation(getContext())).into(image);
 
         }
 

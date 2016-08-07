@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.models.TestInfo;
+import com.alexandershtanko.psychotests.utils.Animate;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -17,6 +18,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
+import jp.wasabeef.glide.transformations.gpu.VignetteFilterTransformation;
 
 /**
  * Created by aleksandr on 12.06.16.
@@ -24,17 +27,17 @@ import jp.wasabeef.glide.transformations.CropCircleTransformation;
 public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_TEST = 0;
     private static final int TYPE_TEST_OF_DAY = 1;
-    static int[] imgBgs = {R.drawable.circle_gray, R.drawable.circle_blue, R.drawable.circle_red, R.drawable.circle_green, R.drawable.circle_orange};
+    static int[] imgBgs = {R.drawable.circle_gray, R.drawable.circle_blue, R.drawable.circle_red, R.drawable.circle_orange};
     SortedList<TestInfo> list = new SortedList<>(TestInfo.class, null);
     private OnItemClickListener onItemClickListener;
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_TEST:
                 return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests, parent, false));
             case TYPE_TEST_OF_DAY:
-                return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests_tod, parent, false));
+                return new ViewHolderTOD(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_tests_tod, parent, false));
         }
         return null;
     }
@@ -103,11 +106,11 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             category.setText(StringUtils.capitalizeSentences(testInfo.getCategory()));
             if (testInfo.getImage() != null && !testInfo.getImage().equals(""))
                 Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.drawable.ic_help_outline_white_24dp).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
+                        .bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
             else
-                Glide.with(itemView.getContext()).load(R.drawable.ic_help_outline_white_24dp).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
+                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).bitmapTransform(new SepiaFilterTransformation(itemView.getContext()),new CropCircleTransformation(itemView.getContext())).into(image);
 
-            image.setBackgroundResource(imgBgs[position % imgBgs.length]);
+            //image.setBackgroundResource(imgBgs[position % imgBgs.length]);
 
             if (testInfo.isDone()) {
                 done.setVisibility(View.VISIBLE);
@@ -117,11 +120,10 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public static class ViewHolderTOD extends RecyclerView.ViewHolder {
-        @BindView(R.id.name)
-        TextView name;
         @BindView(R.id.image)
         ImageView image;
-
+        @BindView(R.id.name)
+        TextView name;
 
         public ViewHolderTOD(View itemView) {
             super(itemView);
@@ -129,17 +131,28 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         public void populate(TestInfo testInfo, OnItemClickListener onItemClickListener) {
+
             itemView.setOnClickListener(v -> {
                 if (onItemClickListener != null)
                     onItemClickListener.onItemClick(testInfo.getTestId());
             });
             name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
-            if (testInfo.getImage() != null && !testInfo.getImage().equals(""))
-                Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                        .placeholder(R.drawable.ic_help_outline_white_24dp).into(image);
+
+
+            if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {
+                Glide.with(itemView.getContext()).load(testInfo.getImage()).bitmapTransform(new VignetteFilterTransformation(itemView.getContext()),new CropCircleTransformation(itemView.getContext())).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(image);
+            }
             else
-                Glide.with(itemView.getContext()).load(R.drawable.ic_help_outline_white_24dp).into(image);
+                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).into(image);
+            animateImage(image);
 
         }
+
+        public void animateImage(ImageView imageView) {
+            Animate.animateImageView(imageView);
+        }
     }
+
+
 }

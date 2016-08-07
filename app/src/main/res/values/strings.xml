@@ -21,6 +21,8 @@
     <string name="negative_review">"Что вам не понравилось: "</string>
     <string name="send_review">Отправить отзыв</string>
     <string name="select">Выберите</string>
+    <string name="title_test_of_day">Доброе утро</string>
+    <string name="desc_test_of_day">Пройдите ежедневный тест за чашкой кофе</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>
