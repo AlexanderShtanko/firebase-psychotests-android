@@ -35,14 +35,16 @@ public class TestResultViewHolder extends AbstractViewHolder {
     @BindView(R.id.repeat)
     Button repeatButton;
     @BindView(R.id.share_result)
-    Button shareResultButton;
+    View shareResultButton;
     @BindView(R.id.rate)
-    Button rate;
+    View rate;
     @BindView(R.id.feedback)
-    Button feedback;
+    View feedback;
 
     public TestResultViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
+        doneFab.hide();
+        doneFab.show();
     }
 
     public void populateResult(TestResult result) {

@@ -1,56 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent" android:padding="16dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        android:padding="16dp">
 
 
-        <ImageView android:layout_marginBottom="10dp" android:background="@drawable/circle_gray"
-            android:layout_width="150dp" android:id="@+id/image" android:layout_marginTop="10dp" android:padding="10dp"
-            android:layout_height="150dp" android:layout_gravity="center_horizontal" />
-        <TextView
-            android:id="@+id/name"
-            style="@style/TextAppearance.Page.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Название теста" />
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/circle_gray"
+            android:padding="0dp" />
 
-        <TextView
-            android:id="@+id/category"
-            style="@style/TextAppearance.Page.Category"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:singleLine="true"
-            android:text="Категория" />
+            android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/TextAppearance.Page.Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Название теста" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp" android:layout_centerVertical="true"
-                android:background="@color/gray" />
+                <TextView
+                    android:id="@+id/category"
+                    style="@style/TextAppearance.Page.Category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:singleLine="true"
+                    android:text="Категория" />
+            </LinearLayout>
 
             <android.support.design.widget.FloatingActionButton
-                android:layout_centerVertical="true"
+                android:id="@+id/start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" android:foregroundGravity="center"
+                android:layout_margin="10dp"
                 android:src="@drawable/ic_arrow_forward_white_24dp"
-                app:fabSize="normal" android:layout_alignParentRight="true"
-                android:layout_width="wrap_content" android:id="@+id/start"
-                android:layout_height="wrap_content" />
+                app:fabSize="normal" />
+        </LinearLayout>
 
-            <Button android:id="@+id/show_result" android:background="@drawable/oval_normal" android:paddingLeft="20dp" android:paddingRight="20dp"
-                android:layout_width="wrap_content" android:text="Показать результат" android:textAllCaps="false"
-                android:layout_height="wrap_content" android:layout_centerVertical="true" />
-        </RelativeLayout>
+
+        <Button
+            android:id="@+id/show_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/oval_normal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Показать результат"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/TextAppearance.Page.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Описание теста" />
 
         <TextView
             android:id="@+id/desc"

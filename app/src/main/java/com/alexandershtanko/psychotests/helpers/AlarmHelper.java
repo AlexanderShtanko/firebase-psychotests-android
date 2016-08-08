@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
-import com.alexandershtanko.psychotests.receivers.TestOfDayAlarmReceiver;
+import com.alexandershtanko.psychotests.receivers.TODAlarmReceiver;
 
 import java.util.Calendar;
 
@@ -24,7 +24,7 @@ public class AlarmHelper {
         calendar.set(Calendar.MINUTE, 0);
 
 
-        Intent alarmIntent = new Intent(context, TestOfDayAlarmReceiver.class);
+        Intent alarmIntent = new Intent(context, TODAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 143532, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         manager.cancel(pendingIntent);
         manager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),

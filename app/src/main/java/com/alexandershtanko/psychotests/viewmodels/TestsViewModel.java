@@ -54,15 +54,21 @@ public class TestsViewModel extends AbstractViewModel {
 
 
     private void addToSortedList(List<Test> tests) {
-        String testOfDayId=storage.getTestOfDayId();
+        String testOfDayId = storage.getTestOfDayId();
 
         if (tests != null && tests.size() > 0) {
             if (emptySubject.getValue())
                 emptySubject.onNext(false);
+
+            boolean isFilterNull = filterSubject.getValue() == null||!filterSubject.getValue().getOnlyDone()&&filterSubject.getValue().getCategory()==null;
+
             for (Test test : tests) {
-                if(test.getInfo().getTestId().equals(testOfDayId))
-                    test.getInfo().setTestOfDay(true);
+                if (isFilterNull) {
+                    if (test.getInfo().getTestId().equals(testOfDayId))
+                        test.getInfo().setTestOfDay(true);
+                }
                 sortedList.add(test.getInfo());
+
             }
         } else if (!emptySubject.getValue())
             emptySubject.onNext(true);

@@ -132,15 +132,15 @@ public class Animate {
 
         AnimatorSet animatorSet1 = new AnimatorSet();
         animatorSet1.setDuration(1000).playTogether(
-                ObjectAnimator.ofFloat(view, View.SCALE_X, 5f),
-                ObjectAnimator.ofFloat(view, View.SCALE_Y, 5f));
+                ObjectAnimator.ofFloat(view, View.SCALE_X, 8f),
+                ObjectAnimator.ofFloat(view, View.SCALE_Y, 8f));
 
         AnimatorSet animatorSet2 = new AnimatorSet();
         animatorSet2.playSequentially(
-                ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 50).setDuration(5000),
-                ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 50).setDuration(5000),
-                ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -50).setDuration(10000),
-                ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, -50).setDuration(10000),
+                ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 100).setDuration(5000),
+                ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 100).setDuration(5000),
+                ObjectAnimator.ofFloat(view, View.TRANSLATION_X, -100).setDuration(10000),
+                ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, -100).setDuration(10000),
                 ObjectAnimator.ofFloat(view, View.TRANSLATION_X, 0).setDuration(10000),
                 ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, 0).setDuration(10000)
 

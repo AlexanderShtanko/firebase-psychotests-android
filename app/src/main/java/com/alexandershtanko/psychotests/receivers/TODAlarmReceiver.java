@@ -15,7 +15,7 @@ import com.alexandershtanko.psychotests.activities.MainActivity;
 /**
  * Created by aleksandr on 07.08.16.
  */
-public class TestOfDayAlarmReceiver extends BroadcastReceiver {
+public class TODAlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         sendNotification(context);

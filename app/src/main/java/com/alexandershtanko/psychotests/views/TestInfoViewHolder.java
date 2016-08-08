@@ -48,21 +48,21 @@ public class TestInfoViewHolder extends AbstractViewHolder {
 
     public TestInfoViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
+        startFab.setVisibility(View.GONE);
+        Animate.show(startFab,R.anim.scale_in);
+
+
 
     }
 
     public void populateTestInfo(TestInfo testInfo) {
-        name.setVisibility(View.GONE);
-        category.setVisibility(View.GONE);
-        desc.setVisibility(View.GONE);
-
         name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
         category.setText(StringUtils.capitalizeSentences(testInfo.getCategory()));
         desc.setText(testInfo.getDesc());
 
         if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {
             image.setVisibility(View.VISIBLE);
-            Glide.with(getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.tree).bitmapTransform(new CropCircleTransformation(getContext())).into(image);
+            Glide.with(getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE).bitmapTransform(new CropCircleTransformation(getContext())).into(image);
             Glide.with(getContext()).load(testInfo.getImage()).asBitmap().into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

@@ -10,46 +10,46 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/name"
-            style="@style/TextAppearance.Page.Title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Название теста" />
+            android:orientation="horizontal">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp">
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_centerVertical="true"
-                android:background="@color/gray" />
-
-            <Button
-                android:id="@+id/repeat"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/name"
+                style="@style/TextAppearance.Page.Title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:background="@drawable/oval_normal"
-                android:gravity="center"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="Пройти заново"
-                android:textAllCaps="false" />
+                android:layout_weight="1"
+                android:text="Название теста" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/button_done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
                 android:src="@drawable/ic_check_white_24dp"
                 app:fabSize="normal" />
-        </RelativeLayout>
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:background="@drawable/oval_normal"
+            android:gravity="center"
+            android:paddingLeft="20dp" android:textSize="16sp"
+            android:paddingRight="20dp"
+            android:text="Пройти заново"
+            android:textAllCaps="false"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp" />
+
 
         <TextView
             style="@style/TextAppearance.Page.Title"
@@ -66,60 +66,45 @@
             android:layout_marginTop="10dp"
             android:text="Текст результата" />
 
-        <Button
-            android:id="@+id/share_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@drawable/oval_normal"
-            android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="Поделиться результатом"
-            android:textAllCaps="false"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp" />
-        <TextView
 
-            style="@style/TextAppearance.Page.Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Если вам понравилось:" />
-        <Button
-            android:id="@+id/rate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@drawable/oval_normal"
-            android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="Оценить в Google Play"
-            android:textAllCaps="false"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp" />
+        <LinearLayout
+            android:layout_width="wrap_content" android:layout_gravity="center"
+            android:layout_height="wrap_content" android:orientation="horizontal"
+            android:layout_marginTop="15dp">
 
-        <TextView
 
-            style="@style/TextAppearance.Page.Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Если вам не понравилось:" />
-        <Button
-            android:id="@+id/feedback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:background="@drawable/oval_normal"
-            android:gravity="center"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="Написать разработчику"
-            android:textAllCaps="false"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/feedback" app:backgroundTint="@color/gray"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_thumb_down_white_24dp"
+                app:fabSize="normal" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/rate" app:backgroundTint="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_thumb_up_white_24dp"
+                app:fabSize="normal" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/share_result"
+                android:layout_width="wrap_content" app:backgroundTint="@color/colorAccent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_share_white_24dp"
+                app:fabSize="normal" />
+        </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

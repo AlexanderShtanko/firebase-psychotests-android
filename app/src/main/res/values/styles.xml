@@ -32,7 +32,7 @@
         <item name="android:textColor">@color/gray_black</item>
     </style>
     <style name="TextAppearance.Page.Text">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/black</item>
     </style>
 

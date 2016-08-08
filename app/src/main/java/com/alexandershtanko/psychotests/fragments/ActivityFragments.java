@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.alexandershtanko.psychotests.R;
+
 /**
  * Created by aleksandr on 13.06.16.
  */
@@ -65,7 +67,7 @@ public class ActivityFragments {
         if (old != null)
             fragmentManager.beginTransaction().remove(old).commit();
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction().replace(containerId, fragment, tag);
+        FragmentTransaction transaction = fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(containerId, fragment, tag);
 
         if (toBackStack) {
             fragmentManager.popBackStack(tag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
