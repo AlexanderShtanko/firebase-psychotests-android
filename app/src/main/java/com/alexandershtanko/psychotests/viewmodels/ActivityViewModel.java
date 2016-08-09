@@ -28,14 +28,12 @@ public class ActivityViewModel extends AbstractViewModel {
     public static final String TESTS = "tests";
     public static final String LIKE_STATUS = "like_status";
     private final String deviceId;
-    private Storage storage;
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
     public ActivityViewModel(Context context) {
         deviceId = DeviceUtils.getDeviceId(context);
-        storage = Storage.getInstance();
-        storage.init(context);
+        Storage.getInstance().init(context);
         AlarmHelper.setTestOfDayAlarm(context);
     }
 
@@ -48,7 +46,7 @@ public class ActivityViewModel extends AbstractViewModel {
                 .doOnError(this::onError)
                 .subscribe(this::observe, this::onError));
 
-        s.add(storage.getLikeStatusObservable().skip(1)
+        s.add(Storage.getInstance().getLikeStatusObservable().skip(1)
                 .subscribeOn(Schedulers.io())
                 .doOnError(this::onError)
                 .subscribe(this::sendTestLikeStatus, this::onError));
@@ -76,7 +74,7 @@ public class ActivityViewModel extends AbstractViewModel {
             case CHANGED:
             case MOVED:
             case ADDED:
-                storage.addTest(test);
+                Storage.getInstance().addTest(test);
 
                 databaseReference.child(LIKE_STATUS).child(testId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -96,7 +94,7 @@ public class ActivityViewModel extends AbstractViewModel {
                         test.getInfo().setLikeCount(countLike);
                         test.getInfo().setDislikeCount(countDislike);
 
-                        storage.addTest(test);
+                        Storage.getInstance().addTest(test);
                     }
 
                     @Override
@@ -108,7 +106,7 @@ public class ActivityViewModel extends AbstractViewModel {
                 break;
 
             case REMOVED:
-                storage.removeTest(testId);
+                Storage.getInstance().removeTest(testId);
                 break;
         }
 

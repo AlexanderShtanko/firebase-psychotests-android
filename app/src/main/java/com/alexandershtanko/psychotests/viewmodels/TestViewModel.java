@@ -24,11 +24,10 @@ public class TestViewModel extends AbstractViewModel {
     private BehaviorSubject<TestQuestion> currentQuestionSubject = BehaviorSubject.create();
     private BehaviorSubject<String> testIdSubject = BehaviorSubject.create();
     private List<Integer> resultList = new ArrayList<>();
-    private Storage storage = Storage.getInstance();
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
-        s.add(testIdSubject.asObservable().switchMap(storage::getTestObservable).first()
+        s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getTestObservable).first()
                 .subscribeOn(Schedulers.io()).subscribe(testSubject::onNext));
 
         s.add(testSubject.asObservable().subscribeOn(Schedulers.io()).subscribe(test -> currentQuestionIndexSubject.onNext(0)));
@@ -43,7 +42,7 @@ public class TestViewModel extends AbstractViewModel {
                 .switchMap(index -> testSubject.asObservable()
                         .filter(test -> index == test.getQuestions().size()))
                 .subscribeOn(Schedulers.io())
-                .subscribe(test -> storage.setResult(test.getInfo().getTestId(), resultList)));
+                .subscribe(test -> Storage.getInstance().setResult(test.getInfo().getTestId(), resultList)));
     }
 
     @Override

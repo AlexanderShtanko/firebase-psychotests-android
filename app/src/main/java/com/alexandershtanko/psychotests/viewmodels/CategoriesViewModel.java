@@ -20,7 +20,6 @@ import rx.subscriptions.CompositeSubscription;
  * Created by aleksandr on 12.06.16.
  */
 public class CategoriesViewModel extends AbstractViewModel {
-    Storage storage = Storage.getInstance();
     Map<String,Category> categories = new HashMap<>();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
     private BehaviorSubject<Category> categorySubject = BehaviorSubject.create();
@@ -29,7 +28,7 @@ public class CategoriesViewModel extends AbstractViewModel {
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
-        s.add(storage.getTestsObservable()
+        s.add(Storage.getInstance().getTestsObservable()
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::observeData, this::onError));
 

@@ -23,7 +23,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class TestsViewModel extends AbstractViewModel {
 
-    private Storage storage = Storage.getInstance();
 
 
     private SortedCallback callback;
@@ -44,7 +43,7 @@ public class TestsViewModel extends AbstractViewModel {
     @Override
     protected void onSubscribe(CompositeSubscription s) {
         s.add(filterSubject.asObservable()
-                .switchMap(filter -> storage.getTestsObservable()
+                .switchMap(filter -> Storage.getInstance().getTestsObservable()
                         .map(tests -> filter(tests, filter)).subscribeOn(Schedulers.io()))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -54,7 +53,7 @@ public class TestsViewModel extends AbstractViewModel {
 
 
     private void addToSortedList(List<Test> tests) {
-        String testOfDayId = storage.getTestOfDayId();
+        String testOfDayId = Storage.getInstance().getTestOfDayId();
 
         if (tests != null && tests.size() > 0) {
             if (emptySubject.getValue())
@@ -83,7 +82,7 @@ public class TestsViewModel extends AbstractViewModel {
 
         for (Test test : tests) {
             if (category == null || test.getInfo().getCategory() != null && test.getInfo().getCategory().equals(category)) {
-                boolean isDone = storage.hasResult(test.getInfo().getTestId());
+                boolean isDone = Storage.getInstance().hasResult(test.getInfo().getTestId());
                 if (!onlyDone || isDone) {
                     if (test.getInfo() != null)
                         test.getInfo().setDone(isDone);

@@ -18,7 +18,6 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class TestResultViewModel extends AbstractViewModel {
 
-    private Storage storage = Storage.getInstance();
 
     private BehaviorSubject<TestInfo> testInfoSubject = BehaviorSubject.create();
     private BehaviorSubject<TestResult> testResultSubject = BehaviorSubject.create();
@@ -29,16 +28,16 @@ public class TestResultViewModel extends AbstractViewModel {
     @Override
     protected void onSubscribe(CompositeSubscription s) {
         s.add(testIdSubject.asObservable()
-                .switchMap(storage::getTestObservable)
+                .switchMap(Storage.getInstance()::getTestObservable)
                 .subscribeOn(Schedulers.io()).subscribe(test -> {
                     testInfoSubject.onNext(test.getInfo());
-                    List<Integer> result = storage.getResult(test.getInfo().getTestId());
+                    List<Integer> result = Storage.getInstance().getResult(test.getInfo().getTestId());
                     if (result != null) {
                         testResultSubject.onNext(getResult(test, result));
                     }
                 }, this::onError));
 
-        s.add(testIdSubject.asObservable().switchMap(storage::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
+        s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
                 likeStatusSubject::onNext
         ));
     }
@@ -114,11 +113,11 @@ public class TestResultViewModel extends AbstractViewModel {
     }
 
     public void like() {
-        storage.setLikeStatus(testIdSubject.getValue(), true);
+        Storage.getInstance().setLikeStatus(testIdSubject.getValue(), true);
     }
 
     public void dislike() {
-        storage.setLikeStatus(testIdSubject.getValue(), false);
+        Storage.getInstance().setLikeStatus(testIdSubject.getValue(), false);
 
     }
 

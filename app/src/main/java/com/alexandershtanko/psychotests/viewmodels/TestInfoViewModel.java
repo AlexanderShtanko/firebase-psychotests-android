@@ -14,7 +14,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by aleksandr on 12.06.16.
  */
 public class TestInfoViewModel extends AbstractViewModel {
-    Storage storage = Storage.getInstance();
+
     BehaviorSubject<String> testIdSubject = BehaviorSubject.create();
     BehaviorSubject<TestInfo> testInfoSubject = BehaviorSubject.create();
     BehaviorSubject<Boolean> hasResultSubject = BehaviorSubject.create();
@@ -24,7 +24,7 @@ public class TestInfoViewModel extends AbstractViewModel {
     @Override
     protected void onSubscribe(CompositeSubscription s) {
         s.add(testIdSubject.asObservable()
-                .switchMap(storage::getTestObservable)
+                .switchMap(Storage.getInstance()::getTestObservable)
                 .filter(this::notNull)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
@@ -32,11 +32,11 @@ public class TestInfoViewModel extends AbstractViewModel {
                 .subscribe(testInfoSubject::onNext));
 
         s.add(testIdSubject.asObservable()
-                .map(storage::hasResult)
+                .map(Storage.getInstance()::hasResult)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(hasResultSubject::onNext));
-        s.add(testIdSubject.asObservable().switchMap(storage::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
+        s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
                 likeStatusSubject::onNext
         ));
     }
@@ -68,11 +68,11 @@ public class TestInfoViewModel extends AbstractViewModel {
     }
 
     public void like() {
-        storage.setLikeStatus(testIdSubject.getValue(), true);
+        Storage.getInstance().setLikeStatus(testIdSubject.getValue(), true);
     }
 
     public void dislike() {
-        storage.setLikeStatus(testIdSubject.getValue(), false);
+        Storage.getInstance().setLikeStatus(testIdSubject.getValue(), false);
 
     }
 

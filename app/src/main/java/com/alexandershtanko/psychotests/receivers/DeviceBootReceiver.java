@@ -12,6 +12,7 @@ import com.alexandershtanko.psychotests.helpers.AlarmHelper;
 public class DeviceBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        AlarmHelper.unsetAlarm(context);
         AlarmHelper.setTestOfDayAlarm(context);
     }
 

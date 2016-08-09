@@ -23,8 +23,7 @@ public class AlarmHelper {
         if (!isAlarmSet(context)) {
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-            Intent alarmIntent = new Intent(context, TODAlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = getPendingIntent(context);
 
 
             Calendar firingCal = Calendar.getInstance();
@@ -54,8 +53,24 @@ public class AlarmHelper {
 
     }
 
+    private static PendingIntent getPendingIntent(Context context) {
+        Intent alarmIntent = new Intent(context, TODAlarmReceiver.class);
+        return PendingIntent.getBroadcast(context, REQUEST_CODE, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     private static boolean isAlarmSet(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_ALARM, Context.MODE_PRIVATE);
         return prefs.contains(ALARM_SET);
     }
+
+    public static void unsetAlarm(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_ALARM, Context.MODE_PRIVATE);
+        if (prefs.contains(ALARM_SET))
+            prefs.edit().remove(ALARM_SET).commit();
+
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(getPendingIntent(context));
+    }
+
+
 }
