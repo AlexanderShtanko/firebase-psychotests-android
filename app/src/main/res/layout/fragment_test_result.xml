@@ -37,18 +37,20 @@
 
         <Button
             android:id="@+id/repeat"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
+            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:background="@drawable/oval_normal"
+            android:drawableLeft="@drawable/ic_autorenew_black_24dp"
+            android:drawablePadding="10dp"
             android:gravity="center"
-            android:paddingLeft="20dp" android:textSize="16sp"
+            android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="Пройти заново"
             android:textAllCaps="false"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp" />
+            android:textSize="16sp" />
 
 
         <TextView
@@ -68,40 +70,44 @@
 
 
         <LinearLayout
-            android:layout_width="wrap_content" android:layout_gravity="center"
-            android:layout_height="wrap_content" android:orientation="horizontal"
-            android:layout_marginTop="15dp">
-
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
 
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/dislike" app:backgroundTint="@color/gray"
+                android:id="@+id/dislike"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:src="@drawable/ic_thumb_down_white_24dp"
+                app:backgroundTint="@color/gray"
                 app:fabSize="normal" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/like" app:backgroundTint="@color/gray"
+                android:id="@+id/like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:src="@drawable/ic_thumb_up_white_24dp"
+                app:backgroundTint="@color/gray"
                 app:fabSize="normal" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/share_result"
-                android:layout_width="wrap_content" app:backgroundTint="@color/colorPrimary"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:src="@drawable/ic_share_white_24dp"
+                app:backgroundTint="@color/colorPrimary"
                 app:fabSize="normal" />
         </LinearLayout>
 

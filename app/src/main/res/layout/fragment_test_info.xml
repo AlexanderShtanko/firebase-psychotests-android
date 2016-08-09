@@ -63,11 +63,11 @@
 
         <Button
             android:id="@+id/show_result"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_gravity="left"
+            android:layout_marginTop="20dp" android:drawableLeft="@drawable/ic_done_black_24dp" android:drawablePadding="10dp"
             android:background="@drawable/oval_normal"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
