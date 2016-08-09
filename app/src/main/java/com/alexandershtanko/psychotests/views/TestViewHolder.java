@@ -22,6 +22,7 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -78,7 +79,7 @@ public class TestViewHolder extends AbstractViewHolder {
         }
 
         private void populateBackground(String background) {
-            Glide.with(viewHolder.getContext()).load(background).into(viewHolder.backgroundImage);
+            Glide.with(viewHolder.getContext()).load(background).bitmapTransform(new BlurTransformation(viewHolder.getContext())).into(viewHolder.backgroundImage);
 
         }
 

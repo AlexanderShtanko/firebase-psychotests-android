@@ -45,8 +45,8 @@ public class TestsViewModel extends AbstractViewModel {
     protected void onSubscribe(CompositeSubscription s) {
         s.add(filterSubject.asObservable()
                 .switchMap(filter -> storage.getTestsObservable()
-                        .map(tests -> filter(tests, filter)))
-                .subscribeOn(Schedulers.io())
+                        .map(tests -> filter(tests, filter)).subscribeOn(Schedulers.io()))
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::addToSortedList, this::onError));
 

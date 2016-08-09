@@ -17,7 +17,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
 
@@ -92,6 +91,11 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @BindView(R.id.image_done)
         ImageView done;
 
+        @BindView(R.id.like)
+        TextView like;
+        @BindView(R.id.dislike)
+        TextView dislike;
+
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -103,6 +107,9 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     onItemClickListener.onItemClick(testInfo.getTestId());
             });
             name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
+            like.setText(testInfo.getLikeCount()+"");
+            dislike.setText(testInfo.getDislikeCount()+"");
+
             category.setText(StringUtils.capitalizeSentences(testInfo.getCategory()));
             if (testInfo.getImage() != null && !testInfo.getImage().equals(""))
                 Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -140,7 +147,7 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 
             if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {
-                Glide.with(itemView.getContext()).load(testInfo.getImage()).bitmapTransform(new BlurTransformation(itemView.getContext()),new CropCircleTransformation(itemView.getContext())).diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                Glide.with(itemView.getContext()).load(testInfo.getImage()).bitmapTransform(new CropCircleTransformation(itemView.getContext())).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(image);
             }
             else

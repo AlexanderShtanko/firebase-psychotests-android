@@ -1,14 +1,15 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
+import com.alexandershtanko.psychotests.models.Category;
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;
@@ -20,9 +21,9 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class CategoriesViewModel extends AbstractViewModel {
     Storage storage = Storage.getInstance();
-    Set<String> categories = new HashSet<>();
+    Map<String,Category> categories = new HashMap<>();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
-    private BehaviorSubject<String> categorySubject = BehaviorSubject.create();
+    private BehaviorSubject<Category> categorySubject = BehaviorSubject.create();
     private BehaviorSubject<Boolean> emptySubject = BehaviorSubject.create(true);
 
 
@@ -38,11 +39,15 @@ public class CategoriesViewModel extends AbstractViewModel {
 
         for (Test test : tests) {
             TestInfo testInfo = test.getInfo();
-            String category = testInfo.getCategory();
+            String name = testInfo.getCategory();
 
-            if (!categories.contains(category)) {
+            if (!categories.containsKey(name)) {
+                Category category = new Category();
+                category.setImage(testInfo.getImage());
+                category.setName(name);
+
                 categorySubject.onNext(category);
-                categories.add(category);
+                categories.put(name,category);
             }
         }
         if(categories.size()==0)
@@ -50,11 +55,11 @@ public class CategoriesViewModel extends AbstractViewModel {
         else emptySubject.onNext(false);
     }
 
-    public List<String> getCategories() {
-        return new ArrayList<>(categories);
+    public List<Category> getCategories() {
+        return new ArrayList<>(categories.values());
     }
 
-    public Observable<String> getCategoryObservable() {
+    public Observable<Category> getCategoryObservable() {
         return categorySubject.asObservable();
     }
 

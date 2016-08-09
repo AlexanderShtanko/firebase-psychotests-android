@@ -18,6 +18,8 @@ public class TestInfoViewModel extends AbstractViewModel {
     BehaviorSubject<String> testIdSubject = BehaviorSubject.create();
     BehaviorSubject<TestInfo> testInfoSubject = BehaviorSubject.create();
     BehaviorSubject<Boolean> hasResultSubject = BehaviorSubject.create();
+    BehaviorSubject<Boolean> likeStatusSubject = BehaviorSubject.create();
+
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
@@ -34,6 +36,9 @@ public class TestInfoViewModel extends AbstractViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe(hasResultSubject::onNext));
+        s.add(testIdSubject.asObservable().switchMap(storage::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
+                likeStatusSubject::onNext
+        ));
     }
 
     public Observable<TestInfo> getTestInfoObservable() {
@@ -60,5 +65,18 @@ public class TestInfoViewModel extends AbstractViewModel {
 
     public BehaviorSubject<Boolean> getHasResultObservable() {
         return hasResultSubject;
+    }
+
+    public void like() {
+        storage.setLikeStatus(testIdSubject.getValue(), true);
+    }
+
+    public void dislike() {
+        storage.setLikeStatus(testIdSubject.getValue(), false);
+
+    }
+
+    public Observable<Boolean> getLikeStatusObservable() {
+        return likeStatusSubject.asObservable();
     }
 }

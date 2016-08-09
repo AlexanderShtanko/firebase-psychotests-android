@@ -132,8 +132,8 @@ public class Animate {
 
         AnimatorSet animatorSet1 = new AnimatorSet();
         animatorSet1.setDuration(1000).playTogether(
-                ObjectAnimator.ofFloat(view, View.SCALE_X, 8f),
-                ObjectAnimator.ofFloat(view, View.SCALE_Y, 8f));
+                ObjectAnimator.ofFloat(view, View.SCALE_X, 4f),
+                ObjectAnimator.ofFloat(view, View.SCALE_Y, 4f));
 
         AnimatorSet animatorSet2 = new AnimatorSet();
         animatorSet2.playSequentially(

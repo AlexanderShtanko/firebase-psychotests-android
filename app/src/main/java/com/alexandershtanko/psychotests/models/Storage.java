@@ -1,6 +1,7 @@
 package com.alexandershtanko.psychotests.models;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import com.alexandershtanko.psychotests.utils.RxPaper;
@@ -22,6 +23,7 @@ public class Storage {
     private static final String BOOK_TESTS = "TEST";
     private static final String BOOK_RESULTS = "RESULT";
     private static final String BOOK_DATA = "DATA";
+    private static final String BOOK_LIKE_STATUS = "LIKE_STATUS";
     private static Storage instance;
 
     private Context context;
@@ -68,6 +70,11 @@ public class Storage {
 
     public Observable<Test> getTestObservable(String testId) {
         Observable<RxPaper.PaperObject<Test>> observable = rxPaper.read(BOOK_TESTS, testId);
+        return getValuesObservable(observable);
+    }
+
+    @NonNull
+    private<T> Observable<T> getValuesObservable(Observable<RxPaper.PaperObject<T>> observable) {
         return observable.filter(po -> po.getChangesType() != RxPaper.ChangesType.REMOVED).map(RxPaper.PaperObject::getObject);
     }
 
@@ -113,5 +120,26 @@ public class Storage {
 
             return testOfDay;
         }
+    }
+
+    public void setLikeStatus(String id, boolean like) {
+        rxPaper.write(BOOK_LIKE_STATUS, id, like);
+    }
+
+    public Observable<Boolean> getLikeStatusObservable(String id)
+    {
+        Observable<RxPaper.PaperObject<Boolean>> observable = rxPaper.read(BOOK_LIKE_STATUS,id);
+        return getValuesObservable(observable);
+    }
+
+    public Observable<Map<String, RxPaper.PaperObject<Boolean>>> getLikeStatusObservable()
+    {
+        return rxPaper.read(BOOK_LIKE_STATUS);
+    }
+
+    public Boolean getLikeStatus(String id)
+    {
+        RxPaper.PaperObject<Boolean> obj = rxPaper.readOnce(BOOK_LIKE_STATUS, id);
+        return (obj!=null&&obj.getChangesType()!= RxPaper.ChangesType.REMOVED)?obj.getObject():null;
     }
 }

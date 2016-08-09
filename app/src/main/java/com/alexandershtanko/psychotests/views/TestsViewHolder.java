@@ -62,8 +62,8 @@ public class TestsViewHolder extends AbstractViewHolder {
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::selectTest));
-            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(filter -> populateToolbar(filter)));
-            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(isEmpty -> viewHolder.populateEmpty(isEmpty)));
+            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateToolbar));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateEmpty));
         }
 
         private void populateToolbar(TestsViewModel.Filter filter) {

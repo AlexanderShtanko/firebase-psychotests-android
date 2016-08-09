@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
+import com.alexandershtanko.psychotests.models.Category;
 import com.alexandershtanko.psychotests.viewmodels.CategoriesViewModel;
 import com.alexandershtanko.psychotests.views.adapters.CategoriesAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -39,11 +40,11 @@ public class CategoriesViewHolder extends AbstractViewHolder {
         list.setAdapter(adapter);
     }
 
-    public void add(String category) {
+    public void add(Category category) {
         adapter.add(category);
     }
 
-    public void populate(List<String> categories) {
+    public void populate(List<Category> categories) {
         adapter.populate(categories);
     }
 
@@ -60,13 +61,15 @@ public class CategoriesViewHolder extends AbstractViewHolder {
 
         @Override
         protected void onBind(CompositeSubscription s) {
-            s.add(Observable.create((Observable.OnSubscribe<List<String>>) subscriber -> subscriber.onNext(viewModel.getCategories())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            s.add(Observable.create((Observable.OnSubscribe<List<Category>>) subscriber -> subscriber.onNext(viewModel.getCategories())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(viewHolder::populate));
+
+
             s.add(viewModel.getCategoryObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::add));
             s.add(viewModel.getErrorObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .observeOn(AndroidSchedulers.mainThread()).subscribe(this::selectCategory));
-            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(isEmpty -> viewHolder.populateEmpty(isEmpty)));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateEmpty));
 
         }
 

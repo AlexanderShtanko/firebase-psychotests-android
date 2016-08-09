@@ -75,7 +75,7 @@
 
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/feedback" app:backgroundTint="@color/gray"
+                android:id="@+id/dislike" app:backgroundTint="@color/gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -85,7 +85,7 @@
                 app:fabSize="normal" />
 
             <android.support.design.widget.FloatingActionButton
-                android:id="@+id/rate" app:backgroundTint="@color/colorPrimary"
+                android:id="@+id/like" app:backgroundTint="@color/gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -96,7 +96,7 @@
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/share_result"
-                android:layout_width="wrap_content" app:backgroundTint="@color/colorAccent"
+                android:layout_width="wrap_content" app:backgroundTint="@color/colorPrimary"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center"

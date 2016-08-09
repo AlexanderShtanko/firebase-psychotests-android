@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
-import com.alexandershtanko.psychotests.utils.RateHelper;
+import com.alexandershtanko.psychotests.helpers.RateUsHelper;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.ActivityViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -110,11 +110,11 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
                     break;
 
                 case R.id.nav_share:
-                    RateHelper.shareTheApp(getContext());
+                    RateUsHelper.shareTheApp(getContext());
                     break;
 
                 case R.id.nav_rate:
-                    RateHelper.rateTheApp(getContext());
+                    RateUsHelper.openGooglePlay(getContext());
                     break;
             }
         });

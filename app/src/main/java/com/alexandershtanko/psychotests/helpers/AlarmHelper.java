@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.alexandershtanko.psychotests.receivers.TODAlarmReceiver;
 
@@ -14,21 +15,47 @@ import java.util.Calendar;
  */
 public class AlarmHelper {
 
-    public static void setTestOfDayAlarm(Context context)
-    {
-        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    public static final int REQUEST_CODE = 143534;
+    public static final String ALARM_SET = "ALARM_SET";
+    public static final String PREFS_ALARM = "ALARM";
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 0);
+    public static void setTestOfDayAlarm(Context context) {
+        if (!isAlarmSet(context)) {
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            Intent alarmIntent = new Intent(context, TODAlarmReceiver.class);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, REQUEST_CODE, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        Intent alarmIntent = new Intent(context, TODAlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 143532, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.cancel(pendingIntent);
-        manager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+            Calendar firingCal = Calendar.getInstance();
+            Calendar currentCal = Calendar.getInstance();
 
+            firingCal.set(Calendar.HOUR_OF_DAY, 9);
+            firingCal.set(Calendar.MINUTE, 0);
+            firingCal.set(Calendar.SECOND, 0);
+
+            long intendedTime = firingCal.getTimeInMillis();
+            long currentTime = currentCal.getTimeInMillis();
+
+            if (intendedTime >= currentTime) {
+
+                manager.setRepeating(AlarmManager.RTC, intendedTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+            } else {
+
+                firingCal.add(Calendar.DAY_OF_MONTH, 1);
+                intendedTime = firingCal.getTimeInMillis();
+
+                manager.setRepeating(AlarmManager.RTC, intendedTime, AlarmManager.INTERVAL_DAY, pendingIntent);
+            }
+
+            SharedPreferences prefs = context.getSharedPreferences(PREFS_ALARM, Context.MODE_PRIVATE);
+            prefs.edit().putBoolean(ALARM_SET, true).apply();
+        }
+
+    }
+
+    private static boolean isAlarmSet(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_ALARM, Context.MODE_PRIVATE);
+        return prefs.contains(ALARM_SET);
     }
 }

@@ -9,9 +9,21 @@ public class TestInfo {
     private String image;
     private String category;
     private String testId;
+
+    private Integer likeCount;
+    private Integer dislikeCount;
+
     private boolean done;
     private long dateAdd = 0;
     private boolean testOfDay;
+
+    public int getLikeCount() {
+        return likeCount != null ? likeCount : 0;
+    }
+
+    public int getDislikeCount() {
+        return dislikeCount != null ? dislikeCount : 0;
+    }
 
     public String getName() {
         return name;
@@ -76,5 +88,14 @@ public class TestInfo {
 
     public void setTestOfDay(boolean testOfDay) {
         this.testOfDay = testOfDay;
+    }
+
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public void setDislikeCount(Integer dislikeCount) {
+        this.dislikeCount = dislikeCount;
     }
 }

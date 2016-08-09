@@ -1,6 +1,7 @@
 package com.alexandershtanko.psychotests.views;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.graphics.Palette;
@@ -46,12 +47,31 @@ public class TestInfoViewHolder extends AbstractViewHolder {
     @BindView(R.id.show_result)
     Button showResultButton;
 
+    @BindView(R.id.like)
+    FloatingActionButton like;
+    @BindView(R.id.dislike)
+    FloatingActionButton dislike;
+
     public TestInfoViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
         startFab.setVisibility(View.GONE);
         Animate.show(startFab,R.anim.scale_in);
+    }
 
 
+    public void populateLikeStatus(Boolean likeStatus)
+    {
+        if(likeStatus==null) return;
+        if(likeStatus) {
+            like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.orange)));
+            dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+        }
+
+        else
+        {
+            dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.orange)));
+            like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+        }
 
     }
 
@@ -106,11 +126,26 @@ public class TestInfoViewHolder extends AbstractViewHolder {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(viewHolder::showResultButton, ErrorUtils.onError()));
 
+            s.add(viewModel.getLikeStatusObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateLikeStatus));
+
+
             s.add(RxView.clicks(viewHolder.startFab)
                     .subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId())));
             s.add(RxView.clicks(viewHolder.showResultButton)
                     .subscribe(v-> showResult()));
+
+            s.add(RxView.clicks(viewHolder.like).subscribe(v -> like()));
+            s.add(RxView.clicks(viewHolder.dislike).subscribe(v -> dislike()));
         }
+
+        private void dislike() {
+            viewModel.dislike();
+        }
+
+        private void like() {
+            viewModel.like();
+        }
+
 
         private void showResult() {
             ActivityFragments.getInstance().openTestResult(viewModel.getTestId());

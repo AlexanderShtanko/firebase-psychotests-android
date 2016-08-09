@@ -23,6 +23,15 @@
     <string name="select">Выберите</string>
     <string name="title_test_of_day">Доброе утро</string>
     <string name="desc_test_of_day">Пройдите ежедневный тест за чашкой кофе</string>
+    <string name="yes">да</string>
+    <string name="no">нет</string>
+    <string name="text_rate_us_like_question">Вам понравилось приложение?</string>
+    <string name="text_rate_us_google_play_question">Оценить в Google Play</string>
+    <string name="want">Хочу</string>
+    <string name="next_time">В следующий раз</string>
+    <string name="text_rate_us_help_question">Расскажите, что вам не понравилось</string>
+    <string name="give_feedback">Оставить отзыв</string>
+    <string name="no_thanks">Нет, спасибо</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>
