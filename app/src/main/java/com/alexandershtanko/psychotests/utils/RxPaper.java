@@ -43,9 +43,7 @@ public class RxPaper {
     public <T> Observable<PaperObject<T>> read(String bookName, String key) {
         return Observable.create((Observable.OnSubscribe<PaperObject>) subscriber -> {
             PaperObject<T> paperObject = Paper.book(bookName).read(key);
-            if (paperObject != null) {
-                subscriber.onNext(paperObject);
-            }
+            subscriber.onNext(paperObject);
         }).mergeWith(getKeyUpdatesSubject(bookName, key))
                 .map(paperObject ->
                         (PaperObject<T>) paperObject).subscribeOn(Schedulers.io());
@@ -61,7 +59,7 @@ public class RxPaper {
                 {
                     Map<String, PaperObject<T>> map = new HashMap<>();
                     for (String key : oldMap.keySet()) {
-                        if(oldMap.get(key)!=null)
+                        if (oldMap.get(key) != null)
                             map.put(key, oldMap.get(key));
                     }
                     return map;
@@ -73,7 +71,7 @@ public class RxPaper {
         Map<String, PaperObject<T>> map = new HashMap<>();
         for (String key : keys) {
             PaperObject<T> paperObject = readOnce(bookName, key);
-            if(paperObject!=null)
+            if (paperObject != null)
                 map.put(key, paperObject);
         }
         return map;

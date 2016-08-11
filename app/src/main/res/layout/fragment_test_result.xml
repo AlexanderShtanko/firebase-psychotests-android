@@ -76,6 +76,16 @@
             android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_thumb_up_white_24dp"
+                app:backgroundTint="@color/gray"
+                app:fabSize="normal" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/dislike"
@@ -88,16 +98,6 @@
                 app:backgroundTint="@color/gray"
                 app:fabSize="normal" />
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/like"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_thumb_up_white_24dp"
-                app:backgroundTint="@color/gray"
-                app:fabSize="normal" />
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/share_result"

@@ -2,10 +2,11 @@ package com.alexandershtanko.psychotests.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.activities.MainActivity;
@@ -15,6 +16,7 @@ import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+import com.google.firebase.crash.FirebaseCrash;
 
 import butterknife.BindView;
 import rx.Observable;
@@ -46,6 +48,7 @@ public class TestsViewHolder extends AbstractViewHolder {
 
     public static class ViewBinder extends AbstractViewBinder<TestsViewHolder, TestsViewModel> {
 
+        private static final String TAG = ActivityViewHolder.ViewBinder.class.getSimpleName();
         private final MainActivity activity;
 
         public ViewBinder(Activity activity, TestsViewHolder viewHolder, TestsViewModel viewModel) {
@@ -69,7 +72,14 @@ public class TestsViewHolder extends AbstractViewHolder {
         private void populateToolbar(TestsViewModel.Filter filter) {
             if (filter.getOnlyDone()) {
                 activity.updateToolbar(R.string.tests_done);
-            } else {
+            } else
+            if(filter.getOnlyFavorite())
+            {
+                activity.updateToolbar(R.string.tests_favorite);
+
+            }
+            else
+            {
                 if (filter.getCategory() != null) {
                     activity.updateToolbar(viewHolder.getContext().getResources().getString(R.string.category) + ": " + filter.getCategory());
 
@@ -86,7 +96,9 @@ public class TestsViewHolder extends AbstractViewHolder {
         }
 
         public void showError(Throwable throwable) {
-            Toast.makeText(viewHolder.getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(TAG,"error:",throwable);
+            FirebaseCrash.report(throwable);
+            Snackbar.make(viewHolder.getView(), R.string.base_error,Snackbar.LENGTH_LONG).show();
         }
 
 

@@ -68,11 +68,20 @@ public class TestInfoViewModel extends AbstractViewModel {
     }
 
     public void like() {
-        Storage.getInstance().setLikeStatus(testIdSubject.getValue(), true);
+
+        Boolean likeStatus = Storage.getInstance().getLikeStatus(testIdSubject.getValue());
+        if (likeStatus != null && likeStatus)
+            Storage.getInstance().removeLikeStatus(testIdSubject.getValue());
+        else
+            Storage.getInstance().setLikeStatus(testIdSubject.getValue(), true);
     }
 
     public void dislike() {
-        Storage.getInstance().setLikeStatus(testIdSubject.getValue(), false);
+        Boolean likeStatus = Storage.getInstance().getLikeStatus(testIdSubject.getValue());
+        if (likeStatus != null && !likeStatus)
+            Storage.getInstance().removeLikeStatus(testIdSubject.getValue());
+        else
+            Storage.getInstance().setLikeStatus(testIdSubject.getValue(), false);
 
     }
 

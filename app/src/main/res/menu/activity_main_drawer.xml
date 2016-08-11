@@ -8,12 +8,16 @@
             android:title="Все тесты"/>
         <item
             android:id="@+id/nav_categories"
-            android:icon="@android:drawable/ic_menu_view"
+            android:icon="@android:drawable/ic_menu_slideshow"
             android:title="Категории"/>
         <item
             android:id="@+id/nav_done"
-            android:icon="@android:drawable/ic_menu_recent_history"
+            android:icon="@android:drawable/ic_menu_agenda"
             android:title="Пройденные тесты"/>
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@android:drawable/ic_menu_view"
+            android:title="Избранные тесты"/>
 
     </group>
 

@@ -55,20 +55,19 @@ public class TestInfoViewHolder extends AbstractViewHolder {
     public TestInfoViewHolder(Context context, int layoutRes) {
         super(context, layoutRes);
         startFab.setVisibility(View.GONE);
-        Animate.show(startFab,R.anim.scale_in);
+        Animate.show(startFab, R.anim.scale_in);
     }
 
 
-    public void populateLikeStatus(Boolean likeStatus)
-    {
-        if(likeStatus==null) return;
-        if(likeStatus) {
+    public void populateLikeStatus(Boolean likeStatus) {
+        if (likeStatus == null) {
+            dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+            like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+
+        } else if (likeStatus) {
             like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.orange)));
             dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
-        }
-
-        else
-        {
+        } else {
             dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.orange)));
             like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
         }
@@ -109,8 +108,6 @@ public class TestInfoViewHolder extends AbstractViewHolder {
     }
 
 
-
-
     public static class ViewBinder extends AbstractViewBinder<TestInfoViewHolder, TestInfoViewModel> {
         public ViewBinder(TestInfoViewHolder viewHolder, TestInfoViewModel viewModel) {
             super(viewHolder, viewModel);
@@ -132,7 +129,7 @@ public class TestInfoViewHolder extends AbstractViewHolder {
             s.add(RxView.clicks(viewHolder.startFab)
                     .subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId())));
             s.add(RxView.clicks(viewHolder.showResultButton)
-                    .subscribe(v-> showResult()));
+                    .subscribe(v -> showResult()));
 
             s.add(RxView.clicks(viewHolder.like).subscribe(v -> like()));
             s.add(RxView.clicks(viewHolder.dislike).subscribe(v -> dislike()));

@@ -16,6 +16,7 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
 
     public static final String ARG_CATEGORY = "category";
     public static final String ARG_PASSED = "passed";
+    private static final String ARG_FAVORITE = "favorite";
 
     public static Fragment getInstance() {
         return new TestsFragment();
@@ -39,6 +40,14 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
         return fragment;
     }
 
+    public static Fragment getInstanceForFavoriteTests() {
+        TestsFragment fragment = new TestsFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_FAVORITE, true);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public TestsViewHolder createViewHolder() {
         return new TestsViewHolder(getContext(), R.layout.fragment_tests);
@@ -50,6 +59,7 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
 
         String category = null;
         Boolean onlyPassed = false;
+        Boolean onlyFavorite = false;
 
         Bundle args = getArguments();
         if (args != null) {
@@ -59,9 +69,13 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
             if (args.containsKey(ARG_PASSED)) {
                 onlyPassed = args.getBoolean(ARG_PASSED);
             }
+
+            if (args.containsKey(ARG_FAVORITE)) {
+                onlyFavorite = args.getBoolean(ARG_FAVORITE);
+            }
         }
 
-        testsViewModel.setFilter(category,onlyPassed);
+        testsViewModel.setFilter(category,onlyPassed,onlyFavorite);
 
         return testsViewModel;
     }

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'android-apt'
+apply plugin: 'com.google.gms.google-services'
 
 
 android {
@@ -22,8 +23,8 @@ android {
         applicationId "com.alexandershtanko.psychotests"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         signingConfig signingConfigs.config
     }
 
@@ -59,6 +60,7 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:9.0.2'
     compile 'com.google.firebase:firebase-ads:9.0.2'
     compile 'com.google.firebase:firebase-messaging:9.0.2'
+    compile 'com.google.android.gms:play-services-analytics:9.0.0'
 
 
 

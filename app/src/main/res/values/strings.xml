@@ -32,6 +32,8 @@
     <string name="text_rate_us_help_question">Расскажите, что вам не понравилось</string>
     <string name="give_feedback">Оставить отзыв</string>
     <string name="no_thanks">Нет, спасибо</string>
+    <string name="base_error">Упс, что то пошло не так, мы уже работаем над этим.</string>
+    <string name="tests_favorite">Избранные тесты</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>

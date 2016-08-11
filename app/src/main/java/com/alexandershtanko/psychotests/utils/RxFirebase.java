@@ -15,12 +15,21 @@ import rx.subscriptions.Subscriptions;
  */
 public class RxFirebase {
     public static class ChildEvent<T> {
-        private Object priority;
-        private T value;
+        private final DataSnapshot dataSnapshot;
+        private final Class<T> childClass;
         private EventType eventType;
+        private String oldKey;
+
+        public ChildEvent(Class<T> childClass, EventType eventType, DataSnapshot dataSnapshot, String oldKey) {
+            this.eventType = eventType;
+            this.oldKey = oldKey;
+            this.dataSnapshot = dataSnapshot;
+            this.childClass = childClass;
+        }
+
 
         public String getKey() {
-            return key;
+            return dataSnapshot.getKey();
         }
 
         public String getOldKey() {
@@ -32,33 +41,15 @@ public class RxFirebase {
         }
 
         public T getValue() {
-            return value;
+            return getValue(dataSnapshot);
         }
 
-        public Object getPriority() {
-            return priority;
-        }
-
-        private String oldKey;
-        private String key;
-
-        public ChildEvent(Class<T> childClass, EventType eventType, DataSnapshot dataSnapshot, String oldKey) {
-            this.eventType = eventType;
-            this.oldKey = oldKey;
-            this.value = getValue(dataSnapshot, childClass);
-            this.key = getKey(dataSnapshot);
-            this.priority = getPriority(dataSnapshot);
-        }
-
-        private Object getPriority(DataSnapshot dataSnapshot) {
+        public Object getPriority(DataSnapshot dataSnapshot) {
             return dataSnapshot.getPriority();
         }
 
-        private String getKey(DataSnapshot dataSnapshot) {
-            return dataSnapshot.getKey();
-        }
 
-        private T getValue(DataSnapshot dataSnapshot, Class<T> childClass) {
+        private T getValue(DataSnapshot dataSnapshot) {
             return dataSnapshot.getValue(childClass);
         }
 

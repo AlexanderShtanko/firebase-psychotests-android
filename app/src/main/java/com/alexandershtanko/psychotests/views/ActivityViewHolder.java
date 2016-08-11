@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.crash.FirebaseCrash;
 
 import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -105,6 +107,9 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
                 case R.id.nav_categories:
                     fragments.openCategories();
                     break;
+                case R.id.nav_favorites:
+                    fragments.openFavoriteTests();
+                    break;
                 case R.id.nav_done:
                     fragments.openPassedTests();
                     break;
@@ -185,6 +190,8 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
     public static class ViewBinder extends AbstractViewBinder<ActivityViewHolder, ActivityViewModel> {
 
+        private static final String TAG = ViewBinder.class.getSimpleName();
+
         public ViewBinder(ActivityViewHolder viewHolder, ActivityViewModel viewModel) {
             super(viewHolder, viewModel);
 
@@ -199,7 +206,9 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         }
 
         private void showError(Throwable error) {
-            Snackbar.make(viewHolder.getView(), R.string.error_connection,Snackbar.LENGTH_INDEFINITE).show();
+            Log.e(TAG,"error:",error);
+            FirebaseCrash.report(error);
+            Snackbar.make(viewHolder.getView(), R.string.error_connection,Snackbar.LENGTH_LONG).show();
         }
 
     }

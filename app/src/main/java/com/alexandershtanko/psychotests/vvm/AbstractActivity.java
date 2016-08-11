@@ -11,14 +11,16 @@ public abstract class AbstractActivity<H extends AbstractViewHolder, M extends A
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         viewModel = createViewModel();
-        viewHolder = createViewHolder();
 
+        super.onCreate(savedInstanceState);
+
+        viewHolder = createViewHolder();
         setContentView(viewHolder.getView());
 
         viewBinder = createViewBinder(viewHolder,viewModel);
         viewModel.subscribe();
+
 
     }
 

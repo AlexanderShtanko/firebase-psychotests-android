@@ -1,10 +1,11 @@
 package com.alexandershtanko.psychotests.views;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
@@ -13,6 +14,7 @@ import com.alexandershtanko.psychotests.viewmodels.CategoriesViewModel;
 import com.alexandershtanko.psychotests.views.adapters.CategoriesAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
+import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.List;
 
@@ -54,6 +56,8 @@ public class CategoriesViewHolder extends AbstractViewHolder {
     }
 
     public static class ViewBinder extends AbstractViewBinder<CategoriesViewHolder, CategoriesViewModel> {
+        private static final String TAG = ActivityViewHolder.ViewBinder.class.getSimpleName();
+
         public ViewBinder(CategoriesViewHolder viewHolder, CategoriesViewModel viewModel) {
             super(viewHolder, viewModel);
 
@@ -78,7 +82,9 @@ public class CategoriesViewHolder extends AbstractViewHolder {
         }
 
         public void showError(Throwable throwable) {
-            Toast.makeText(viewHolder.getContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+            Log.e(TAG,"error:",throwable);
+            FirebaseCrash.report(throwable);
+            Snackbar.make(viewHolder.getView(), R.string.base_error,Snackbar.LENGTH_LONG).show();
         }
     }
 

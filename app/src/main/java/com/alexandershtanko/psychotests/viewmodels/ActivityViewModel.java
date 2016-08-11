@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Map;
 
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -28,6 +29,7 @@ public class ActivityViewModel extends AbstractViewModel {
     public static final String TESTS = "tests";
     public static final String LIKE_STATUS = "like_status";
     private final String deviceId;
+    private BehaviorSubject<DataSnapshot> likeDataSnapshotSubject = BehaviorSubject.create();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
@@ -40,11 +42,16 @@ public class ActivityViewModel extends AbstractViewModel {
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
-        s.add(RxFirebase.getChildrenObservable(databaseReference.child(TESTS), Test.class)
+        s.add(RxFirebase.getChildrenObservable(databaseReference.child(TESTS), Test.class).onBackpressureBuffer()
+                .doOnError(this::onError)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .doOnError(this::onError)
                 .subscribe(this::observe, this::onError));
+
+        s.add(likeDataSnapshotSubject.asObservable().onBackpressureBuffer()
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.io())
+                .subscribe(this::obtainLikeDataSnapshot));
 
         s.add(Storage.getInstance().getLikeStatusObservable().skip(1)
                 .subscribeOn(Schedulers.io())
@@ -75,34 +82,19 @@ public class ActivityViewModel extends AbstractViewModel {
             case MOVED:
             case ADDED:
                 Storage.getInstance().addTest(test);
-
-                databaseReference.child(LIKE_STATUS).child(testId).addListenerForSingleValueEvent(new ValueEventListener() {
+                ValueEventListener valueEventListener = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
-
-                        int countLike = 0;
-                        int countDislike = 0;
-                        if (map != null)
-                            for (Boolean like : map.values()) {
-                                if (like)
-                                    countLike++;
-                                if (!like)
-                                    countDislike++;
-                            }
-
-                        test.getInfo().setLikeCount(countLike);
-                        test.getInfo().setDislikeCount(countDislike);
-
-                        Storage.getInstance().addTest(test);
+                        likeDataSnapshotSubject.onNext(dataSnapshot);
+                        databaseReference.child(LIKE_STATUS).child(testId).removeEventListener(this);
                     }
+
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
-                });
-
+                };
+                databaseReference.child(LIKE_STATUS).child(testId).addListenerForSingleValueEvent(valueEventListener);
                 break;
 
             case REMOVED:
@@ -111,6 +103,23 @@ public class ActivityViewModel extends AbstractViewModel {
         }
 
 
+    }
+
+    private void obtainLikeDataSnapshot(DataSnapshot dataSnapshot) {
+        Map<String, Boolean> map = (Map<String, Boolean>) dataSnapshot.getValue();
+
+        int countLike = 0;
+        int countDislike = 0;
+        if (map != null)
+            for (Boolean like : map.values()) {
+                if (like)
+                    countLike++;
+                if (!like)
+                    countDislike++;
+            }
+
+        String testId = dataSnapshot.getKey();
+        Storage.getInstance().updateTestLikeCounters(testId,countLike,countDislike);
     }
 
     @Override

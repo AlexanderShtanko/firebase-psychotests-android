@@ -68,16 +68,15 @@ public class TestResultViewHolder extends AbstractViewHolder {
 
     }
 
-    public void populateLikeStatus(Boolean likeStatus)
-    {
-        if(likeStatus==null) return;
-        if(likeStatus) {
+    public void populateLikeStatus(Boolean likeStatus) {
+        if (likeStatus == null) {
+            dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+            like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+
+        } else if (likeStatus) {
             like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.orange)));
             dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
-        }
-
-        else
-        {
+        } else {
             dislike.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.orange)));
             like.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
         }
@@ -121,7 +120,7 @@ public class TestResultViewHolder extends AbstractViewHolder {
         }
 
         private void done() {
-            if(RateUsHelper.needShowRateUs(viewHolder.getContext()))
+            if (RateUsHelper.needShowRateUs(viewHolder.getContext()))
                 RateUsHelper.doYouLikeApplication(viewHolder.getContext());
             ActivityFragments.getInstance().openTests();
         }

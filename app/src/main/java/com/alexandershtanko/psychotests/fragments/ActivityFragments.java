@@ -49,6 +49,11 @@ public class ActivityFragments {
         replaceFragment(TestsFragment.getInstanceForPassedTests(), TESTS_FRAGMENT_TAG, true);
     }
 
+    public void openFavoriteTests() {
+        replaceFragment(TestsFragment.getInstanceForFavoriteTests(), TESTS_FRAGMENT_TAG, true);
+
+    }
+
     public void openTestInfo(String testId) {
         replaceFragment(TestInfoFragment.getInstance(testId), TEST_INFO_FRAGMENT_TAG, true);
     }
@@ -78,5 +83,6 @@ public class ActivityFragments {
 
 
     }
+
 
 }

@@ -16,6 +16,7 @@ public class TestInfo {
     private boolean done;
     private long dateAdd = 0;
     private boolean testOfDay;
+    private Boolean likeStatus;
 
     public int getLikeCount() {
         return likeCount != null ? likeCount : 0;
@@ -97,5 +98,13 @@ public class TestInfo {
 
     public void setDislikeCount(Integer dislikeCount) {
         this.dislikeCount = dislikeCount;
+    }
+
+    public Boolean getLikeStatus() {
+        return likeStatus;
+    }
+
+    public void setLikeStatus(Boolean likeStatus) {
+        this.likeStatus = likeStatus;
     }
 }

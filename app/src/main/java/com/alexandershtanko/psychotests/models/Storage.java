@@ -57,7 +57,7 @@ public class Storage {
 
     public Observable<List<Test>> getTestsObservable() {
         Observable<Map<String, RxPaper.PaperObject<Test>>> observable = rxPaper.read(BOOK_TESTS);
-        return observable.map(Map::values).map(col -> {
+        return observable.filter(m -> m != null).map(Map::values).map(col -> {
             List<Test> tests = new ArrayList<Test>();
             for (RxPaper.PaperObject<Test> paperObject : col) {
                 if (paperObject.getChangesType() != RxPaper.ChangesType.REMOVED) {
@@ -74,8 +74,8 @@ public class Storage {
     }
 
     @NonNull
-    private<T> Observable<T> getValuesObservable(Observable<RxPaper.PaperObject<T>> observable) {
-        return observable.filter(po -> po.getChangesType() != RxPaper.ChangesType.REMOVED).map(RxPaper.PaperObject::getObject);
+    private <T> Observable<T> getValuesObservable(Observable<RxPaper.PaperObject<T>> observable) {
+        return observable.map(po -> (po != null && po.getChangesType() != RxPaper.ChangesType.REMOVED) ? po.getObject() : null);
     }
 
     public void removeTest(String testId) {
@@ -125,21 +125,48 @@ public class Storage {
     public void setLikeStatus(String id, boolean like) {
         rxPaper.write(BOOK_LIKE_STATUS, id, like);
     }
-
-    public Observable<Boolean> getLikeStatusObservable(String id)
-    {
-        Observable<RxPaper.PaperObject<Boolean>> observable = rxPaper.read(BOOK_LIKE_STATUS,id);
+    //Like status can be True, False or Null
+    public Observable<Boolean> getLikeStatusObservable(String id) {
+        Observable<RxPaper.PaperObject<Boolean>> observable = rxPaper.read(BOOK_LIKE_STATUS, id);
         return getValuesObservable(observable);
     }
 
-    public Observable<Map<String, RxPaper.PaperObject<Boolean>>> getLikeStatusObservable()
-    {
+    public Observable<Map<String, RxPaper.PaperObject<Boolean>>> getLikeStatusObservable() {
         return rxPaper.read(BOOK_LIKE_STATUS);
     }
 
-    public Boolean getLikeStatus(String id)
-    {
+    public Observable<Map<String, RxPaper.PaperObject<Object>>> getResultsObservable() {
+        return rxPaper.read(BOOK_RESULTS);
+    }
+
+    public Boolean getLikeStatus(String id) {
         RxPaper.PaperObject<Boolean> obj = rxPaper.readOnce(BOOK_LIKE_STATUS, id);
-        return (obj!=null&&obj.getChangesType()!= RxPaper.ChangesType.REMOVED)?obj.getObject():null;
+        return (obj != null && obj.getChangesType() != RxPaper.ChangesType.REMOVED) ? obj.getObject() : null;
+    }
+
+    public void updateTestLikeCounters(String testId, int countLike, int countDislike) {
+        RxPaper.PaperObject<Test> obj = rxPaper.readOnce(BOOK_TESTS, testId);
+        if (obj != null) {
+            Test test = obj.getObject();
+            test.getInfo().setLikeCount(countLike);
+            test.getInfo().setDislikeCount(countDislike);
+
+            addTest(test);
+        }
+    }
+
+    public void removeLikeStatus(String testId) {
+        rxPaper.delete(BOOK_LIKE_STATUS, testId);
+    }
+
+    public Observable<Boolean> getTestDoneObservable(String testId) {
+
+        return rxPaper.read(BOOK_RESULTS, testId).map(obj -> obj != null && obj.getChangesType() != RxPaper.ChangesType.REMOVED);
+    }
+
+
+    public Test getTest(String id) {
+        RxPaper.PaperObject<Test> obj = rxPaper.readOnce(BOOK_TESTS, id);
+        return obj!=null&&obj.getChangesType()!= RxPaper.ChangesType.REMOVED?obj.getObject():null;
     }
 }

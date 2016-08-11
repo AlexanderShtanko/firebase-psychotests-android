@@ -2,10 +2,12 @@ package com.alexandershtanko.psychotests.viewmodels;
 
 import android.content.Context;
 import android.support.v7.util.SortedList;
+import android.util.Log;
 
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
+import com.alexandershtanko.psychotests.utils.RxPaper;
 import com.alexandershtanko.psychotests.views.adapters.SortedCallback;
 import com.alexandershtanko.psychotests.vvm.AbstractViewModel;
 
@@ -23,15 +25,16 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class TestsViewModel extends AbstractViewModel {
 
-
-
+    int counter = 0;
+    private static final String TAG = TestsViewModel.class.getSimpleName();
     private SortedCallback callback;
     private SortedList<TestInfo> sortedList;
 
     private BehaviorSubject<Filter> filterSubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
+    private BehaviorSubject<Test> testSubject = BehaviorSubject.create();
 
-    private BehaviorSubject<Boolean> emptySubject = BehaviorSubject.create(false);
+    private BehaviorSubject<Boolean> emptySubject = BehaviorSubject.create(true);
 
 
     public TestsViewModel(Context context) {
@@ -44,57 +47,111 @@ public class TestsViewModel extends AbstractViewModel {
     protected void onSubscribe(CompositeSubscription s) {
         s.add(filterSubject.asObservable()
                 .switchMap(filter -> Storage.getInstance().getTestsObservable()
-                        .map(tests -> filter(tests, filter)).subscribeOn(Schedulers.io()))
-                .subscribeOn(Schedulers.computation())
+                        .onBackpressureBuffer().map(tests -> filter(filter, tests)))
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(this::onError)
                 .subscribe(this::addToSortedList, this::onError));
 
+        s.add(Storage.getInstance().getLikeStatusObservable().skip(1).subscribeOn(Schedulers.io()).map(map -> {
+            List<Test> tests = new ArrayList<>();
+            for (RxPaper.PaperObject<Boolean> obj : map.values()) {
+                Test test = Storage.getInstance().getTest(obj.getKey());
+                if (test != null) {
+                    int index = sortedList.indexOf(test.getInfo());
+                    if (index != -1) {
+                        tests.add(test);
+                    }
+                }
+            }
+            return filter(filterSubject.getValue(), tests);
+        }).doOnError(this::onError)
+                .subscribe(this::addToSortedList));
+
+        s.add(Storage.getInstance().getResultsObservable().skip(1).subscribeOn(Schedulers.io()).map(map -> {
+            List<Test> tests = new ArrayList<>();
+            for (RxPaper.PaperObject<Object> obj : map.values()) {
+                Test test = Storage.getInstance().getTest(obj.getKey());
+                if (test != null) {
+                    int index = sortedList.indexOf(test.getInfo());
+                    if (index != -1) {
+                        tests.add(test);
+                    }
+                }
+            }
+            return filter(filterSubject.getValue(), tests);
+        }).doOnError(this::onError)
+                .subscribe(this::addToSortedList));
+
     }
 
 
-    private void addToSortedList(List<Test> tests) {
-        String testOfDayId = Storage.getInstance().getTestOfDayId();
+    private void addToSortedList(List<FilterResult<Test>> filterResults) {
 
-        if (tests != null && tests.size() > 0) {
-            if (emptySubject.getValue())
-                emptySubject.onNext(false);
-
-            boolean isFilterNull = filterSubject.getValue() == null||!filterSubject.getValue().getOnlyDone()&&filterSubject.getValue().getCategory()==null;
-
-            for (Test test : tests) {
-                if (isFilterNull) {
-                    if (test.getInfo().getTestId().equals(testOfDayId))
-                        test.getInfo().setTestOfDay(true);
-                }
-                sortedList.add(test.getInfo());
-
-            }
-        } else if (!emptySubject.getValue())
-            emptySubject.onNext(true);
+        for (FilterResult<Test> filterResult : filterResults) {
+            if (filterResult != null && filterResult.getObject() != null) {
+                counter++;
+                Test test = filterResult.getObject();
 
 
-    }
+                if (filterResult.getResult()) {
+                    sortedList.add(test.getInfo());
+                    Log.e(TAG, counter + "|" + sortedList.size() + " added: " + test.getInfo().getName());
+                } else {
+                    sortedList.remove(test.getInfo());
+                    Log.e(TAG, counter + "|" + sortedList.size() + " removed: " + test.getInfo().getName());
 
-    private List<Test> filter(List<Test> tests, Filter filter) {
-        List<Test> filteredTests = new ArrayList<>();
-        String category = filter.getCategory();
-        Boolean onlyDone = filter.getOnlyDone();
-
-        for (Test test : tests) {
-            if (category == null || test.getInfo().getCategory() != null && test.getInfo().getCategory().equals(category)) {
-                boolean isDone = Storage.getInstance().hasResult(test.getInfo().getTestId());
-                if (!onlyDone || isDone) {
-                    if (test.getInfo() != null)
-                        test.getInfo().setDone(isDone);
-                    filteredTests.add(test);
                 }
 
-            }
 
+            }
         }
 
-        return filteredTests;
+        if (sortedList != null && sortedList.size() > 0)
+            updateEmpty(false);
+        else
+            updateEmpty(true);
     }
+
+    private void updateEmpty(Boolean isEmpty) {
+        if (isEmpty != emptySubject.getValue())
+            emptySubject.onNext(isEmpty);
+    }
+
+    private List<FilterResult<Test>> filter(Filter filter, List<Test> tests) {
+        List<FilterResult<Test>> filterResults = new ArrayList<>();
+
+        for (Test test : tests) {
+
+            test.getInfo().setLikeStatus(Storage.getInstance().getLikeStatus(test.getInfo().getTestId()));
+            test.getInfo().setDone(Storage.getInstance().hasResult(test.getInfo().getTestId()));
+
+            FilterResult<Test> filterResult = new FilterResult<>(false, test);
+            String testOfDayId = Storage.getInstance().getTestOfDayId();
+
+            if (filter.getCategory() == null || test.getInfo().getCategory() != null && test.getInfo().getCategory().equals(filter.getCategory())) {
+                boolean isDone = test.getInfo().isDone();
+                if (!filter.getOnlyDone() || isDone) {
+                    Boolean isFavorite = test.getInfo().getLikeStatus();
+                    if (!filter.getOnlyFavorite() || isFavorite != null && isFavorite) {
+
+                        if (filter.isEmpty()) {
+                            if (test.getInfo().getTestId().equals(testOfDayId))
+                                test.getInfo().setTestOfDay(true);
+                        }
+
+
+                        filterResult.setResult(true);
+                    }
+                }
+            }
+            filterResults.add(filterResult);
+        }
+
+
+        return filterResults;
+    }
+
 
     public Observable<Boolean> getEmptyObservable() {
         return emptySubject.asObservable();
@@ -119,21 +176,47 @@ public class TestsViewModel extends AbstractViewModel {
         return sortedList;
     }
 
-    public void setFilter(String category, Boolean onlyDone) {
-        filterSubject.onNext(new Filter(category, onlyDone));
+    public void setFilter(String category, Boolean onlyDone, Boolean onlyFavorite) {
+        filterSubject.onNext(new Filter(category, onlyDone, onlyFavorite));
     }
 
     public Observable<Filter> getFilterObservable() {
         return filterSubject.asObservable();
     }
 
+    public static class FilterResult<T> {
+
+
+        private Boolean result;
+        private T object;
+
+        public FilterResult(Boolean result, T object) {
+            this.result = result;
+            this.object = object;
+        }
+
+        public void setResult(Boolean result) {
+            this.result = result;
+        }
+
+        public Boolean getResult() {
+            return result;
+        }
+
+        public T getObject() {
+            return object;
+        }
+    }
+
     public static class Filter {
+        private final Boolean onlyFavorite;
         private String category;
         private Boolean onlyDone;
 
-        public Filter(String category, Boolean onlyDone) {
+        public Filter(String category, Boolean onlyDone, Boolean onlyFavorite) {
             this.category = category;
             this.onlyDone = onlyDone;
+            this.onlyFavorite = onlyFavorite;
         }
 
         public String getCategory() {
@@ -142,6 +225,16 @@ public class TestsViewModel extends AbstractViewModel {
 
         public Boolean getOnlyDone() {
             return onlyDone;
+        }
+
+        public Boolean getOnlyFavorite() {
+            return onlyFavorite;
+        }
+
+        public Boolean isEmpty() {
+            return (onlyFavorite == null || !onlyFavorite)
+                    && (onlyDone == null || !onlyDone)
+                    && (category == null);
         }
     }
 }
