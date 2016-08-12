@@ -63,8 +63,8 @@ public class TestViewModel extends AbstractViewModel {
             resultList.add(value);
         else resultList.set(currentQuestionIndex, value);
 
-
-        currentQuestionIndexSubject.onNext(currentQuestionIndexSubject.getValue() + 1);
+        if (currentQuestionIndexSubject.getValue() < getQuestionsCount())
+            currentQuestionIndexSubject.onNext(currentQuestionIndexSubject.getValue() + 1);
     }
 
     public void back() {

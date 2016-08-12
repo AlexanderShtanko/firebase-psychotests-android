@@ -45,6 +45,7 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     AdView adView;
 
 
+
     private ActivityFragments fragments = ActivityFragments.getInstance();
     private ActionBarDrawerToggle toggle;
     private DrawerLayout.DrawerListener listener;
@@ -77,6 +78,7 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
             }
         });
+
 
 
 
@@ -201,14 +203,14 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getErrorObservable()
                     .subscribeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(e->viewModel.clearError())
+                    .doOnNext(e -> viewModel.clearError())
                     .subscribe(this::showError));
         }
 
         private void showError(Throwable error) {
-            Log.e(TAG,"error:",error);
+            Log.e(TAG, "error:", error);
             FirebaseCrash.report(error);
-            Snackbar.make(viewHolder.getView(), R.string.error_connection,Snackbar.LENGTH_LONG).show();
+            Snackbar.make(viewHolder.getView(), R.string.error_connection, Snackbar.LENGTH_LONG).show();
         }
 
     }

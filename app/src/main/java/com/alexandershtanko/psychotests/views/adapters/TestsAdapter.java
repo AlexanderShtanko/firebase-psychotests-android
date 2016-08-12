@@ -26,7 +26,7 @@ import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
 public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_TEST = 0;
     private static final int TYPE_TEST_OF_DAY = 1;
-    static int[] imgBgs = {R.drawable.circle_gray, R.drawable.circle_blue, R.drawable.circle_red, R.drawable.circle_orange};
+    static int[] imgBgs = {R.drawable.circle_gray, R.drawable.circle_white, R.drawable.circle_red, R.drawable.circle_orange};
     SortedList<TestInfo> list = new SortedList<>(TestInfo.class, null);
     private OnItemClickListener onItemClickListener;
 
@@ -154,6 +154,21 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         @BindView(R.id.name)
         TextView name;
 
+        @BindView(R.id.image_done)
+        ImageView done;
+
+        @BindView(R.id.like)
+        TextView like;
+        @BindView(R.id.dislike)
+        TextView dislike;
+
+        @BindView(R.id.image_like)
+        ImageView likeImage;
+        @BindView(R.id.image_dislike)
+        ImageView dislikeImage;
+
+
+
         public ViewHolderTOD(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -166,7 +181,22 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     onItemClickListener.onItemClick(testInfo.getTestId());
             });
             name.setText(StringUtils.capitalizeSentences(testInfo.getName()));
+            like.setText(testInfo.getLikeCount() + "");
+            dislike.setText(testInfo.getDislikeCount() + "");
 
+
+            if (testInfo.getLikeStatus() != null) {
+                if (testInfo.getLikeStatus()) {
+                    likeImage.setImageResource(R.drawable.ic_thumb_up_orange_24dp);
+                    dislikeImage.setImageResource(R.drawable.ic_thumb_down_white_24dp);
+                } else {
+                    likeImage.setImageResource(R.drawable.ic_thumb_up_white_24dp);
+                    dislikeImage.setImageResource(R.drawable.ic_thumb_down_orange_24dp);
+                }
+            } else {
+                likeImage.setImageResource(R.drawable.ic_thumb_up_white_24dp);
+                dislikeImage.setImageResource(R.drawable.ic_thumb_down_white_24dp);
+            }
 
             if (testInfo.getImage() != null && !testInfo.getImage().equals("")) {
                 Glide.with(itemView.getContext()).load(testInfo.getImage()).bitmapTransform(new CropCircleTransformation(itemView.getContext())).diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -174,6 +204,11 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             } else
                 Glide.with(itemView.getContext()).load(R.drawable.tree_bg).into(image);
             animateImage(image);
+
+            if (testInfo.isDone()) {
+                done.setVisibility(View.VISIBLE);
+            } else
+                done.setVisibility(View.GONE);
 
         }
 

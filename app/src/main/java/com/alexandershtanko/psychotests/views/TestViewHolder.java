@@ -22,7 +22,7 @@ import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
-import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.gpu.SketchFilterTransformation;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -46,6 +46,9 @@ public class TestViewHolder extends AbstractViewHolder {
     }
 
     public void populateNumber(Integer index, Integer count) {
+        if(index>=count)
+            index=count-1;
+
         number.setText(getContext().getString(R.string.number, index + 1, count));
     }
 
@@ -79,7 +82,7 @@ public class TestViewHolder extends AbstractViewHolder {
         }
 
         private void populateBackground(String background) {
-            Glide.with(viewHolder.getContext()).load(background).bitmapTransform(new BlurTransformation(viewHolder.getContext())).into(viewHolder.backgroundImage);
+            Glide.with(viewHolder.getContext()).load(background).bitmapTransform(new SketchFilterTransformation(viewHolder.getContext())).into(viewHolder.backgroundImage);
 
         }
 
@@ -116,7 +119,7 @@ public class TestViewHolder extends AbstractViewHolder {
 
         private void selectVariant(AnswerVariant variant) {
             viewModel.selectVariant(variant.getValue());
-            if (viewModel.getCurrentQuestionIndex() == viewModel.getQuestionsCount()) {
+            if (viewModel.getCurrentQuestionIndex() >= viewModel.getQuestionsCount()) {
                 ActivityFragments.getInstance().openTestResult(viewModel.getTestId());
             }
         }

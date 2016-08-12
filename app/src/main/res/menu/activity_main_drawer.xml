@@ -4,33 +4,33 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_tests"
-            android:icon="@android:drawable/ic_menu_today"
-            android:title="Все тесты"/>
+            android:icon="@drawable/ic_view_list_black_24dp"
+            android:title="@string/text_all_tests"/>
         <item
             android:id="@+id/nav_categories"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Категории"/>
+            android:icon="@drawable/ic_receipt_black_24dp"
+            android:title="@string/categories"/>
         <item
             android:id="@+id/nav_done"
-            android:icon="@android:drawable/ic_menu_agenda"
-            android:title="Пройденные тесты"/>
+            android:icon="@drawable/ic_check_circle_black_24dp"
+            android:title="@string/tests_done"/>
         <item
             android:id="@+id/nav_favorites"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="Избранные тесты"/>
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="@string/tests_favorite"/>
 
     </group>
 
-    <item android:title="Обратная связь">
+    <item android:title="@string/feedback">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@android:drawable/ic_menu_share"
-                android:title="Поделиться ссылкой"/>
+                android:icon="@drawable/ic_share_black_24dp"
+                android:title="@string/share_link"/>
             <item
                 android:id="@+id/nav_rate"
-                android:icon="@android:drawable/ic_menu_send"
-                android:title="Оценить приложение"/>
+                android:icon="@drawable/ic_star_rate_black_18dp"
+                android:title="@string/rate_app"/>
         </menu>
     </item>
 
