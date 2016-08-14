@@ -62,4 +62,9 @@ public abstract class AbstractFragment<H extends AbstractViewHolder, M extends A
         super.onDestroy();
         viewModel.unsubscribe();
     }
+
+    public M getViewModel()
+    {
+        return viewModel;
+    }
 }

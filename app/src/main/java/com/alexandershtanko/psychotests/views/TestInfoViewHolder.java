@@ -92,7 +92,7 @@ public class TestInfoViewHolder extends AbstractViewHolder {
             });
         } else {
             image.setVisibility(View.VISIBLE);
-            Glide.with(getContext()).load(R.drawable.tree).bitmapTransform(new CropCircleTransformation(getContext())).into(image);
+            Glide.with(getContext()).load(R.drawable.tree_bg).bitmapTransform(new CropCircleTransformation(getContext())).into(image);
 
         }
 

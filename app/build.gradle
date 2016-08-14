@@ -23,8 +23,8 @@ android {
         applicationId "com.alexandershtanko.psychotests"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 5
+        versionName "1.0.4"
         signingConfig signingConfigs.config
     }
 
@@ -62,7 +62,7 @@ dependencies {
     compile 'com.google.firebase:firebase-messaging:9.0.2'
     compile 'com.google.android.gms:play-services-analytics:9.0.0'
 
-
+    compile 'com.github.jaouan:revealator:1.1.0'
 
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
@@ -71,6 +71,10 @@ dependencies {
     compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
         transitive = true;
     }
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

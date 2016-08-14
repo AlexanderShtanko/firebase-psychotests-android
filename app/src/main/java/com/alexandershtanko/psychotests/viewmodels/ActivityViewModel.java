@@ -29,11 +29,13 @@ public class ActivityViewModel extends AbstractViewModel {
     public static final String TESTS = "tests";
     public static final String LIKE_STATUS = "like_status";
     private final String deviceId;
+    private final Context context;
     private BehaviorSubject<DataSnapshot> likeDataSnapshotSubject = BehaviorSubject.create();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
     public ActivityViewModel(Context context) {
+        this.context =context;
         deviceId = DeviceUtils.getDeviceId(context);
         Storage.getInstance().init(context);
         AlarmHelper.setTestOfDayAlarm(context);
@@ -42,6 +44,8 @@ public class ActivityViewModel extends AbstractViewModel {
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
+
+
         s.add(RxFirebase.getChildrenObservable(databaseReference.child(TESTS), Test.class).onBackpressureBuffer()
                 .doOnError(this::onError)
                 .subscribeOn(Schedulers.io())

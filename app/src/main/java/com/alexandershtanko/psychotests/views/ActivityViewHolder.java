@@ -45,7 +45,6 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
     AdView adView;
 
 
-
     private ActivityFragments fragments = ActivityFragments.getInstance();
     private ActionBarDrawerToggle toggle;
     private DrawerLayout.DrawerListener listener;
@@ -57,7 +56,11 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
         this.activity = activity;
         fragments.init(activity.getSupportFragmentManager(), R.id.content_frame);
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         initDrawer(activity);
+
 
         adView.setVisibility(View.GONE);
         MobileAds.initialize(activity.getApplicationContext(), "ca-app-pub-5101098532198101~8268739673");
@@ -80,8 +83,6 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         });
 
 
-
-
     }
 
     private void initDrawer(AppCompatActivity activity) {
@@ -92,6 +93,8 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+
         toolbar.setTitle(R.string.app_name);
         fragments.openTests();
     }
@@ -187,6 +190,10 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
 
     public void updateToolbar(String string) {
         toolbar.setTitle(StringUtils.capitalizeSentences(string));
+    }
+
+    public View getToolbar() {
+        return toolbar;
     }
 
 

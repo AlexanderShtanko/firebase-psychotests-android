@@ -41,6 +41,9 @@
     <string name="rate_app">Оценить приложение</string>
     <string name="empty_list">Тут пока ничего нет</string>
     <string name="ops">Упс!</string>
+    <string name="sort">Сортировать</string>
+    <string name="sort_date">Сначала новые</string>
+    <string name="sort_popularity">По популярности</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>

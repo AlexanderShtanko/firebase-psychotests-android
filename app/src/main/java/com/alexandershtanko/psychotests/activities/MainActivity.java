@@ -18,6 +18,7 @@ public class MainActivity extends AbstractActivity<ActivityViewHolder, ActivityV
 
     @Override
     public ActivityViewModel createViewModel() {
+
         return new ActivityViewModel(this);
     }
 
@@ -32,7 +33,6 @@ public class MainActivity extends AbstractActivity<ActivityViewHolder, ActivityV
             finish();
     }
 
-
     public void updateToolbar(int stringRes)
     {
         activityViewHolder.updateToolbar(stringRes);
@@ -42,4 +42,6 @@ public class MainActivity extends AbstractActivity<ActivityViewHolder, ActivityV
         activityViewHolder.updateToolbar(string);
 
     }
+
+
 }

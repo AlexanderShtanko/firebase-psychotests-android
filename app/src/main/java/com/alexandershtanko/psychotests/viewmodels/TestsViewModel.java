@@ -25,14 +25,15 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class TestsViewModel extends AbstractViewModel {
 
-    int counter = 0;
     private static final String TAG = TestsViewModel.class.getSimpleName();
+    int counter = 0;
     private SortedCallback callback;
     private SortedList<TestInfo> sortedList;
 
     private BehaviorSubject<Filter> filterSubject = BehaviorSubject.create();
     private BehaviorSubject<Throwable> errorSubject = BehaviorSubject.create();
     private BehaviorSubject<Test> testSubject = BehaviorSubject.create();
+    private BehaviorSubject<SortedCallback.SortType> sortTypeSubject = BehaviorSubject.create();
 
     private BehaviorSubject<Boolean> emptySubject = BehaviorSubject.create(true);
 
@@ -45,6 +46,7 @@ public class TestsViewModel extends AbstractViewModel {
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {
+
         s.add(filterSubject.asObservable()
                 .switchMap(filter -> Storage.getInstance().getTestsObservable()
                         .onBackpressureBuffer().map(tests -> filter(filter, tests)))
@@ -58,14 +60,13 @@ public class TestsViewModel extends AbstractViewModel {
             for (RxPaper.PaperObject<Boolean> obj : map.values()) {
                 Test test = Storage.getInstance().getTest(obj.getKey());
                 if (test != null) {
-                    int index = sortedList.indexOf(test.getInfo());
-                    if (index != -1) {
-                        tests.add(test);
-                    }
+                    tests.add(test);
                 }
             }
             return filter(filterSubject.getValue(), tests);
-        }).doOnError(this::onError)
+        })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(this::onError)
                 .subscribe(this::addToSortedList));
 
         s.add(Storage.getInstance().getResultsObservable().skip(1).subscribeOn(Schedulers.io()).map(map -> {
@@ -73,15 +74,29 @@ public class TestsViewModel extends AbstractViewModel {
             for (RxPaper.PaperObject<Object> obj : map.values()) {
                 Test test = Storage.getInstance().getTest(obj.getKey());
                 if (test != null) {
-                    int index = sortedList.indexOf(test.getInfo());
-                    if (index != -1) {
-                        tests.add(test);
-                    }
+                    tests.add(test);
                 }
             }
             return filter(filterSubject.getValue(), tests);
-        }).doOnError(this::onError)
+        })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(this::onError)
                 .subscribe(this::addToSortedList));
+
+        s.add(sortTypeSubject.asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(sortType -> {
+            callback.setSortType(sortType);
+            List<TestInfo> list = new ArrayList<>();
+            sortedList.beginBatchedUpdates();
+            for (int i = 0; i < sortedList.size(); i++) {
+                list.add(sortedList.get(i));
+            }
+            sortedList.clear();
+            for (int i = 0; i < list.size(); i++) {
+                sortedList.add(list.get(i));
+            }
+
+            sortedList.endBatchedUpdates();
+        }));
 
     }
 
@@ -127,7 +142,10 @@ public class TestsViewModel extends AbstractViewModel {
             test.getInfo().setDone(Storage.getInstance().hasResult(test.getInfo().getTestId()));
 
             FilterResult<Test> filterResult = new FilterResult<>(false, test);
-            String testOfDayId = Storage.getInstance().getTestOfDayId();
+
+            String testOfDayId = null;
+            if (filter.isEmpty())
+                testOfDayId = Storage.getInstance().getTestOfDayId();
 
             if (filter.getCategory() == null || test.getInfo().getCategory() != null && test.getInfo().getCategory().equals(filter.getCategory())) {
                 boolean isDone = test.getInfo().isDone();
@@ -152,6 +170,9 @@ public class TestsViewModel extends AbstractViewModel {
         return filterResults;
     }
 
+    public void setSortType(SortedCallback.SortType sortType) {
+        sortTypeSubject.onNext(sortType);
+    }
 
     public Observable<Boolean> getEmptyObservable() {
         return emptySubject.asObservable();
@@ -195,12 +216,12 @@ public class TestsViewModel extends AbstractViewModel {
             this.object = object;
         }
 
-        public void setResult(Boolean result) {
-            this.result = result;
-        }
-
         public Boolean getResult() {
             return result;
+        }
+
+        public void setResult(Boolean result) {
+            this.result = result;
         }
 
         public T getObject() {

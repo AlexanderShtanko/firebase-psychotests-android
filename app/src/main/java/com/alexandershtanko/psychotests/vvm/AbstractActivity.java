@@ -42,4 +42,10 @@ public abstract class AbstractActivity<H extends AbstractViewHolder, M extends A
         super.onDestroy();
         viewModel.unsubscribe();
     }
+
+
+    public H getViewHolder()
+    {
+        return viewHolder;
+    }
 }

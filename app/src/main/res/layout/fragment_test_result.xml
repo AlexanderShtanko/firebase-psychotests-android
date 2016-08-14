@@ -42,7 +42,7 @@
             android:layout_gravity="left"
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/oval_normal"
+            android:background="@drawable/oval_button"
             android:drawableLeft="@drawable/ic_autorenew_black_24dp"
             android:drawablePadding="10dp"
             android:gravity="center"

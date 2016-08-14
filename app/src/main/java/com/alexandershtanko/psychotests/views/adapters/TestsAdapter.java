@@ -202,7 +202,7 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Glide.with(itemView.getContext()).load(testInfo.getImage()).bitmapTransform(new CropCircleTransformation(itemView.getContext())).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .into(image);
             } else
-                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).into(image);
+                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
             animateImage(image);
 
             if (testInfo.isDone()) {

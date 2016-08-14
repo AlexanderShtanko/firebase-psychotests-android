@@ -100,20 +100,33 @@ public class Storage {
 
     public String getTestOfDayId() {
         RxPaper.PaperObject<String> paperObject = RxPaper.getInstance().readOnce(BOOK_DATA, TEST_OF_DAY);
-        if (paperObject != null && DateUtils.isToday(paperObject.getCreatedAt()))
+        if (paperObject != null && DateUtils.isToday(paperObject.getUpdatedAt()))
             return paperObject.getObject();
         else {
             String testOfDay = null;
 
-            Map<String, RxPaper.PaperObject<Object>> tests = RxPaper.getInstance().readOnce(BOOK_TESTS);
+            Map<String, RxPaper.PaperObject<Test>> tests = RxPaper.getInstance().readOnce(BOOK_TESTS);
             if (tests != null && tests.size() > 0) {
-                RxPaper.PaperObject<Object> lastTest = Collections.max(tests.values(), (lhs, rhs) -> {
-                    if (lhs.getCreatedAt() > rhs.getCreatedAt())
+                RxPaper.PaperObject<Test> lastTest = Collections.max(tests.values(), (lhs, rhs) -> {
+                    long dateAdd1 = lhs.getObject().getInfo().getDateAdd();
+                    long dateAdd2 = rhs.getObject().getInfo().getDateAdd();
+
+                    boolean hasRes1 = hasResult(lhs.getKey());
+                    boolean hasRes2 = hasResult(rhs.getKey());
+                    if (!hasRes1 && !hasRes2) {
+                        if (dateAdd1 > dateAdd2)
+                            return 1;
+                        else if (dateAdd1 < dateAdd2)
+                            return -1;
+                        else return 0;
+                    } else if (!hasRes1) {
                         return 1;
-                    else if (lhs.getCreatedAt() < rhs.getCreatedAt())
+                    } else if (!hasRes2)
                         return -1;
                     else return 0;
+
                 });
+
                 testOfDay = lastTest.getKey();
                 RxPaper.getInstance().write(BOOK_DATA, TEST_OF_DAY, testOfDay);
             }
@@ -125,6 +138,7 @@ public class Storage {
     public void setLikeStatus(String id, boolean like) {
         rxPaper.write(BOOK_LIKE_STATUS, id, like);
     }
+
     //Like status can be True, False or Null
     public Observable<Boolean> getLikeStatusObservable(String id) {
         Observable<RxPaper.PaperObject<Boolean>> observable = rxPaper.read(BOOK_LIKE_STATUS, id);
@@ -167,6 +181,6 @@ public class Storage {
 
     public Test getTest(String id) {
         RxPaper.PaperObject<Test> obj = rxPaper.readOnce(BOOK_TESTS, id);
-        return obj!=null&&obj.getChangesType()!= RxPaper.ChangesType.REMOVED?obj.getObject():null;
+        return obj != null && obj.getChangesType() != RxPaper.ChangesType.REMOVED ? obj.getObject() : null;
     }
 }
