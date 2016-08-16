@@ -19,11 +19,11 @@ import rx.Observable;
  */
 public class Storage {
 
-    public static final String TEST_OF_DAY = "test of day";
-    private static final String BOOK_TESTS = "TEST";
-    private static final String BOOK_RESULTS = "RESULT";
-    private static final String BOOK_DATA = "DATA";
-    private static final String BOOK_LIKE_STATUS = "LIKE_STATUS";
+    public static final String TEST_OF_DAY = "tod";
+    private static final String BOOK_TESTS = "test";
+    private static final String BOOK_RESULTS = "result";
+    private static final String BOOK_DATA = "data";
+    private static final String BOOK_LIKE_STATUS = "like";
     private static Storage instance;
 
     private Context context;

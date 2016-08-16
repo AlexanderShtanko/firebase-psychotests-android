@@ -137,7 +137,11 @@ public class RxPaper {
     }
 
     public void delete(String bookName) {
-        Paper.book(bookName).destroy();
+        try {
+            Paper.book(bookName).destroy();
+        } catch (Exception e) {
+            ErrorUtils.log(RxPaper.class.getSimpleName(), e);
+        }
         getBookUpdatesSubject(bookName).onNext(null);
     }
 
