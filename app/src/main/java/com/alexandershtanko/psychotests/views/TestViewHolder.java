@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.activities.MainActivity;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.models.AnswerVariant;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.utils.DisplayUtils;
@@ -46,8 +47,8 @@ public class TestViewHolder extends AbstractViewHolder {
     }
 
     public void populateNumber(Integer index, Integer count) {
-        if(index>=count)
-            index=count-1;
+        if (index >= count)
+            index = count - 1;
 
         number.setText(getContext().getString(R.string.number, index + 1, count));
     }
@@ -120,7 +121,10 @@ public class TestViewHolder extends AbstractViewHolder {
         private void selectVariant(AnswerVariant variant) {
             viewModel.selectVariant(variant.getValue());
             if (viewModel.getCurrentQuestionIndex() >= viewModel.getQuestionsCount()) {
-                ActivityFragments.getInstance().openTestResult(viewModel.getTestId());
+                {
+                    AmplitudeHelper.testDone(viewModel.getTestId(),viewModel.getTest().getInfo().getName(),viewModel.getTest().getInfo().getCategory());
+                    ActivityFragments.getInstance().openTestResult(viewModel.getTestId());
+                }
             }
         }
     }

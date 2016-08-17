@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.activities.MainActivity;
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -38,7 +39,7 @@ public class FirebaseNotificationService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getSound() != null && remoteMessage.getNotification().getSound().length() > 0);
-
+            AmplitudeHelper.onPushNotificationShow(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

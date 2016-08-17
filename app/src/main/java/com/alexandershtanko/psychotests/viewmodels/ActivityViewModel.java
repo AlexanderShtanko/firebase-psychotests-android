@@ -1,8 +1,10 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
+import android.app.Activity;
 import android.content.Context;
 
 import com.alexandershtanko.psychotests.helpers.AlarmHelper;
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.utils.DeviceUtils;
@@ -34,12 +36,17 @@ public class ActivityViewModel extends AbstractViewModel {
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 
-    public ActivityViewModel(Context context) {
-        this.context =context;
+    public ActivityViewModel(Activity activity) {
+        this.context = activity;
         deviceId = DeviceUtils.getDeviceId(context);
         Storage.getInstance().init(context);
         AlarmHelper.setTestOfDayAlarm(context);
+
+        AmplitudeHelper.init(activity);
+        AmplitudeHelper.onStart();
     }
+
+
 
 
     @Override
@@ -123,7 +130,7 @@ public class ActivityViewModel extends AbstractViewModel {
             }
 
         String testId = dataSnapshot.getKey();
-        Storage.getInstance().updateTestLikeCounters(testId,countLike,countDislike);
+        Storage.getInstance().updateTestLikeCounters(testId, countLike, countDislike);
     }
 
     @Override

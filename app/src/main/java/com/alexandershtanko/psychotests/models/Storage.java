@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.utils.RxPaper;
 
 import java.util.ArrayList;
@@ -136,6 +137,10 @@ public class Storage {
     }
 
     public void setLikeStatus(String id, boolean like) {
+        Test test = getTest(id);
+        if(test!=null)
+        AmplitudeHelper.onLike(id,test.getInfo().getName(),test.getInfo().getCategory(),like);
+
         rxPaper.write(BOOK_LIKE_STATUS, id, like);
     }
 

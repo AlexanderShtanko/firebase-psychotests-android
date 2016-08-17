@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.activities.MainActivity;
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.TestsViewHolder;
 import com.alexandershtanko.psychotests.views.adapters.SortedCallback;
@@ -82,6 +83,8 @@ public class TestsFragment extends AbstractFragment<TestsViewHolder, TestsViewMo
                 onlyFavorite = args.getBoolean(ARG_FAVORITE);
             }
         }
+        AmplitudeHelper.onOpenTests(category,onlyPassed,onlyFavorite);
+
 
         testsViewModel.setFilter(category, onlyPassed, onlyFavorite);
         return testsViewModel;

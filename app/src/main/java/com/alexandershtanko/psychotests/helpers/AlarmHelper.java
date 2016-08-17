@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.alexandershtanko.psychotests.receivers.TODAlarmReceiver;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.util.Calendar;
 
@@ -20,6 +21,8 @@ public class AlarmHelper {
     public static final String PREFS_ALARM = "ALARM";
 
     public static void setTestOfDayAlarm(Context context) {
+
+
         if (!isAlarmSet(context)) {
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 

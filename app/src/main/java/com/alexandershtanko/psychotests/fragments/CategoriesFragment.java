@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.activities.MainActivity;
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.viewmodels.CategoriesViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.views.CategoriesViewHolder;
@@ -21,6 +22,8 @@ public class CategoriesFragment extends AbstractFragment<CategoriesViewHolder,Ca
 
     @Override
     public CategoriesViewModel createViewModel() {
+        AmplitudeHelper.onOpenCategories();
+
         return new CategoriesViewModel();
     }
 

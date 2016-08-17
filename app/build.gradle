@@ -5,6 +5,9 @@ apply plugin: 'com.google.gms.google-services'
 
 
 android {
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     signingConfigs {
         config {
             keyAlias 'alexandershtanko'
@@ -26,6 +29,8 @@ android {
         versionCode 5
         versionName "1.0.4"
         signingConfig signingConfigs.config
+        multiDexEnabled true
+
     }
 
     buildTypes {
@@ -41,6 +46,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:multidex:1.0.1'
+
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
@@ -60,20 +67,18 @@ dependencies {
     compile 'com.google.firebase:firebase-crash:9.0.2'
     compile 'com.google.firebase:firebase-ads:9.0.2'
     compile 'com.google.firebase:firebase-messaging:9.0.2'
-    compile 'com.google.android.gms:play-services-analytics:9.0.0'
-
-    compile 'com.github.jaouan:revealator:1.1.0'
+    compile 'com.google.firebase:firebase-config:9.0.2'
 
 
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     compile 'com.google.firebase:firebase-database:9.0.2'
     compile 'com.github.pilgr:Paper:1.5'
-    compile ('com.github.ozodrukh:CircularReveal:2.0.1@aar') {
-        transitive = true;
-    }
+
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.1'
+    compile 'com.amplitude:android-sdk:2.7.1'
+
 
 }
 

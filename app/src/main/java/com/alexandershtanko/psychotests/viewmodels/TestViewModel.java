@@ -1,5 +1,6 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
@@ -30,7 +31,10 @@ public class TestViewModel extends AbstractViewModel {
         s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getTestObservable).first()
                 .subscribeOn(Schedulers.io()).subscribe(testSubject::onNext));
 
-        s.add(testSubject.asObservable().subscribeOn(Schedulers.io()).subscribe(test -> currentQuestionIndexSubject.onNext(0)));
+        s.add(testSubject.asObservable().subscribeOn(Schedulers.io()).subscribe(test -> {
+            currentQuestionIndexSubject.onNext(0);
+            AmplitudeHelper.onOpenTest(test.getInfo().getTestId(),test.getInfo().getName(),test.getInfo().getCategory());
+        }));
 
         s.add(currentQuestionIndexSubject.asObservable()
                 .switchMap(index -> testSubject.asObservable().first()
@@ -106,5 +110,13 @@ public class TestViewModel extends AbstractViewModel {
 
     public Observable<String> getTestImageObservable() {
         return testSubject.asObservable().filter(this::notNull).map(Test::getInfo).map(TestInfo::getImage).filter(this::notNull);
+    }
+
+    public String getTestName() {
+        return testSubject.getValue().getInfo().getName();
+    }
+
+    public Test getTest() {
+        return testSubject.getValue();
     }
 }

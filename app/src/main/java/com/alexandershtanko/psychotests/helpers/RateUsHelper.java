@@ -21,12 +21,17 @@ public class RateUsHelper {
     public static void doYouLikeApplication(Context context) {
         openDialog(context, R.string.text_rate_us_like_question, R.string.yes, R.string.no,
                 (dialog, which) -> {
+                    AmplitudeHelper.onRateUsResult(true);
                     rateUsInGooglePlay(context);
                 },
                 (dialog, which) -> {
+                    AmplitudeHelper.onRateUsResult(false);
                     helpUs(context);
                 }
         );
+
+        AmplitudeHelper.onRateUsOpen();
+
     }
 
 
@@ -40,6 +45,7 @@ public class RateUsHelper {
                     doNotShowInThisSession();
                 }
         );
+
     }
 
     public static void helpUs(Context context) {
@@ -52,6 +58,7 @@ public class RateUsHelper {
                     doNotShowAgain(context);
                 }
         );
+
     }
 
     public static void doNotShowAgain(Context context) {

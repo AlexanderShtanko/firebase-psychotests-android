@@ -1,5 +1,6 @@
 package com.alexandershtanko.psychotests.viewmodels;
 
+import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.models.TestInfo;
@@ -30,10 +31,14 @@ public class TestResultViewModel extends AbstractViewModel {
         s.add(testIdSubject.asObservable()
                 .switchMap(Storage.getInstance()::getTestObservable)
                 .subscribeOn(Schedulers.io()).subscribe(test -> {
+
                     testInfoSubject.onNext(test.getInfo());
                     List<Integer> result = Storage.getInstance().getResult(test.getInfo().getTestId());
                     if (result != null) {
-                        testResultSubject.onNext(getResult(test, result));
+                        TestResult tes = getResult(test, result);
+                        testResultSubject.onNext(tes);
+                        AmplitudeHelper.onOpenResult(test.getInfo().getTestId(),test.getInfo().getName(),test.getInfo().getCategory(),tes);
+
                     }
                 }, this::onError));
 
