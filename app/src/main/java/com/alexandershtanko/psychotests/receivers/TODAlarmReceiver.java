@@ -31,8 +31,11 @@ public class TODAlarmReceiver extends BroadcastReceiver {
         if (config.getValue(TOD_NOTIFICATION) != null)
             showNotification = config.getBoolean(TOD_NOTIFICATION);
 
-        if (!showNotification)
+        AmplitudeHelper.onShowTODNotification(showNotification);
+
+        if (!showNotification) {
             return;
+        }
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -51,6 +54,5 @@ public class TODAlarmReceiver extends BroadcastReceiver {
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
 
-        AmplitudeHelper.onShowTODNotification();
     }
 }

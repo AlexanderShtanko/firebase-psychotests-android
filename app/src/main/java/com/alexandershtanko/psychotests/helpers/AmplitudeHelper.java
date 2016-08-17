@@ -127,9 +127,11 @@ public class AmplitudeHelper {
         }
     }
 
-    public static void onShowTODNotification() {
+    public static void onShowTODNotification(boolean showNotification) {
         try {
-            Amplitude.getInstance().logEvent("Test of Day Notification Show");
+            JSONObject object = new JSONObject();
+            object.put("tod_notification remote config", showNotification);
+            Amplitude.getInstance().logEvent("Test of Day Notification Show",object);
         } catch (Exception e) {
             ErrorUtils.log(TAG, e);
         }
