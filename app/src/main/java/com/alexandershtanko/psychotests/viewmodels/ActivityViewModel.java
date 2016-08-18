@@ -2,9 +2,11 @@ package com.alexandershtanko.psychotests.viewmodels;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
 import com.alexandershtanko.psychotests.helpers.AlarmHelper;
 import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
+import com.alexandershtanko.psychotests.helpers.RemoteConfigHelper;
 import com.alexandershtanko.psychotests.models.Storage;
 import com.alexandershtanko.psychotests.models.Test;
 import com.alexandershtanko.psychotests.utils.DeviceUtils;
@@ -38,16 +40,18 @@ public class ActivityViewModel extends AbstractViewModel {
 
     public ActivityViewModel(Activity activity) {
         this.context = activity;
+
+
         deviceId = DeviceUtils.getDeviceId(context);
         Storage.getInstance().init(context);
         AlarmHelper.setTestOfDayAlarm(context);
 
         AmplitudeHelper.init(activity);
         AmplitudeHelper.onStart();
+        RemoteConfigHelper.updateValues();
+
+        Log.e("ActivityViewModel", "Show TOD notification:" + RemoteConfigHelper.isNeedShowTODNotification());
     }
-
-
-
 
     @Override
     protected void onSubscribe(CompositeSubscription s) {

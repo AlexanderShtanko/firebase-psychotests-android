@@ -10,14 +10,13 @@ import android.support.v4.app.NotificationCompat;
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.activities.MainActivity;
 import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.alexandershtanko.psychotests.helpers.RemoteConfigHelper;
 
 /**
  * Created by aleksandr on 07.08.16.
  */
 public class TODAlarmReceiver extends BroadcastReceiver {
 
-    public static final String TOD_NOTIFICATION = "tod_notification";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -25,17 +24,12 @@ public class TODAlarmReceiver extends BroadcastReceiver {
     }
 
     private void sendNotification(Context context) {
-        FirebaseRemoteConfig config = FirebaseRemoteConfig.getInstance();
-        boolean showNotification = true;
 
-        if (config.getValue(TOD_NOTIFICATION) != null)
-            showNotification = config.getBoolean(TOD_NOTIFICATION);
+        boolean needShowTODNotification = RemoteConfigHelper.isNeedShowTODNotification();
+        AmplitudeHelper.onShowTODNotification(needShowTODNotification);
 
-        AmplitudeHelper.onShowTODNotification(showNotification);
-
-        if (!showNotification) {
+        if (!needShowTODNotification)
             return;
-        }
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -53,6 +47,7 @@ public class TODAlarmReceiver extends BroadcastReceiver {
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
 
     }
 }

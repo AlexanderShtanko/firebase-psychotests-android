@@ -78,7 +78,7 @@ public class AmplitudeHelper {
             object.put("testId", testId);
             object.put("testName", testName);
             object.put("category", category);
-            Amplitude.getInstance().logEvent("Like", object);
+            Amplitude.getInstance().logEvent("Test Open", object);
         } catch (Exception e) {
             ErrorUtils.log(TAG, e);
         }
