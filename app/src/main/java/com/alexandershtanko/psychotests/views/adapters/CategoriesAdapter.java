@@ -86,7 +86,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
                         .into(image);
             }
             else
-                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).into(image);
+                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).bitmapTransform(new SketchFilterTransformation(itemView.getContext()),new CropCircleTransformation(itemView.getContext())).into(image);
         }
     }
 }

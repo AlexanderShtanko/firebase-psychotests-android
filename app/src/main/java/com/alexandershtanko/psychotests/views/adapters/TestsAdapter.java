@@ -18,7 +18,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
-import jp.wasabeef.glide.transformations.gpu.SepiaFilterTransformation;
 
 /**
  * Created by aleksandr on 12.06.16.
@@ -137,7 +136,7 @@ public class TestsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 Glide.with(itemView.getContext()).load(testInfo.getImage()).diskCacheStrategy(DiskCacheStrategy.SOURCE)
                         .bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
             else
-                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).bitmapTransform(new SepiaFilterTransformation(itemView.getContext()), new CropCircleTransformation(itemView.getContext())).into(image);
+                Glide.with(itemView.getContext()).load(R.drawable.tree_bg).bitmapTransform(new CropCircleTransformation(itemView.getContext())).into(image);
 
             //image.setBackgroundResource(imgBgs[position % imgBgs.length]);
 

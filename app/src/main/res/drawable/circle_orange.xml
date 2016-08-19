@@ -6,7 +6,7 @@
 
 
 
-    <solid android:color="@color/orange" />
+    <solid android:color="@color/colorPrimaryDark" />
 
     <size
         android:height="25dp"

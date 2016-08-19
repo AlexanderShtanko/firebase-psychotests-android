@@ -7,24 +7,28 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_gravity="center_horizontal"
 
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp">
+            android:layout_marginBottom="10dp">
 
-            <ImageView
-                android:id="@+id/image"
-                android:layout_width="150dp"
+            <View
+                android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:background="@color/colorPrimary" />
+
+            <ImageView android:layout_margin="10dp"
+                android:id="@+id/image"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/circle_gray"
-                android:padding="0dp" />
+                android:background="@drawable/circle_orange"
+                />
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -62,73 +66,82 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/name"
-                    style="@style/TextAppearance.Page.Title"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Название теста" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/category"
-                    style="@style/TextAppearance.Page.Category"
-                    android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/name"
+                        style="@style/TextAppearance.Page.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Название теста" />
+
+                    <TextView
+                        android:id="@+id/category"
+                        style="@style/TextAppearance.Page.Category"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:singleLine="true"
+                        android:text="Категория" />
+                </LinearLayout>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/start"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:singleLine="true"
-                    android:text="Категория" />
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:foregroundGravity="center"
+                    android:src="@drawable/ic_arrow_forward_white_24dp"
+                    app:fabSize="normal" />
             </LinearLayout>
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/start"
+
+            <Button
+                android:id="@+id/show_result"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:foregroundGravity="center"
-                android:src="@drawable/ic_arrow_forward_white_24dp"
-                app:fabSize="normal" />
+                android:layout_centerVertical="true"
+                android:layout_gravity="left"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/oval_button"
+                android:drawableLeft="@drawable/ic_done_black_24dp"
+                android:drawablePadding="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="Показать результат"
+                android:textAllCaps="false"
+                android:textSize="16sp" />
+
+            <TextView
+                style="@style/TextAppearance.Page.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Описание теста" />
+
+            <TextView
+                android:id="@+id/desc"
+                style="@style/TextAppearance.Page.Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Описание теста" />
         </LinearLayout>
-
-
-        <Button
-            android:id="@+id/show_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_gravity="left"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/oval_button"
-            android:drawableLeft="@drawable/ic_done_black_24dp"
-            android:drawablePadding="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:text="Показать результат"
-            android:textAllCaps="false"
-            android:textSize="16sp" />
-
-        <TextView
-            style="@style/TextAppearance.Page.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Описание теста" />
-
-        <TextView
-            android:id="@+id/desc"
-            style="@style/TextAppearance.Page.Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Описание теста" />
 
 
     </LinearLayout>

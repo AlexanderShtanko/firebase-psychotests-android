@@ -86,7 +86,6 @@ public class TestsViewModel extends AbstractViewModel {
         s.add(sortTypeSubject.asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(sortType -> {
             callback.setSortType(sortType);
             List<TestInfo> list = new ArrayList<>();
-            sortedList.beginBatchedUpdates();
             for (int i = 0; i < sortedList.size(); i++) {
                 list.add(sortedList.get(i));
             }
@@ -94,8 +93,6 @@ public class TestsViewModel extends AbstractViewModel {
             for (int i = 0; i < list.size(); i++) {
                 sortedList.add(list.get(i));
             }
-
-            sortedList.endBatchedUpdates();
         }));
 
     }
