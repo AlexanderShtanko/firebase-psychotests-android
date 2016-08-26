@@ -16,7 +16,6 @@ import com.alexandershtanko.psychotests.viewmodels.TestsViewModel;
 import com.alexandershtanko.psychotests.views.adapters.TestsAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
-import com.google.firebase.crash.FirebaseCrash;
 
 import butterknife.BindView;
 import rx.Observable;
@@ -64,9 +63,9 @@ public class TestsViewHolder extends AbstractViewHolder {
             s.add(viewModel.getErrorObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError, ErrorUtils.onError()));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::selectTest));
-            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateToolbar));
-            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateEmpty));
+                    .subscribe(this::selectTest,ErrorUtils.onError()));
+            s.add(viewModel.getFilterObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateToolbar,ErrorUtils.onError()));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateEmpty,ErrorUtils.onError()));
         }
 
         private void populateToolbar(TestsViewModel.Filter filter) {
@@ -97,7 +96,6 @@ public class TestsViewHolder extends AbstractViewHolder {
 
         public void showError(Throwable throwable) {
             Log.e(TAG,"error:",throwable);
-            FirebaseCrash.report(throwable);
             Snackbar.make(viewHolder.getView(), R.string.base_error,Snackbar.LENGTH_LONG).show();
         }
 

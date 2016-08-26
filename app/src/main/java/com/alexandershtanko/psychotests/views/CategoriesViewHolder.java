@@ -10,11 +10,11 @@ import android.view.View;
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.models.Category;
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.viewmodels.CategoriesViewModel;
 import com.alexandershtanko.psychotests.views.adapters.CategoriesAdapter;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
-import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.List;
 
@@ -66,14 +66,14 @@ public class CategoriesViewHolder extends AbstractViewHolder {
         @Override
         protected void onBind(CompositeSubscription s) {
             s.add(Observable.create((Observable.OnSubscribe<List<Category>>) subscriber -> subscriber.onNext(viewModel.getCategories())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(viewHolder::populate));
+                    .subscribe(viewHolder::populate, ErrorUtils.onError()));
 
 
-            s.add(viewModel.getCategoryObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::add));
-            s.add(viewModel.getErrorObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError));
+            s.add(viewModel.getCategoryObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::add,ErrorUtils.onError()));
+            s.add(viewModel.getErrorObservable().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(this::showError,ErrorUtils.onError()));
             s.add(Observable.create((Observable.OnSubscribe<String>) subscriber -> viewHolder.adapter.setOnItemClickListener(subscriber::onNext))
-                    .observeOn(AndroidSchedulers.mainThread()).subscribe(this::selectCategory));
-            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateEmpty));
+                    .observeOn(AndroidSchedulers.mainThread()).subscribe(this::selectCategory,ErrorUtils.onError()));
+            s.add(viewModel.getEmptyObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateEmpty,ErrorUtils.onError()));
 
         }
 
@@ -83,7 +83,6 @@ public class CategoriesViewHolder extends AbstractViewHolder {
 
         public void showError(Throwable throwable) {
             Log.e(TAG,"error:",throwable);
-            FirebaseCrash.report(throwable);
             Snackbar.make(viewHolder.getView(), R.string.base_error,Snackbar.LENGTH_LONG).show();
         }
     }

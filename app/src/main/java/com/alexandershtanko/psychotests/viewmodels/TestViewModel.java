@@ -29,24 +29,24 @@ public class TestViewModel extends AbstractViewModel {
     @Override
     protected void onSubscribe(CompositeSubscription s) {
         s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getTestObservable).first()
-                .subscribeOn(Schedulers.io()).subscribe(testSubject::onNext));
+                .subscribeOn(Schedulers.io()).subscribe(testSubject::onNext,this::onError));
 
         s.add(testSubject.asObservable().subscribeOn(Schedulers.io()).subscribe(test -> {
             currentQuestionIndexSubject.onNext(0);
             AmplitudeHelper.onOpenTest(test.getInfo().getTestId(),test.getInfo().getName(),test.getInfo().getCategory());
-        }));
+        },this::onError));
 
         s.add(currentQuestionIndexSubject.asObservable()
                 .switchMap(index -> testSubject.asObservable().first()
                         .filter(test -> index < test.getQuestions().size())
                         .map(test -> test.getQuestions().get(index)))
-                .subscribe(currentQuestionSubject::onNext));
+                .subscribe(currentQuestionSubject::onNext,this::onError));
 
         s.add(currentQuestionIndexSubject.asObservable()
                 .switchMap(index -> testSubject.asObservable()
                         .filter(test -> index == test.getQuestions().size()))
                 .subscribeOn(Schedulers.io())
-                .subscribe(test -> Storage.getInstance().setResult(test.getInfo().getTestId(), resultList)));
+                .subscribe(test -> Storage.getInstance().setResult(test.getInfo().getTestId(), resultList),this::onError));
     }
 
     @Override

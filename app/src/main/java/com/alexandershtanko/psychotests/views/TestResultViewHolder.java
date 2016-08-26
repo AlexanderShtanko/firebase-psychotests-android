@@ -13,6 +13,7 @@ import com.alexandershtanko.psychotests.helpers.RateUsHelper;
 import com.alexandershtanko.psychotests.models.TestInfo;
 import com.alexandershtanko.psychotests.models.TestResult;
 import com.alexandershtanko.psychotests.utils.Animate;
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestResultViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -97,16 +98,16 @@ public class TestResultViewHolder extends AbstractViewHolder {
 
         @Override
         protected void onBind(CompositeSubscription s) {
-            s.add(viewModel.getTestResultObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateResult));
-            s.add(viewModel.getTestInfoObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateTestInfo));
-            s.add(viewModel.getLikeStatusObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateLikeStatus));
+            s.add(viewModel.getTestResultObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateResult, ErrorUtils.onError()));
+            s.add(viewModel.getTestInfoObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateTestInfo,ErrorUtils.onError()));
+            s.add(viewModel.getLikeStatusObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(viewHolder::populateLikeStatus,ErrorUtils.onError()));
 
-            s.add(RxView.clicks(viewHolder.doneFab).subscribe(v -> done()));
-            s.add(RxView.clicks(viewHolder.repeatButton).subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId())));
+            s.add(RxView.clicks(viewHolder.doneFab).subscribe(v -> done(),ErrorUtils.onError()));
+            s.add(RxView.clicks(viewHolder.repeatButton).subscribe(v -> ActivityFragments.getInstance().openTest(viewModel.getTestId()),ErrorUtils.onError()));
 
-            s.add(RxView.clicks(viewHolder.shareResultButton).subscribe(v -> viewHolder.shareResult(viewModel.getTestInfo(), viewModel.getTestResult())));
-            s.add(RxView.clicks(viewHolder.like).subscribe(v -> like()));
-            s.add(RxView.clicks(viewHolder.dislike).subscribe(v -> dislike()));
+            s.add(RxView.clicks(viewHolder.shareResultButton).subscribe(v -> viewHolder.shareResult(viewModel.getTestInfo(), viewModel.getTestResult()),ErrorUtils.onError()));
+            s.add(RxView.clicks(viewHolder.like).subscribe(v -> like(),ErrorUtils.onError()));
+            s.add(RxView.clicks(viewHolder.dislike).subscribe(v -> dislike(),ErrorUtils.onError()));
 
 
         }

@@ -67,7 +67,7 @@ public class TestsViewModel extends AbstractViewModel {
         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(this::onError)
-                .subscribe(this::addToSortedList));
+                .subscribe(this::addToSortedList,this::onError));
 
         s.add(Storage.getInstance().getResultsObservable().skip(1).subscribeOn(Schedulers.io()).map(map -> {
             List<Test> tests = new ArrayList<>();
@@ -81,7 +81,7 @@ public class TestsViewModel extends AbstractViewModel {
         })
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(this::onError)
-                .subscribe(this::addToSortedList));
+                .subscribe(this::addToSortedList,this::onError));
 
         s.add(sortTypeSubject.asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(sortType -> {
             callback.setSortType(sortType);
@@ -93,7 +93,7 @@ public class TestsViewModel extends AbstractViewModel {
             for (int i = 0; i < list.size(); i++) {
                 sortedList.add(list.get(i));
             }
-        }));
+        },this::onError));
 
     }
 

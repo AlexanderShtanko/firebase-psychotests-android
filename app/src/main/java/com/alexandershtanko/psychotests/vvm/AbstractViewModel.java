@@ -1,5 +1,7 @@
 package com.alexandershtanko.psychotests.vvm;
 
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
+
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -12,6 +14,7 @@ public abstract class AbstractViewModel {
     CompositeSubscription s = new CompositeSubscription();
 
     public void onError(Throwable throwable) {
+        ErrorUtils.log(this.getClass().getSimpleName(),throwable);
         errorSubject.onNext(throwable);
     }
 

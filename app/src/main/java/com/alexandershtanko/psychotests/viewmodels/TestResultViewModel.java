@@ -43,7 +43,7 @@ public class TestResultViewModel extends AbstractViewModel {
                 }, this::onError));
 
         s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
-                likeStatusSubject::onNext
+                likeStatusSubject::onNext,this::onError
         ));
     }
 

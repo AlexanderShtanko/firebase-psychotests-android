@@ -16,6 +16,7 @@ import com.alexandershtanko.psychotests.helpers.AmplitudeHelper;
 import com.alexandershtanko.psychotests.models.AnswerVariant;
 import com.alexandershtanko.psychotests.models.TestQuestion;
 import com.alexandershtanko.psychotests.utils.DisplayUtils;
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.TestViewModel;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
@@ -66,16 +67,16 @@ public class TestViewHolder extends AbstractViewHolder {
         protected void onBind(CompositeSubscription s) {
             s.add(viewModel.getTestNameObservable()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::populateToolbar));
+                    .subscribe(this::populateToolbar, ErrorUtils.onError()));
             s.add(viewModel.getCurrentQuestionObservable()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::populateQuestion));
+                    .subscribe(this::populateQuestion,ErrorUtils.onError()));
 
             s.add(viewModel.getCurrentQuestionIndexObservable()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(index -> viewHolder
-                            .populateNumber(index, viewModel.getQuestionsCount())));
-            s.add(viewModel.getTestImageObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateBackground));
+                            .populateNumber(index, viewModel.getQuestionsCount()),ErrorUtils.onError()));
+            s.add(viewModel.getTestImageObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(this::populateBackground,ErrorUtils.onError()));
         }
 
         private void populateToolbar(String name) {

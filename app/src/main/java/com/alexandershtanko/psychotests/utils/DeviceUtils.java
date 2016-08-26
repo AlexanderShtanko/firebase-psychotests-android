@@ -5,10 +5,14 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.os.Environment;
+import android.os.StatFs;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.format.Formatter;
 import android.util.Patterns;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -77,5 +81,14 @@ public class DeviceUtils {
 
     private static boolean isSystemPackage(ApplicationInfo applicationInfo) {
         return ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
+    }
+
+    public static int megabytesAvailable() {
+        File path = Environment.getDataDirectory();
+        StatFs stat = new StatFs(path.getPath());
+        long blockSize = stat.getBlockSize();
+        long availableBlocks = stat.getAvailableBlocks();
+        return (int) (availableBlocks*blockSize/1024f/1024f);
+
     }
 }

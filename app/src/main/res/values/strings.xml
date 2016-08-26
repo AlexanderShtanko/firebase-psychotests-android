@@ -27,7 +27,7 @@
     <string name="no">нет</string>
     <string name="text_rate_us_like_question">Вам понравилось проходить тест?</string>
     <string name="text_rate_us_google_play_question">Оценить в Google Play</string>
-    <string name="want">С радостью</string>
+    <string name="want">Хорошо</string>
     <string name="next_time">В следующий раз</string>
     <string name="text_rate_us_help_question">Расскажите, что вам не понравилось</string>
     <string name="give_feedback">Оставить отзыв</string>
@@ -44,6 +44,8 @@
     <string name="sort">Сортировать</string>
     <string name="sort_date">Сначала новые</string>
     <string name="sort_popularity">По популярности</string>
+    <string name="error_no_space_title">Мало свободной памяти</string>
+    <string name="error_no_space">Попробуйте освободить немного места, чтобы мы могли загрузить для вас еще больше интересных тестов:)</string>
     <string-array name="drawer_items">
         <item>@string/all_tests</item>
         <item>@string/categories</item>

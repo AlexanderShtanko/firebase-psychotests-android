@@ -34,6 +34,7 @@ public class ActivityViewModel extends AbstractViewModel {
     public static final String LIKE_STATUS = "like_status";
     private final String deviceId;
     private final Context context;
+    private final int freeSpace;
     private BehaviorSubject<DataSnapshot> likeDataSnapshotSubject = BehaviorSubject.create();
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -41,6 +42,7 @@ public class ActivityViewModel extends AbstractViewModel {
     public ActivityViewModel(Activity activity) {
         this.context = activity;
 
+        freeSpace = DeviceUtils.megabytesAvailable();
 
         deviceId = DeviceUtils.getDeviceId(context);
         Storage.getInstance().init(context);
@@ -66,7 +68,7 @@ public class ActivityViewModel extends AbstractViewModel {
         s.add(likeDataSnapshotSubject.asObservable().onBackpressureBuffer()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
-                .subscribe(this::obtainLikeDataSnapshot));
+                .subscribe(this::obtainLikeDataSnapshot,this::onError));
 
         s.add(Storage.getInstance().getLikeStatusObservable().skip(1)
                 .subscribeOn(Schedulers.io())
@@ -145,5 +147,9 @@ public class ActivityViewModel extends AbstractViewModel {
     @Override
     public void restoreInstanceState() {
 
+    }
+
+    public int getFreeSpace() {
+        return freeSpace;
     }
 }

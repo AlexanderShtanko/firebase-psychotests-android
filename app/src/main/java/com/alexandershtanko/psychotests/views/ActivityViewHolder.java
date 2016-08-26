@@ -15,15 +15,16 @@ import android.widget.Toast;
 import com.alexandershtanko.psychotests.R;
 import com.alexandershtanko.psychotests.fragments.ActivityFragments;
 import com.alexandershtanko.psychotests.helpers.RateUsHelper;
+import com.alexandershtanko.psychotests.utils.ErrorUtils;
 import com.alexandershtanko.psychotests.utils.StringUtils;
 import com.alexandershtanko.psychotests.viewmodels.ActivityViewModel;
+import com.alexandershtanko.psychotests.views.dialogs.TextDialog;
 import com.alexandershtanko.psychotests.vvm.AbstractViewBinder;
 import com.alexandershtanko.psychotests.vvm.AbstractViewHolder;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.firebase.crash.FirebaseCrash;
 
 import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,6 +35,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by aleksandr on 12.06.16.
  */
 public class ActivityViewHolder extends AbstractViewHolder implements NavigationView.OnNavigationItemSelectedListener {
+    public static final int MIN_EMPTY_SPACE = 10;
     private final AppCompatActivity activity;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -204,6 +206,10 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
         public ViewBinder(ActivityViewHolder viewHolder, ActivityViewModel viewModel) {
             super(viewHolder, viewModel);
 
+            if (viewModel.getFreeSpace() < MIN_EMPTY_SPACE)
+                showNoEmptySpaceError();
+
+
         }
 
         @Override
@@ -211,13 +217,18 @@ public class ActivityViewHolder extends AbstractViewHolder implements Navigation
             s.add(viewModel.getErrorObservable()
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .doOnNext(e -> viewModel.clearError())
-                    .subscribe(this::showError));
+                    .subscribe(this::showError, ErrorUtils.onError()));
+
         }
 
         private void showError(Throwable error) {
             Log.e(TAG, "error:", error);
-            FirebaseCrash.report(error);
             Snackbar.make(viewHolder.getView(), R.string.error_connection, Snackbar.LENGTH_LONG).show();
+        }
+
+        private void showNoEmptySpaceError() {
+            Snackbar.make(viewHolder.getView(), R.string.error_no_space, Snackbar.LENGTH_LONG).show();
+            TextDialog.show(viewHolder.getContext(),viewHolder.getContext().getString(R.string.error_no_space_title),viewHolder.getContext().getString(R.string.error_no_space),true,null);
         }
 
     }

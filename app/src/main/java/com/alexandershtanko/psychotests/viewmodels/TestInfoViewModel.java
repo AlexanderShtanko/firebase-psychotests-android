@@ -30,7 +30,7 @@ public class TestInfoViewModel extends AbstractViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .map(Test::getInfo)
-                .subscribe(testInfoSubject::onNext));
+                .subscribe(testInfoSubject::onNext,this::onError));
 
         s.add(testIdSubject.asObservable()
                 .map(Storage.getInstance()::hasResult)
@@ -38,8 +38,7 @@ public class TestInfoViewModel extends AbstractViewModel {
                 .observeOn(Schedulers.io())
                 .subscribe(hasResultSubject::onNext));
         s.add(testIdSubject.asObservable().switchMap(Storage.getInstance()::getLikeStatusObservable).subscribeOn(Schedulers.io()).subscribe(
-                likeStatusSubject::onNext
-        ));
+                likeStatusSubject::onNext,this::onError));
 
         s.add(testInfoSubject.asObservable().observeOn(Schedulers.io()).subscribe(testInfo->{
             if(testInfo!=null)
@@ -47,7 +46,7 @@ public class TestInfoViewModel extends AbstractViewModel {
                 boolean testOfDay = testInfo.getTestId().equals(Storage.getInstance().getTestOfDayId());
                 AmplitudeHelper.onOpenTestInfo(testInfo.getTestId(),testInfo.getName(),testInfo.getCategory(),Storage.getInstance().hasResult(testInfo.getTestId()),testOfDay);
             }
-        }));
+        },this::onError));
     }
 
     public Observable<TestInfo> getTestInfoObservable() {
