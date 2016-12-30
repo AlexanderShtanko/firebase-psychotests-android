@@ -4,16 +4,19 @@ apply plugin: 'android-apt'
 apply plugin: 'com.google.gms.google-services'
 
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
     signingConfigs {
         config {
-            keyAlias 'alexandershtanko'
-            keyPassword 'NS38101'
-            storePassword 'NS38101'
-            storeFile file('store.jks')
+            keyAlias  properties.getProperty("alias")
+            keyPassword  properties.getProperty("key_password")
+            storePassword  properties.getProperty("store_password")
+            storeFile file(properties.getProperty("keystore"))
         }
     }
     compileSdkVersion 23
